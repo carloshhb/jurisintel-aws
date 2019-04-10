@@ -1,0 +1,111 @@
+{% extends 'conteudo/base.html' %}
+{% load staticfiles %}
+{% block title %}Jurisintel - Perfil{% endblock %}
+{% block navitems %}
+    <li class="nav-item">
+        <a href="{% url 'conteudo:home' %}">Home</a>
+    </li>
+{% endblock %}
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        #search-col{
+            overflow-x: hidden;
+        }
+    </style>
+{% endblock %}
+{% block conteudo %}
+    <div class="container" id="main-container">
+        <div class="row flex-xl-nowrap" id="main-row">
+            <div class="card col-3 p-0" id="search-col" >
+                <div class="d-flex flex-column justify-content-start" style="height: 100%">
+                    <div class="p-1" id="search-tools">
+                        <ul class="nav nav-fill flex-column align-middle p-3" role="tablist" id="v-pills-tab">
+                            <li class="nav-item links mb-1" role="tab">
+                                <a class="nav-link" data-toggle="pill" id="v-profile-tab" aria-controls="v-profile" href="#v-profile">
+                                    <i class="fas fa-user"></i>Ver perfil
+                                </a>
+                            </li>
+                            <li class="nav-item links mb-1">
+                                <a class="nav-link" data-toggle='pill' id='v-firm-tab' aria-controls='v-firm' href="#v-firm">
+                                    <i class="fas fa-building"></i>&nbspMeu escritório</a>
+                            </li>
+                            <li class="nav-item links mb-1" role="tab">
+                                <a class="nav-link" data-toggle="pill" id="v-plano-tab" role="tab" aria-controls="v-plano" href="#v-plano">
+                                    <i class="fas fa-money-check-alt"></i>&nbspDados do plano</a>
+                            </li>
+                            <li class="nav-item links mb-1">
+                                <a class="nav-link" role="tab" aria-controls='' href="{% url 'password_change' %}">
+                                    <i class="fas fa-user-edit"></i>&nbspAlterar senha</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9 py-4 menor" id="main-col">
+                {% if mensagem != ''%}
+                    <div class="alert alert-warning" role='alert'>
+                        {{ mensagem }}
+                    </div>
+                {% endif %}
+                <section class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" role="tabpanel" id="v-profile" aria-labelledby="v-profile-tab">
+                        <div class="card">
+                            <div class="card-header">Perfil</div>
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {% include 'includes/form.html' with form=perfil_form %}
+                                    <button type="submit" class="btn btn-success">Enviar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" role="tabpanel" id="v-firm" aria-labelledby="v-firm-tab">
+                        <div class="card">
+                            <div class="card-header">Meu escritório</div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    Seu escritório pode ser definido apenas UMA vez. Após isso, por gentileza,
+                                    entrar em contato com a administração.
+                                </div>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {% include 'includes/form.html' with form=escritorio_form %}
+                                    <button type="submit" class="btn btn-success">Cadastrar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" role="tabpanel" id="v-plano" aria-labelledby="v-plano-tab" >
+                        <div class="card">
+                            <div class="card-header">Plano</div>
+                            <div class="card-body">
+                                {% if assinante == True %}
+                                    <div class="form-group">
+                                        <label for="planType">Plano adquirido</label>
+                                        <input type="text" class="form-control" id="planType" value="{{ plan_type }}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="statusPlano">Situação do plano</label>
+                                        <input type="text" class="form-control" id="statusPlano" value="{{ status }}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dataPlano">Data de adesão</label>
+                                        <input type="text" class="form-control" id="dataPlano" value="{{ data }}" disabled>
+                                    </div>
+                                    {% if trial %}
+                                        <div class="form-group">
+                                            <label for="dataTrial">Data do fim do período de testes</label>
+                                            <input type="text" class="form-control" id="dataTrial" value="{{ data_trial }}" disabled>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock %}

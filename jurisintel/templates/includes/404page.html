@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}JurisIntel - Ops!! Página não encontrada!{% endblock %}
+
+{% block extrahead %}
+    <style>
+        #top{
+            background: initial;
+            background-image: url("{% static 'img/404-page.svg' %}") !important;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .pnf{
+            margin-top: 1rem;
+        }
+        .msgPNF{
+            color: white;
+        }
+        h4.msgPNF, h5.msgPNF{
+            font-weight: 700;
+        }
+        .pnf-numero{
+            margin-top: 10rem;
+        }
+        .btn-pnf{
+            width: 70px;
+        }
+    </style>
+{% endblock %}
+
+{% block conteudo %}
+    <section id="top">
+        <nav class="navbar navbar-expand-lg flex-column flex-md-row bd-navbar" id="navbar">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">JurisIntel</a>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="d-flex justify-content-center pnf-numero">
+                <h1 class="msgPNF">{{ status }}</h1>
+            </div>
+            <div class="d-flex flex-column pnf">
+
+                <h4 class="msgPNF">Ops!! Parece que você veio para um lugar distante... <br> Não há nada por aqui!</h4>
+                <p class="msgPNF">Clique no botão para voltar de onde você veio</p>
+                <p class="msgPNF">Caso aconteça novamente, entre em contato com o suporte</p>
+                <a type="button" class="btn btn-custom-warning btn-pnf" href="{% url 'home' %}">Voltar</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

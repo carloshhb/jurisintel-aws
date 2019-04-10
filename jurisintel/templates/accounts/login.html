@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar - Jurisintel{% endblock %}
+{% block extrahead %}
+    <style>
+        .logincontainer{
+            color: #222b37;
+            vertical-align: middle !important;
+        }
+        h3.card-title{
+            font-weight: 700;
+        }
+    .barra-nav{
+            position: relative !important;
+        }
+        .card-login{
+            color: #303030;
+        }
+        .p1{
+            height: 100%;
+        }
+        .login-area{
+            padding: 30px 0 30px 0;
+        }
+    </style>
+
+{% endblock %}
+{% block conteudo %}
+    <section class="first-part">
+        <nav class="navbar navbar-expand-lg flex-column flex-md-row bd-navbar barra-nav">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">JurisIntel</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarNav" aria-controls="navbarNav"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i style="color: white;" class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse navbar-links">
+                    <ul class="navbar-nav flex-row ml-md-auto d-md-flex">
+                        <li class="nav-item topnav">
+                            <a href="{% url 'home' %}">Voltar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <section class="p1">
+            <div class="container top1">
+                <div class="container logincontainer">
+                    <div class="d-flex flex-row justify-content-center login-area">
+                        <div class="col-lg-4 col-md-6 col-sm-8">
+                            {% if msg %}
+                                <div class="alert alert-success">{{ msg }}</div>
+                            {% endif %}
+                            <div class="card card-login">
+                                <div class="card-body">
+                                    <h3 class="card-title">Login</h3>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {% include 'includes/form.html' with form=login_form %}
+                                        <button type="submit" class="btn btn-outline-success btn-block">Entrar</button>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-muted text-center">
+                                    Novo por aqui? <a href="{% url 'accounts:registro' %}">Registrar</a>
+                                </div>
+                            </div>
+                            <div class="text-center py-2">
+                                <a href="{% url 'password_reset' %}" class="text-white">Esqueceu sua senha?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </section>
+    </section>
+{% endblock %}

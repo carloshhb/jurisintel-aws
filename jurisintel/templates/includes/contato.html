@@ -1,0 +1,17 @@
+<form id="contato" method="post" action="{% url 'content:contato' %}" class="js-contato-form">
+    {% csrf_token %}
+    <h6>Contato</h6>
+    <div class="form-group">
+        <label style="color: white" for="nome-contato">Nome</label>
+        <input type="text" class="form-control" name="nome-contato" id="nome-contato" placeholder="Seu nome" required>
+    </div>
+    <div class="form-group">
+        <label style="color: white" for="email-contato">Endereço de E-mail</label>
+        <input type="email" class="form-control" name="email-contato" id="email-contato" placeholder="seuemail@email.com"
+        required>
+    </div>
+    <div class="form-group">
+        <textarea class="form-control" name="texto-contato" id="texto-contato" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block mt-1">Enviar</button>
+</form>

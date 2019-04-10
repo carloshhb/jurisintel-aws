@@ -1,0 +1,22 @@
+{% comment %} Criação automática de cartões baseada nos parâmetros {% endcomment %}
+{% for id, value in parameters %}
+<div class="cases-card col-4">
+    <div class="card card-container">
+        <div class="card-container-header">
+            <div class="card-title">{{ value|first }}</div>
+            <i class="fas fa-times card-remove-button js-remove" data-pk={{ id }} data-url="{% url 'conteudo:remover-cartao' %}" data-csrf="{{ csrf_token }}"></i>
+        </div>
+        <div class="card-body inside-card" data-url="{% url 'conteudo:open-case' id%}">
+            <p class="card-resumo">{{ value|last }}
+            </p>
+        </div>
+        <div class="card-tags">
+            {% for idT, v in tags %}
+                {% if idT == id %}
+                    <span class="badge badge-pill badge-danger tag">{{ v|first }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}

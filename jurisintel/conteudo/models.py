@@ -1,0 +1,108 @@
+from django.db import models
+from accounts.models import User
+from django.dispatch import receiver
+from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
+
+from .random_primary import RandomPrimaryIdModel
+# Create your models here.
+
+
+class Temas(models.Model):
+    tema = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '%s' % self.tema
+
+
+class Ementas(models.Model):
+    texto = models.TextField()
+
+    def __str__(self):
+        return '%s' % self.texto
+
+
+class Thumbnail(models.Model):
+    thumbnail = models.ImageField(storage=ThumbnailStorage(), max_length=255)
+
+    def __str__(self):
+        return '%s' % self.thumbnail
+
+
+class Files(models.Model):
+    file = models.FileField(max_length=255)
+    thumbnail = models.ForeignKey(Thumbnail, null=True, on_delete=models.CASCADE)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    resumo = models.TextField(null=True)
+
+    def __str__(self):
+        return '%s' % self.file
+
+    # def save(self, *args, **kwargs):
+    #     super(Files, self).save(*args, **kwargs)
+    #     self.generate_thumbnail()
+    #
+    # def generate_thumbnail(self):
+    #     file = str(self.file)
+    #     pdf = wi(filename=file, resolution=300)
+    #     thumbnail_image = pdf.convert("jpeg")
+    #
+    #     thumbnail_name = '%s.%s' % (file.split('.pdf')[0], 'jpg')
+    #
+    #     with thumbnail_image.sequence[0] as img:
+    #         page = wi(image=img)
+    #         resized_img = page.resize(200, 150)
+    #         resized_img.save(filename=thumbnail_name)
+    #
+    #     thumbnail = Thumbnail()
+    #     thumbnail.thumbnail = resized_img
+    #
+    #     self.thumbnail = thumbnail.save()
+    #     # self.save()
+
+
+@receiver(models.signals.post_delete, sender=Files)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when model object is deleted
+    """
+    if instance.file:
+        s3 = PublicMediaStorage()
+        if s3.exists(instance.file.name):
+            s3.delete(instance.file.name)
+
+
+class Tags(models.Model):
+    tag = models.CharField(max_length=100)
+
+    def __str__(self):
+        return '%s' % self.tag
+
+
+class Case(RandomPrimaryIdModel):
+    CRYPT_KEY_LEN_MIN = 5
+    CRYPT_KEY_LEN_MAX = 12
+
+    id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    docs = models.ManyToManyField(Files, blank=True)
+    ementas = models.ManyToManyField(Ementas, blank=True)
+    tags = models.ManyToManyField(Tags, blank=True)
+    resumo = models.TextField()
+    titulo = models.CharField(max_length=60)
+    created_at = models.DateTimeField(auto_now_add=True)
+    finished_creation = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '%s: %s' % (self.titulo, self.user.first_name)
+
+
+@receiver(models.signals.pre_delete, sender=Case)
+def auto_delete_arquivo_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when model object is deleted
+    """
+    files = instance.docs.all()
+    for file in files:
+        file.delete()

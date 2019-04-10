@@ -1,0 +1,10 @@
+{% load staticfiles %}
+<h6>Em ordem decrescente de maior para menor similaridade:</h6>
+{% for k, v in resultado %}
+    <div class="file-resultado">
+        <a href='{{ v.file_url }}' target="_blank">
+            <img class="open-case-thumbnail" src="{{ v.thumbnail }}" alt="Similar Thumbnail">
+        </a>
+        {{ v.file_name }}
+    </div>
+{% endfor %}

@@ -1,0 +1,22 @@
+
+{% if error_msg %}
+    <div class="alert alert-danger">{{ error_msg }}</div>
+{% endif %}
+{% for field in form.visible_fields %}
+    <div class="form-group">
+        {{ field.label_tag }} {{ field }}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {% if field.help_text %}
+            <small class="form-text text-muted">
+                {{ field.help_text|safe }}
+            </small>
+        {% endif %}
+    </div>
+{% endfor %}
+{% for field in form.hidden_fields %}
+    {{ field }}
+{% endfor %}

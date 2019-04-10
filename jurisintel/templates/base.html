@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block metatags %}{% endblock %}
+    <title>{% block title %} {% endblock%}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script async src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.2.0/js/all.js" integrity="sha384-4oV5EgaV02iISL2ban6c/RmotsABqE4yZxZLcYMAdG7FAPsyHYAPpywE9PJo+Khy" crossorigin="anonymous"></script>
+{#    <script defer src="{% static "js/custom.min.js" %}"></script>#}
+    <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+{#    {% block customcss %}#}
+{#        <link rel="stylesheet" href=" {% static "css/landing-page.min.css" %}">#}
+{#    {% endblock %}#}
+{#    {% block googleanalytics%}#}
+{#        <!-- Global site tag (gtag.js) - Google Analytics -->#}
+{#        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124051180-1"></script>#}
+{#        <script>#}
+{#            window.dataLayer = window.dataLayer || [];#}
+{#            function gtag(){dataLayer.push(arguments);}#}
+{#            gtag('js', new Date());#}
+{##}
+{#            gtag('config', 'UA-124051180-1');#}
+{#        </script>#}
+{#    {% endblock %}#}
+{#    {% block hotjar %}#}
+{#        <!-- Hotjar Tracking Code for https://www.jurisintel.com.br -->#}
+{#        <script>#}
+{#            (function(h,o,t,j,a,r){#}
+{#                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};#}
+{#                h._hjSettings={hjid:1059056,hjsv:6};#}
+{#                a=o.getElementsByTagName('head')[0];#}
+{#                r=o.createElement('script');r.async=1;#}
+{#                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;#}
+{#                a.appendChild(r);#}
+{#            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');#}
+{#        </script>#}
+{#    {% endblock %}#}
+{#    {% block tawkto %}#}
+{#        <!--Start of Tawk.to Script-->#}
+{#        <script type="text/javascript">#}
+{#            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();#}
+{#            (function(){#}
+{#                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];#}
+{#                s1.async=true;#}
+{#                s1.src='https://embed.tawk.to/5c50802351410568a1092f82/default';#}
+{#                s1.charset='UTF-8';#}
+{#                s1.setAttribute('crossorigin','*');#}
+{#                s0.parentNode.insertBefore(s1,s0);#}
+{#            })();#}
+{#        </script>#}
+{#        <!--End of Tawk.to Script-->#}
+{#    {% endblock %}#}
+    {% block extrahead %}
+    {% endblock %}
+</head>
+
+<body>
+{% block conteudo %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+</body>
+</html>

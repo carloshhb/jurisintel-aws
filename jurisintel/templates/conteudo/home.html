@@ -1,0 +1,324 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
+
+    <style>
+        .temas{
+            background-color: #f1f3f4;
+        }
+        .section-title{
+            padding: 3rem 3rem 0 3rem;
+        }
+        .section-container{
+            display: flex;
+            padding: 1rem 3rem 3rem 3rem;
+        }
+        .card-container{
+            max-height: 15em;
+            height: 15em;
+            border: 0;
+            box-shadow: #0000001a 0 1px 20px 5px;
+            cursor: pointer;
+        }
+        .inside-card{
+            max-height: 10em !important;
+            margin-bottom: 1em;
+            overflow-y: hidden;
+        }
+        p.card-resumo{
+            font-size: 10pt;
+            text-align: justify;
+        }
+        .card-title{
+            padding: 1em 1em 0 1em;
+            font-weight: 700;
+        }
+        .card-tags{
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0 1em 1em 1em;
+        }
+        .tag{
+            margin-left: 4px;
+            margin-bottom: 2px;
+        }
+        .card-add-casos-container{
+            border: 2px;
+            border-style: dashed;
+            border-color: #28a745ad;
+        }
+        .inside-add-card{
+            text-align: center;
+        }
+        .form-add-files{
+            width: 60%;
+        }
+        .add-case-container{
+            margin-top: 2em;
+        }
+        .add-card-plus{
+            font-size: 40pt;
+            margin: 0;
+            color: #28a745;
+        }
+        .cases-section-container{
+            padding: 1rem 3rem 3rem 3rem;
+            flex-wrap: wrap;
+        }
+        .cases-card{
+            margin-top: 30px;
+        }
+        .card-remove-button{
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .search-bar{
+            width: 45rem !important;
+        }
+        .drop-zone{
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border: 2px dashed #c2c2c2e6;
+            width: 60%;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .thumbnail{
+        width: 100px;
+        cursor: pointer;
+        }
+        .progress-resumo, .progress-thumbnails{
+            padding-top: 5px;
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">JurisIntel</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="ml-auto mr-auto">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+        <div class="align-items-end justify-content-end">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Panel -->
+<section class="temas">
+    <div class="section-title">
+        <div class="d-flex flex-row justify-content-between">
+            <h5>Meus temas</h5>
+            <button class="btn toggle-temas" data-toggle="collapse" data-target="#temasCollapse" aria-expanded="false" aria-controls="temasCollapse">
+                <i class="fas fa-chevron-circle-up icon"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="col-12 section-container collapse show" aria-labelledby="headingOne" id="temasCollapse">
+        <div class="col-4">
+            <div class="card card-container">
+                <div class="card-title">ICMS</div>
+                <div class="card-body inside-card">
+                    <p class="card-resumo">Agravo regimental em recurso extraordinário com agravo. 2. Direito Tributário. ICMS. Regime especial de recolhimento. 3. A submissão de contribuinte a regime fiscal diferenciado em virtude do inadimplemento reiterado não constitui sanção política condenada pela jurisprudência desta Corte, quando não inviabiliza o exercício da atividade empresarial, como reconhecido pela origem. 4. Matéria local. Ofensa reflexa à Constituição Federal. Revolvimento do acervo fático-probatório. Súmulas 279 e 280 do STF. Precedentes. 5. Agravo regimental desprovido.
+                    </p>
+                </div>
+                <div class="card-tags">
+                    <span class="badge badge-pill badge-danger tag">ICMS</span>
+                    <span class="badge badge-pill badge-danger tag">TEMA 517</span>
+                    <span class="badge badge-pill badge-danger tag">Simples Nacional</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-container ml-4">
+                <div class="card-title">ICMS</div>
+                <div class="card-body inside-card">
+                    <p class="card-resumo">Agravo regimental em recurso extraordinário com agravo. 2. Direito Tributário. 3. Imposto sobre Circulação de Mercadorias e Serviços (ICMS). 4. Alegação de creditamento indevido. Utilização de critério da estimativa para glosar os créditos havidos por autoridade fiscalizadora. Assentada na ementa do Tribunal a quo a inexistência de informações quanto a haver o contribuinte fornecido todas as contas telefônicas para que fosse calculado o devido creditamento do tributo de maneira convencional e não por estimativa. 5. Matéria infraconstitucional. Ofensa reflexa à Constituição Federal. Necessidade de reexame do acervo probatório. Súmula 279 do STF. Precedentes. 6. Ausência de argumentos capazes de infirmar a decisão agravada. 7. Negativa de provimento ao agravo regimental. Sem majoração de honorários, tendo em vista a não fixação anterior pela origem.</p>
+                </div>
+                <div class="card-tags">
+                    <span class="badge badge-pill badge-danger tag">ICMS</span>
+                    <span class="badge badge-pill badge-danger tag">TEMA 517</span>
+                    <span class="badge badge-pill badge-danger tag">Simples Nacional</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card card-container ml-4">
+                <div class="card-title">ICMS</div>
+                <div class="card-body inside-card">
+                    <p class="card-resumo">EMBARGOS DE DECLARAÇÃO. ERRO MATERIAL DO ACÓRDÃO EMBARGADO. POSSIBILIDADE DE APLICAÇÃO DO TEMA 517 DA REPERCUSSÃO GERAL AO CASO. IDENTIDADE ENTRE O PRECEDENTE PARADIGMA E O PRESENTE RECURSO EXTRAORDINÁRIO. CONTROVÉRSIA. APLICAÇÃO DE DIFERENCIAL DE ALÍQUOTA DE ICMS À EMPRESA OPTANTE PELO SIMPLES NACIONAL. ACOLHIMENTO DOS DECLARATÓRIOS DA UNIÃO, COM EFEITOS INFRINGENTES, PARA DETERMINAR A DEVOLUÇÃO DOS AUTOS AO JUÍZO DE ORIGEM. 1. O acórdão embargado incorre em erro material quanto à acomodação da matéria veiculada no Recurso Extraordinário no que se discute no leading case no RE 970.821. 2. Esta CORTE tem entendimento no sentido de reconsiderar as decisões do Relator, seja por meio de agravo interno, seja por meio de embargos de declaração, quando se verifica erro material na aplicação de precedente do Plenário sob o rito da Repercussão Geral. Nesse sentido: RE 594.266 AgR-ED, Rel. Min. DIAS TOFFOLI, Primeira Turma, DJe 26/5/2017; RE 603.185 AgR-ED-ED, Rel. Min. GILMAR MENDES, Segunda Turma, DJe de 6/3/2017. 3. A rigor, a matéria controvertida no apelo extremo é abrangida pelo conteúdo do Tema 517 da Repercussão Geral, no qual se debate a seguinte questão: “Aplicação de diferencial de alíquota de ICMS à empresa optante pelo SIMPLES NACIONAL.” 4. Embargos de Declaração acolhidos, com efeitos infringentes, para determinar a devolução dos autos ao juízo de origem.</p>
+                </div>
+                <div class="card-tags">
+                    <span class="badge badge-pill badge-danger tag">ICMS</span>
+                    <span class="badge badge-pill badge-danger tag">TEMA 517</span>
+                    <span class="badge badge-pill badge-danger tag">Simples Nacional</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="add-case">
+    <div class="d-flex flex-column justify-content-center align-items-center add-case-container">
+        <div class="text-muted text-center drop-zone js-upload">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 1rem;"></i>
+            <h6>Arraste arquivos de um <strong>NOVO</strong> caso aqui</h6>
+        </div>
+        <input id="fileupload" type="file" name="files" multiple
+               style="display: none;"
+               data-url="{% url 'conteudo:upload' %}"
+               data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+        <form action="{% url 'conteudo:file-upload' %}" method='post' id="form-files">
+            {% csrf_token %}
+            <input type="text" name="file-list-id" id="files-id" style="display:none;" value="">
+        </form>
+
+        <table id="gallery">
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</section>
+<section class="casos">
+    <div class="section-title">
+        <h5>Meus casos</h5>
+    </div>
+    <div class="d-flex col-12 cases-section-container">
+        {% include 'conteudo/includes/cards.html '%}
+    </div>
+</section>
+<div class="modal" id="modal-progress" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Enviando...</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                </div>
+                <div class="progress-thumbnails">
+                    - Gerando informações do(s) arquivo(s)... <i class="fas fa-spinner fa-pulse"></i>
+                </div>
+                <div class="progress-resumo">
+                    - Por gentileza, aguarde um momento enquanto os resumos são gerados... <i class="fas fa-spinner fa-pulse"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+<script>
+    $(document).ready(function() {
+
+        let removeCard = function(e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+            let pk = $(this).data('pk');
+            const csrf = $(this).data('csrf');
+            $.ajax({
+                url: url,
+                data: {
+                    pk: pk,
+                    csrfmiddlewaretoken: csrf,
+                },
+                dataType:'json',
+                method:'post',
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        };
+
+        let openCase = function(){
+            let url = $(this).data('url');
+            window.open(url, '_blank');
+        };
+
+        $('.casos').on("click", '.js-remove', removeCard);
+        $('.casos').on("click", '.inside-card', openCase);
+
+        let temasCollapse = $('#temasCollapse');
+
+        temasCollapse.on('hidden.bs.collapse', function () {
+            let btnIcon = $('.icon');
+            btnIcon.removeClass('fas fa-chevron-circle-up');
+            btnIcon.addClass('fas fa-chevron-circle-down');
+        });
+
+        temasCollapse.on('show.bs.collapse', function () {
+            let btnIcon = $('.icon');
+            btnIcon.removeClass('fas fa-chevron-circle-down');
+            btnIcon.addClass('fas fa-chevron-circle-up');
+        });
+
+        $(".js-upload").on('click', function () {
+            $('#fileupload').trigger('click');
+        });
+
+        /* 2. INITIALIZE THE FILE UPLOAD COMPONENT */
+        $("#fileupload").fileupload({
+            dataType: 'json',
+            start: function(e){
+                $("#modal-progress").modal("show");
+            },
+            stop: function(e){
+                {#$("#modal-progress").modal("hide");#}
+                $('#form-files').trigger('submit');
+                $(".progress-resumo").show();
+            },
+            progressall: function(e, data){
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                var strProgress = progress + "%";
+                $(".progress-bar").css({"width": strProgress});
+                $(".progress-bar").text(strProgress);
+                if (progress === 100){
+                    $('.progress-thumbnails').show();
+                }
+            },
+            done: function (e, data) {  /* 3. PROCESS THE RESPONSE FROM THE SERVER */
+                if (data.result.is_valid) {
+                    let preSet = $('#files-id').attr('value');
+                    $('#files-id').attr('value', preSet + data.result.file_id + ';')
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
