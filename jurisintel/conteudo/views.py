@@ -45,21 +45,24 @@ def upload(request):
                 else:
                     data['is_valid'] = False
 
-                thumbnail_image = pdf.convert("jpeg")
-                temp_image = tempfile.SpooledTemporaryFile()
-                pdf_name = str(arquivo).split('.pdf')
-                thumb_name = '%s.jpg' % pdf_name[0]
+                try:
+                    thumbnail_image = pdf.convert("jpeg")
+                    temp_image = tempfile.SpooledTemporaryFile()
+                    pdf_name = str(arquivo).split('.pdf')
+                    thumb_name = '%s.jpg' % pdf_name[0]
 
-                with thumbnail_image.sequence[0] as img:
-                    page = wi(image=img)
-                    page.width = 150
-                    page.height = 200
-                    page.strip()
-                    page.save(file=temp_image)
-                    img_file = s3_thumb.save(thumb_name, temp_image)
-                    thumbnail = Thumbnail.objects.create(thumbnail=img_file)
-                    save_file.thumbnail = thumbnail
-                    save_file.save()
+                    with thumbnail_image.sequence[0] as img:
+                        page = wi(image=img)
+                        page.width = 150
+                        page.height = 200
+                        page.strip()
+                        page.save(file=temp_image)
+                        img_file = s3_thumb.save(thumb_name, temp_image)
+                        thumbnail = Thumbnail.objects.create(thumbnail=img_file)
+                        save_file.thumbnail = thumbnail
+                        save_file.save()
+                except Exception as error:
+                    data['error'] = error
 
         return JsonResponse(data)
 
