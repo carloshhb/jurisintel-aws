@@ -299,8 +299,10 @@
             },
             stop: function(e){
                 {#$("#modal-progress").modal("hide");#}
-                $('#form-files').trigger('submit');
-                $(".progress-resumo").show();
+                if ($('#files-id').attr('value') != ''){
+                    $('#form-files').trigger('submit');
+                    $(".progress-resumo").show();
+                }
             },
             progressall: function(e, data){
                 var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -316,6 +318,7 @@
                     let preSet = $('#files-id').attr('value');
                     $('#files-id').attr('value', preSet + data.result.file_id + ';')
                 }
+                console.log(data.result)
             }
         });
     });

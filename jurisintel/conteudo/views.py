@@ -30,34 +30,36 @@ def upload(request):
         s3_thumb.file_overwrite = False
 
         for file in request.FILES.getlist('files'):
-            pdf = wi(file=file, resolution=200)
-            arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
-            path = '%s/%s' % (str(request.user.pk), arquivo)
-            uploaded_file = s3_file.save(path, file)
-            save_file = Files.objects.create(file=uploaded_file)
+            try:
+                pdf = wi(file=file, resolution=200)
+                arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
+                path = '%s/%s' % (str(request.user.pk), arquivo)
+                uploaded_file = s3_file.save(path, file)
+                save_file = Files.objects.create(file=uploaded_file)
+            except Exception as error:
+                data['error'] = error
+            else:
+                if save_file:
+                    data['is_valid'] = True
+                    data['file_id'] = save_file.pk
+                else:
+                    data['is_valid'] = False
 
-            thumbnail_image = pdf.convert("jpeg")
+                thumbnail_image = pdf.convert("jpeg")
+                temp_image = tempfile.SpooledTemporaryFile()
+                pdf_name = str(arquivo).split('.pdf')
+                thumb_name = '%s.jpg' % pdf_name[0]
 
-            temp_image = tempfile.SpooledTemporaryFile()
-
-            pdf_name = str(arquivo).split('.pdf')
-            thumb_name = '%s.jpg' % pdf_name[0]
-
-            with thumbnail_image.sequence[0] as img:
-                page = wi(image=img)
-                page.width = 150
-                page.height = 200
-                page.strip()
-                page.save(file=temp_image)
-                img_file = s3_thumb.save(thumb_name, temp_image)
-                thumbnail = Thumbnail.objects.create(thumbnail=img_file)
-                save_file.thumbnail = thumbnail
-                save_file.save()
-
-            data = {
-                'is_valid': True,
-                'file_id': save_file.pk
-            }
+                with thumbnail_image.sequence[0] as img:
+                    page = wi(image=img)
+                    page.width = 150
+                    page.height = 200
+                    page.strip()
+                    page.save(file=temp_image)
+                    img_file = s3_thumb.save(thumb_name, temp_image)
+                    thumbnail = Thumbnail.objects.create(thumbnail=img_file)
+                    save_file.thumbnail = thumbnail
+                    save_file.save()
 
         return JsonResponse(data)
 
