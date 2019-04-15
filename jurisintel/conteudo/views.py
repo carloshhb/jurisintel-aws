@@ -4,7 +4,7 @@ import requests
 import mimetypes
 import tempfile
 import secrets
-from django.conf import settings
+
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse, get_object_or_404
 from django.template.loader import render_to_string
@@ -37,7 +37,7 @@ def upload(request):
                 uploaded_file = s3_file.save(path, file)
                 save_file = Files.objects.create(file=uploaded_file)
             except Exception as error:
-                data['error'] = error
+                print(error)
             else:
                 if save_file:
                     data['is_valid'] = True
@@ -62,7 +62,7 @@ def upload(request):
                         save_file.thumbnail = thumbnail
                         save_file.save()
                 except Exception as error:
-                    data['error'] = error
+                    print(error)
 
         return JsonResponse(data)
 
