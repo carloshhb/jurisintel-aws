@@ -89,7 +89,7 @@ def registro(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('conteudo:home'))
 
     error_msg = False
 
@@ -103,7 +103,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('home'))
+                return HttpResponseRedirect(reverse('conteudo:home'))
             else:
                 return HttpResponse("Sua conta não está ativa.")
         else:

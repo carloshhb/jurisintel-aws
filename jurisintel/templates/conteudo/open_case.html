@@ -1,14 +1,6 @@
+{% extends 'conteudo/base_conteudo.html' %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
-
+{% block styles %}
     <style>
         .temas{
             background-color: #f1f3f4;
@@ -88,223 +80,201 @@
             border: 1px solid #d1d1d1;
             border-radius: 8px;
         }
-    </style>
-
-</head>
-<body>
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">JurisIntel</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
-</nav>
-
-<!-- Main Panel -->
-<section class="main-panel">
-    <div class="open-case-header">
-        <div class="first-part">
-            <h5>{{ titulo }}</h5>
-        </div>
-        <div class="second-part">
-            <p>{{ resumo }}</p>
-        </div>
-        <div class="filters">
-            <a href="#ementas">Ementas</a> |
-            <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> |
-            <a href="">Temas</a>
-        </div>
-    </div>
-    <div class="side-button-docs">
-        <span class="button-docs-text">Docs</span>
-    </div>
-</section>
-<section class="main-panel-content">
-    <div class="open-case-content">
-        <div class="open-case-precedents">
-            {% for ementa in ementas %}
-                <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">
-                    <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">
-                        {{ ementa }}
-                    </p>
-                </div>
-            {% empty %}
-                <div class="no-precedents">
-                    <p>Não existem ementas registradas ainda.</p>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-
-</section>
-<style>
-    .first-part{
-        padding: 2em 0 0 0;
-    }
-    .main-panel{
-        display: flex;
-        flex-direction: row;
-    }
-    .main-panel-content {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .open-case-header{
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .open-case-content{
-        display: flex;
-        padding: 20px 50px;
-        align-items: center;
-        justify-content: center;
-    }
-    .open-case-precedents{
-        width: 60%;
-    }
-    .no-precedents{
-        text-align: center;
-    }
-
-    .precedents-card{
-
-        border-radius: 5px;
-        padding: 15px;
-        margin-bottom: 2rem;
-        max-height: 20rem;
-        overflow-y: hidden;
-
-        font-size: 10pt;
-        text-align: justify;
-
-        box-shadow: 0 0 5px 1px #0000004d;
-    }
-    .open-case-thumbnail{
-        width: 200px;
-        cursor: pointer;
-    }
-    .open-case-sim-doc{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .open-case-similares-result{
-        padding-top: 3rem;
-    }
-
-    .wrap {
-        display: none;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        height: 100vh;
-        justify-content: center;
-        background-color: white;
-        {#transform: translate(-50%, -50%);#}
-    }
-    .carregando{
-        max-height: 100vh;
-    }
-    .text {
-        color: #fbae17;
-        display: inline-block;
-        margin-left: 5px;
-    }
-    .loading{
-        position: absolute;
-        top: 50%;
-        left: 43%;
-    }
-    .bounceball {
-        position: relative;
-        display: inline-block;
-        height: 37px;
-        width: 15px;
-    }
-    .bounceball::before{
-        position: absolute;
-        content: '';
-        display: block;
-        top: 0;
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        background-color: #fbae17;
-        transform-origin: 50%;
-        animation: bounce 500ms alternate infinite ease;
-    }
-
-    @keyframes bounce {
-        0% {
-            top: 30px;
-            height: 5px;
-            border-radius: 60px 60px 20px 20px;
-            transform: scaleX(2);
+        .first-part{
+            padding: 2em 0 0 0;
         }
-        35% {
+        .main-panel{
+            display: flex;
+            flex-direction: row;
+        }
+        .main-panel-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .open-case-header{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .open-case-content{
+            display: flex;
+            padding: 20px 50px;
+            align-items: center;
+            justify-content: center;
+        }
+        .open-case-precedents{
+            width: 60%;
+        }
+        .no-precedents{
+            text-align: center;
+        }
+
+        .precedents-card{
+
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 2rem;
+            max-height: 20rem;
+            overflow-y: hidden;
+
+            font-size: 10pt;
+            text-align: justify;
+
+            box-shadow: 0 0 5px 1px #0000004d;
+        }
+        .open-case-thumbnail{
+            width: 200px;
+            cursor: pointer;
+            box-shadow: 0 1px 20px 5px #0000001a;
+            border-radius: 5px;
+        }
+        .open-case-sim-doc{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .open-case-similares-result{
+            padding-top: 3rem;
+        }
+
+        .wrap {
+            display: none;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            justify-content: center;
+            background-color: white;
+        {#transform: translate(-50%, -50%);#}
+        }
+        .carregando{
+            max-height: 100vh;
+        }
+        .text {
+            color: #fbae17;
+            display: inline-block;
+            margin-left: 5px;
+        }
+        .loading{
+            position: absolute;
+            top: 50%;
+            left: 43%;
+        }
+        .bounceball {
+            position: relative;
+            display: inline-block;
+            height: 37px;
+            width: 15px;
+        }
+        .bounceball::before{
+            position: absolute;
+            content: '';
+            display: block;
+            top: 0;
+            width: 15px;
             height: 15px;
             border-radius: 50%;
-            transform: scaleX(1);
+            background-color: #fbae17;
+            transform-origin: 50%;
+            animation: bounce 500ms alternate infinite ease;
         }
-        100% {
-            top: 0;
+
+        @keyframes bounce {
+            0% {
+                top: 30px;
+                height: 5px;
+                border-radius: 60px 60px 20px 20px;
+                transform: scaleX(2);
+            }
+            35% {
+                height: 15px;
+                border-radius: 50%;
+                transform: scaleX(1);
+            }
+            100% {
+                top: 0;
+            }
         }
-    }
-</style>
-<script>
-    $(document).ready(function () {
-        $('.precedents-text').click(function () {
-            let size = $(this).height();
-            let card = $(this).parent('.precedents-card');
+    </style>
+{% endblock styles %}
+{% block sections %}
+    <!-- Main Panel -->
+    <section class="main-panel">
+        <div class="open-case-header">
+            <div class="first-part">
+                <h5>{{ titulo }}</h5>
+            </div>
+            <div class="second-part">
+                <p>{{ resumo }}</p>
+            </div>
+            <div class="filters">
+                <a href="#ementas">Ementas</a> |
+                <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> |
+                <a href="">Temas</a>
+            </div>
+        </div>
+        <div class="side-button-docs">
+            <span class="button-docs-text">Docs</span>
+        </div>
+    </section>
+    <section class="main-panel-content">
+        <div class="open-case-content">
+            <div class="open-case-precedents">
+                {% for ementa in ementas %}
+                    <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">
+                        <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">
+                            {{ ementa }}
+                        </p>
+                    </div>
+                {% empty %}
+                    <div class="no-precedents">
+                        <p>Não existem ementas registradas ainda.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
 
-            if (card.height() === size+10)
-                card.css('maxHeight', '20rem');
-            else if (card.height() === '20rem')
-                card.css('maxHeight', size+10);
-            else
-                console.log(card.height())
-        });
+    </section>
 
-        $('#js-similar').click(function (e) {
-            e.preventDefault();
-            let url = $(this).prop('href');
-            $.ajax({
-                url: url,
-                method: 'get',
-                success: function(response){
-                    console.log(response);
-                    $('.open-case-content').empty();
-                    $('.open-case-content').html(response['html_similares']);
-                }
-            })
-        });
-
-    });
-</script>
-<div class="wrap" id="loading">
-    <div class="loading">
-        <div class="bounceball"></div>
-        <div class="text">BUSCANDO SIMILARES</div>
+    <div class="wrap" id="loading">
+        <div class="loading">
+            <div class="bounceball"></div>
+            <div class="text">BUSCANDO SIMILARES</div>
+        </div>
     </div>
-</div>
-</body>
-</html>
+{% endblock sections %}
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('.precedents-text').click(function () {
+                let size = $(this).height();
+                let card = $(this).parent('.precedents-card');
+
+                if (card.height() === size+10)
+                    card.css('maxHeight', '20rem');
+                else if (card.height() === '20rem')
+                    card.css('maxHeight', size+10);
+                else
+                    console.log(card.height())
+            });
+
+            $('#js-similar').click(function (e) {
+                e.preventDefault();
+                let url = $(this).prop('href');
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    success: function(response){
+                        console.log(response);
+                        $('.open-case-content').empty();
+                        $('.open-case-content').html(response['html_similares']);
+                    }
+                })
+            });
+
+        });
+    </script>
+{% endblock %}

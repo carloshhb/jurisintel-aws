@@ -1,21 +1,50 @@
-import os
-import unicodedata
-import requests
 import mimetypes
-import tempfile
+import os
 import secrets
+import tempfile
+import unicodedata
 
+import requests
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse, get_object_or_404
 from django.template.loader import render_to_string
+from django.views import View
+from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
 
-from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
-from .forms import CardForm
+from .forms import CardForm, UpdateCaseForm
 from .models import Case, Files, Tags, Thumbnail
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo
+
+
 # Create your views here.
+
+
+def retrieve_cases(request):
+    parameters, tag_list = list(), list()
+
+    all_cases = Case.objects.filter(user=request.user).order_by('-created_at')
+    for case in all_cases:
+        parameters.append([case.pk, [case.titulo, case.resumo]])
+        for tag in case.tags.all():
+            tag_list.append([case.pk, [tag.__str__()]])
+
+    return parameters, tag_list
+
+
+@login_required(login_url='user_login')
+def home(request):
+
+    parameters, tag_list = retrieve_cases(request)
+
+    context = {
+        'parameters': parameters,
+        'tags': tag_list,
+    }
+
+    return render(request, 'conteudo/home.html', context)
 
 
 def upload(request):
@@ -146,14 +175,6 @@ def create(request):
         return HttpResponseRedirect(reverse('home'))
 
 
-def remove(request):
-    if request.POST:
-        case = Case.objects.get(pk=request.POST['pk'])
-        case.delete()
-
-        return HttpResponseRedirect(reverse('home'))
-
-
 def open_case(request, pk):
     case = get_object_or_404(Case, pk=pk)
     if request.user == case.user:
@@ -182,19 +203,6 @@ def open_case(request, pk):
         return render(request, 'conteudo/open_case.html', context)
     else:
         return HttpResponseRedirect(reverse('home'))
-
-
-# def get_file(arquivo):
-#     k = requests.get(arquivo.url, stream=True)
-#     file_mimetype = mimetypes.guess_type(k.url)
-#     if file_mimetype[0] == 'application/pdf':
-#         # Nome do arquivo temporário
-#         temp_filename = '%s.pdf' % random_name(10)
-#         tmp_file = 'tmp/' + temp_filename
-#         with open(tmp_file, "wb") as fd:
-#             for chunk in k.iter_content(chunk_size=128):
-#                 fd.write(chunk)
-#         return tmp_file
 
 
 def verify_similarities(request, pk):
@@ -253,3 +261,74 @@ def verify_similarities(request, pk):
                                                   request=request)
 
         return JsonResponse(data)
+
+
+def card_delete(request, pk):
+    data = dict()
+    try:
+        case = Case.objects.get(pk=pk)
+    except Exception as error:
+        print(error)
+    else:
+        if request.method == 'POST':
+            case.delete()
+            data['form_is_valid'] = True
+
+            parameters, tag_list = retrieve_cases(request)
+
+            update_context = {
+                'parameters': parameters,
+                'tags': tag_list,
+            }
+            data['html_response'] = render_to_string('conteudo/includes/cards.html', update_context)
+
+        else:
+            context = {'caso': case}
+            data['html_form'] = render_to_string('conteudo/includes/card_delete.html', context, request=request)
+
+        return JsonResponse(data)
+
+
+def card_update(request, pk):
+    caso = get_object_or_404(Case, pk=pk)
+
+    if request.POST:
+        form = UpdateCaseForm(request.POST, instance=caso)
+
+    else:
+        form = UpdateCaseForm(instance=caso)
+    return save_(request, form, 'conteudo/includes/card_update.html')
+
+
+def save_(request, form, template):
+
+    data = dict()
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+
+            parameters, tag_list = retrieve_cases(request)
+
+            update_context = {
+                'parameters': parameters,
+                'tags': tag_list,
+            }
+            data['html_response'] = render_to_string('conteudo/includes/cards.html', update_context)
+
+        else:
+            data['form_is_valid'] = False
+
+    context = {'form': form}
+    data['html_form'] = render_to_string(template, context, request=request)
+    return JsonResponse(data)
+
+
+class AddDoc(View):
+    def get(self, request, pk):
+        pass
+
+    def post(self, request, pk):
+        pass

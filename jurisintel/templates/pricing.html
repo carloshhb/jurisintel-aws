@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar" style="font-family: Muli, sans-serif;">
+    <div class="container"><a class="navbar-brand logo" href="#">JurisIntel</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse"
+             id="navcol-1">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item" role="presentation"><a class="nav-link" href="index.html">Início</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="features.html">Funcionalidades</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link active" href="pricing.html">Preços</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="about-us.html">Sobre</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="contact-us.html">Contato</a></li>
+            </ul><a class="btn btn-outline-success" role="button" href="login.html" style="margin: 0;margin-right: 32px;">Entrar</a><a class="btn btn-primary" role="button" href="registration.html">Registrar</a></div>
+    </div>
+</nav>
+{% endblock navbar %}
+{% block main %}
+    <main class="page pricing-table-page">
+        <section class="clean-block clean-pricing dark" style="font-family: Muli, sans-serif;">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Preços</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-5 col-lg-4">
+                        <div class="clean-pricing-item">
+                            <div class="heading">
+                                <h3>SOLO</h3>
+                            </div>
+                            <p>Plano para advogados que trabalham individualmente</p>
+                            <div class="features">
+                                <h4><span class="feature">Suporte Integral:&nbsp;</span><span>Yes</span></h4>
+                                <h4><span class="feature"># Casos por mês:&nbsp;</span><span>20</span></h4>
+                                <h4><span class="feature">Storage:&nbsp;</span><span>5GB</span></h4>
+                            </div>
+                            <div class="price">
+                                <h4>R$25</h4>
+                            </div><button class="btn btn-outline-primary btn-block" type="button">ASSINE AGORA</button></div>
+                    </div>
+                    <div class="col-md-5 col-lg-4">
+                        <div class="clean-pricing-item">
+                            <div class="ribbon"><span>Melhor CxB</span></div>
+                            <div class="heading">
+                                <h3>ESCRITÓRIO</h3>
+                            </div>
+                            <p>Plano de melhor custo benefício para escritórios de advocacia</p>
+                            <div class="features">
+                                <h4><span class="feature">Suporte Integral:&nbsp;</span><span>Sim</span></h4>
+                                <h4><span class="feature"># Casos por mês:&nbsp;</span><span>80</span></h4>
+                                <h4><span class="feature">Storage:&nbsp;</span><span>50GB</span></h4>
+                            </div>
+                            <div class="price">
+                                <h4>R$149,99</h4>
+                            </div><button class="btn btn-primary btn-block" type="button"><strong>ASSINE AGORA</strong><br></button></div>
+                    </div>
+                    <div class="col-md-5 col-lg-4">
+                        <div class="clean-pricing-item">
+                            <div class="heading">
+                                <h3>SOB DEMANDA</h3>
+                            </div>
+                            <p>Plano sob consulta para atender necessidades</p>
+                            <div class="features">
+                                <h4><span class="feature">Suporte Integral:&nbsp;</span><span>Sim</span></h4>
+                                <h4><span class="feature"># Casos por mês:&nbsp;</span><span>TBD</span></h4>
+                                <h4><span class="feature">Storage:&nbsp;</span><span>TDB</span></h4>
+                            </div>
+                            <div class="price">
+                                <h4>Sob consulta</h4>
+                            </div><button class="btn btn-outline-primary btn-block" type="button">ASSINE AGORA</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock main %}

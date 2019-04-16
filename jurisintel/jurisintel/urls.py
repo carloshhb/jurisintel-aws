@@ -50,10 +50,10 @@ urlpatterns = [
         template_name='accounts/registration/password_change_done.html'), name='password_change_done'),
 
     path('admin/', admin.site.urls),
-    path('', views.home, name="home"),
+    path('', views.index, name="home"),
     path('inicio/', views.landing_page, name="landing-page"),
-    path('login/', acc_views.user_login, name='user_login'),
     path('logout/', acc_views.user_logout, name='logout'),
+    path('contato/', views.contato, name='contato'),
     path('home/', include('conteudo.urls')),
     path('contas/', include('accounts.urls')),
 ]

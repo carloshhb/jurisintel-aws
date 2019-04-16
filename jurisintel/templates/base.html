@@ -3,66 +3,322 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% block metatags %}{% endblock %}
-    <title>{% block title %} {% endblock%}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script async src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.2.0/js/all.js" integrity="sha384-4oV5EgaV02iISL2ban6c/RmotsABqE4yZxZLcYMAdG7FAPsyHYAPpywE9PJo+Khy" crossorigin="anonymous"></script>
-{#    <script defer src="{% static "js/custom.min.js" %}"></script>#}
-    <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
-{#    {% block customcss %}#}
-{#        <link rel="stylesheet" href=" {% static "css/landing-page.min.css" %}">#}
-{#    {% endblock %}#}
-{#    {% block googleanalytics%}#}
-{#        <!-- Global site tag (gtag.js) - Google Analytics -->#}
-{#        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124051180-1"></script>#}
-{#        <script>#}
-{#            window.dataLayer = window.dataLayer || [];#}
-{#            function gtag(){dataLayer.push(arguments);}#}
-{#            gtag('js', new Date());#}
-{##}
-{#            gtag('config', 'UA-124051180-1');#}
-{#        </script>#}
-{#    {% endblock %}#}
-{#    {% block hotjar %}#}
-{#        <!-- Hotjar Tracking Code for https://www.jurisintel.com.br -->#}
-{#        <script>#}
-{#            (function(h,o,t,j,a,r){#}
-{#                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};#}
-{#                h._hjSettings={hjid:1059056,hjsv:6};#}
-{#                a=o.getElementsByTagName('head')[0];#}
-{#                r=o.createElement('script');r.async=1;#}
-{#                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;#}
-{#                a.appendChild(r);#}
-{#            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');#}
-{#        </script>#}
-{#    {% endblock %}#}
-{#    {% block tawkto %}#}
-{#        <!--Start of Tawk.to Script-->#}
-{#        <script type="text/javascript">#}
-{#            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();#}
-{#            (function(){#}
-{#                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];#}
-{#                s1.async=true;#}
-{#                s1.src='https://embed.tawk.to/5c50802351410568a1092f82/default';#}
-{#                s1.charset='UTF-8';#}
-{#                s1.setAttribute('crossorigin','*');#}
-{#                s0.parentNode.insertBefore(s1,s0);#}
-{#            })();#}
-{#        </script>#}
-{#        <!--End of Tawk.to Script-->#}
-{#    {% endblock %}#}
-    {% block extrahead %}
-    {% endblock %}
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="{% static 'css/Navigation-Clean.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Navigation-with-Search.css'%}">
+    <link rel="stylesheet" href="{% static 'css/smoothproducts.css'%}">
+
+    {% block styles %}
+        <style>
+            .navbar-brand {
+                display: inline-block;
+                padding-top: .3125rem;
+                padding-bottom: .3125rem;
+                margin-right: 1rem;
+                font-size: 1.25rem;
+                line-height: inherit;
+                white-space: nowrap;
+            }
+            .clean-navbar .logo {
+                font-size: 1.5rem;
+            }
+            .navbar-light .navbar-toggler {
+                color: rgba(0,0,0,.5);
+                border-color: rgba(0,0,0,.1);
+            }
+            .navbar-toggler {
+                padding: .25rem .75rem;
+                font-size: 1.25rem;
+                line-height: 1;
+                background-color: transparent;
+                border: 1px solid transparent;
+                border-radius: .25rem;
+            }
+            .clean-navbar .navbar-nav .nav-link {
+                font-weight: 600;
+                font-size: .8rem;
+                text-transform: uppercase;
+            }
+            .clean-navbar .navbar-nav .nav-item {
+                padding-right: 2rem;
+            }
+            .clean-block.clean-hero {
+                position: relative;
+                text-align: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                padding-bottom: 0;
+            }
+            .clean-block.clean-hero .text {
+                max-width: 640px;
+                color: #fff;
+                z-index: 2;
+                padding: 40px 15px;
+                text-shadow: 1px 1px 1px rgba(0,0,0,.15);
+            }
+            .clean-block.clean-hero:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: currentColor;
+                z-index: 1;
+            }
+            .clean-block .block-heading {
+                padding-top: 50px;
+                margin-bottom: 40px;
+                text-align: center;
+            }
+            .clean-block .block-heading h1, .clean-block .block-heading h2, .clean-block .block-heading h3 {
+                margin-bottom: 1.2rem;
+            }
+            .text-info {
+                color: #3b99e0!important;
+            }
+            .h2, h2 {
+                font-size: 2rem;
+            }
+            .feature-box {
+                padding: 15px 20px 15px 70px;
+            }
+            .feature-box .icon {
+                font-size: 30px;
+                position: absolute;
+                left: 15px;
+                top: 15px;
+                width: 30px;
+                text-align: center;
+                color: #3b99e0;
+            }
+            .feature-box h4 {
+                font-weight: 600;
+                font-size: 1.2rem;
+            }
+            .clean-block.clean-info {
+                padding-left: 20px;
+                padding-right: 20px;
+                text-align: center;
+            }
+            .clean-block.dark {
+                background-color: #f6f6f6;
+            }
+            .img-thumbnail {
+                padding: .25rem;
+                background-color: #fff;
+                border: 1px solid #dee2e6;
+                border-radius: .25rem;
+            }
+            .img-fluid, .img-thumbnail {
+                max-width: 100%;
+                height: auto;
+            }
+            img, svg {
+                vertical-align: middle;
+            }
+            .page-footer.dark {
+                background-color: #2b2f31;
+            }
+            .page-footer h5 {
+                font-size: 18px;
+                font-weight: 700;
+                margin-top: 30px;
+            }
+            .page-footer.dark h5 {
+                color: #fff;
+            }
+            .page-footer ul {
+                list-style-type: none;
+                padding-left: 0;
+                line-height: 1.7;
+            }
+            .page-footer .footer-copyright {
+                background-color: #fff;
+                padding-top: 3px;
+                padding-bottom: 3px;
+                text-align: center;
+                margin-top: 50px;
+                border: 1px solid #ededed;
+            }
+            .page-footer.dark .footer-copyright {
+                background-color: #222425;
+                border-color: #222425;
+            }
+            .clean-block.add-on {
+                padding: 50px 0;
+                text-align: center;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+            .page-footer.dark a {
+                color: #d2d1d1;
+            }
+            .page-footer a {
+                color: #53595f;
+                text-decoration: none;
+            }
+            .page-footer ul {
+                list-style-type: none;
+                padding-left: 0;
+                line-height: 1.7;
+            }
+            .page-footer.dark .footer-copyright p {
+                color: #ccc;
+            }
+            .page-footer .footer-copyright p {
+                margin: 10px;
+                color: #7d8288;
+            }
+            .clean-block.add-on.sponsors a img {
+                max-width: 170px;
+                -webkit-filter: grayscale(.8);
+                filter: grayscale(.8);
+            }
+            .page-footer {
+                background-color: #fff;
+                padding-top: 30px;
+                text-align: center;
+            }
+            .clean-block .block-heading p {
+                text-align: center;
+                max-width: 420px;
+                margin: auto;
+                opacity: .7;
+            }
+            @media (min-width: 576px){
+                .navbar {
+                    padding-top: 1.2rem;
+                    padding-bottom: 1.2rem;
+                }
+                .clean-navbar.fixed-top+.page {
+                    padding-top: 5rem;
+                }
+                .clean-block.clean-hero {
+                    min-height: 680px;
+                }
+                .clean-block {
+                    padding-bottom: 100px;
+                }
+                .clean-block .block-heading {
+                    padding-top: 80px;
+                }
+                .clean-block.clean-info {
+                    padding-left: 0;
+                    padding-right: 0;
+                    text-align: inherit;
+                }
+                .page-footer {
+                    text-align: left;
+                }
+            }
+            @media (min-width: 768px){
+                .page-footer ul li:before {
+                    top: 9px;
+                    -webkit-transform: rotate(-45deg);
+                    transform: rotate(-45deg);
+                }
+                .clean-block.add-on.call-to-action h3, .clean-block.add-on.sponsors a:not(:last-child) img {
+                    margin-right: 20px;
+                    margin-bottom: 0;
+                }
+                .page-footer ul li {
+                    position: relative;
+                    padding-left: 10px;
+                }
+                .clean-block.add-on {
+                    -ms-flex-direction: row;
+                    flex-direction: row;
+                }
+                .page-footer ul li:after, .page-footer ul li:before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    width: 2px;
+                    height: 6px;
+                    border-radius: 2px;
+                    background-color: #007bff;
+                    -webkit-transform: rotate(-45deg);
+                    transform: rotate(-45deg);
+                }
+                .page-footer ul li:after {
+                    top: 13px;
+                    -webkit-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                }
+            }
+        </style>
+    {% endblock styles%}
 </head>
 
 <body>
-{% block conteudo %}
+{% block navbar %}
 {% endblock %}
+{% block main %}
+{% endblock main %}
 {% block footer %}
+    <footer class="page-footer dark">
+        <div class="container">
+            <div class="row justify-content-center" style="font-family: Muli, sans-serif;">
+                <div class="col-sm-3" style="max-width: 33%;">
+                    <h5>Comece por aqui</h5>
+                    <ul>
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Registrar</a></li>
+                        <li><a href="#">Teste gratuitamente</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3" style="max-width: 33%;">
+                    <h5>Sobre nós</h5>
+                    <ul>
+                        <li><a href="#">Startup</a></li>
+                        <li><a href="#">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3" style="max-width: 33%;">
+                    <h5>Legal</h5>
+                    <ul>
+                        <li><a href="#">Termos de Serviço</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="clean-block add-on sponsors">
+            <a href="#"><img src="{% static 'img/ace startups_logo_branco_horizontal@3x.svg'%}" style="height: 30px;"></a>
+            <a href="#"><img src="{% static 'img/logo-inova-branco.svg'%}" style="height: 32px;"></a>
+            <a href="#"><img src="{% static 'img/logo-y-combinator-startup-school-branco.png'%}" style="height: 46px;"></a>
+        </div>
+        <div class="footer-copyright">
+            <p>© 2019 JurisIntel - Inteligência Jurídica</p>
+        </div>
+    </footer>
+{% endblock %}
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="{% static 'js/smoothproducts.min.js'%}"></script>
+    <script src="{% static 'js/theme.js' %}"></script>
 {% endblock %}
 </body>
 </html>

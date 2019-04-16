@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block navbar %}
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar" style="font-family: Muli, sans-serif;">
+        <div class="container"><a class="navbar-brand logo" href="#">JurisIntel</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                 id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{% url 'home' %}">Início</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Funcionalidades</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Preços</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Sobre</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="{% url 'contato' %}">Contato</a></li>
+                </ul><a class="btn btn-outline-success" role="button" href="{% url 'accounts:user_login' %}" style="margin: 0;margin-right: 32px;">Entrar</a>
+                <a class="btn btn-primary" role="button" href="{% url 'accounts:registro' %}">Registrar</a></div>
+        </div>
+    </nav>
+{% endblock navbar %}
+{% block main %}
+    <main class="page landing-page">
+        <section class="clean-block clean-hero" style="background-image: url({% static 'img/7854a517-96b5-4dd5-a008-07a2d591bc26.jpg'%}); color: rgba(49,67,78,0.69);font-family: Muli, sans-serif;">
+            <div class="text-center text">
+                <h2 style="margin-bottom: 30px;"><strong>Menos insegurança e Mais inteligência com a informação jurídica</strong><br></h2>
+                <p style="margin-bottom: 30px;">Elimine o desperdício de tempo ao lidar com seu acervo, casos e pesquisas. Entregue valor ao seu cliente. <br></p>
+                <a class="btn btn-success btn-lg"role="button" href="{% url 'accounts:registro' %}">Teste gratuitamente</a>
+            </div>
+        </section>
+        <section class="clean-block features" style="font-family: Muli, sans-serif;">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Poder e Simplicidade para manter o seu trabalho artesanal<br></h2>
+                </div>
+                <div class="row justify-content-between">
+                    <div class="col-md-5 feature-box"><i class="icon-magnifier icon"></i>
+                        <h4 style="font-family: Muli, sans-serif;"><strong>Jurisprudências adequadas sem usar palavras-chave</strong><br></h4>
+                        <p>Insira o seu caso e a nossa tecnologia de Processamento de Linguagem Jurídica fará o resto.<br></p>
+                    </div>
+                    <div class="col-md-5 feature-box"><i class="icon-docs icon"></i>
+                        <h4 style="font-family: Muli, sans-serif;"><strong>Resumo automático para a sua análise</strong><br></h4>
+                        <p>Insira o seu caso e a nossa tecnologia de Processamento de Linguagem Jurídica fará o resto.<br></p>
+                    </div>
+                    <div class="col-md-5 feature-box"><i class="icon-refresh icon"></i>
+                        <h4><strong>Descubra temas que interessam ao seu cliente</strong><br></h4>
+                        <p>Receba e monitore informações estratégicas novas ou relacionadas a casos em que você já atua.<br></p>
+                    </div>
+                    <div class="col-md-5 feature-box"><i class="far fa-hdd icon"></i>
+                        <h4><strong>Saiba se existe algo parecido em seu escritório</strong><br></h4>
+                        <p>Insira os documentos dos seus casos na JurisIntel e o sistema fará um “match” quando houver algo parecido.<br></p>
+                    </div>
+                    <div class="col-md-5 feature-box"><i class="fas fa-hashtag icon"></i>
+                        <h4><strong>Classifique o seu acervo automaticamente</strong><br></h4>
+                        <p>Todo o conhecimento agrupado por similaridade de temas e com geração de “tags” automáticas.<br></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="clean-block clean-info dark" style="font-family: Muli, sans-serif;">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Como Funciona<br></h2>
+                </div>
+                <div class="row align-items-center" style="padding-bottom: 50px;">
+                    <div class="col-md-6"><img class="img-thumbnail" src="{% static 'img/625FFA55.png'%}"></div>
+                    <div class="col-md-6">
+                        <h3><strong>Basta acessar o site e inserir um arquivo</strong><br></h3>
+                        <div class="getting-started-info">
+                            <p>A tecnologia extrai o texto das peças, minutas e outros arquivos armazenados pelo usuário.<br></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center" style="padding-bottom: 50px;">
+                    <div class="col-md-6">
+                        <h3><strong>O sistema faz um resumo e a pesquisa para você</strong><br></h3>
+                        <div class="getting-started-info">
+                            <p>Esse conteúdo é relacionado com decisões e normas tributárias a partir da compreensão dos documentos.<br></p>
+                        </div>
+                    </div>
+                    <div class="col"><img class="img-thumbnail" src="{% static 'img/F38E59B7.png'%}"></div>
+                </div>
+                <div class="row align-items-center" style="padding-bottom: 50px;">
+                    <div class="col-md-6"><img class="img-thumbnail" src="{% static 'img/B81EBC1D.jpg'%}"></div>
+                    <div class="col-md-6">
+                        <h3><strong>Pronto! Resultados entregues para cada caso</strong><br></h3>
+                        <div class="getting-started-info">
+                            <p>Os resultados de decisões aplicáveis são entregues no contexto correto, e várias relações de conteúdo podem ser feitas. <br></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="clean-block slider" style="font-family: Muli, sans-serif;">
+            <div class="container">
+                <div class="d-flex flex-column justify-content-center align-items-center block-heading">
+                    <h2 class="text-info">Temas Jurídicos</h2>
+                    <p style="padding-bottom: 20px;">Atualmente trabalhamos com informações da área tributária, mas estamos em rápida evolução para na próxima versão divulgar novas áreas atendidas.<br></p>
+                    <p style="opacity: 0.80;">Fala pra gente qual matéria você gostaria de ter por aqui?<br></p>
+                    <div class="input-group d-flex d-xl-flex flex-row justify-content-center align-items-center align-content-center flex-nowrap align-items-xl-center" style="width: 300px;padding-top: 10px;">
+                        <div class="input-group-prepend"></div><input class="form-control" type="text" style="width: 300px;">
+                        <div class="input-group-append"><button class="btn btn-primary" type="button">Enviar</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock main %}
