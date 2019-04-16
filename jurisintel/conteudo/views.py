@@ -328,7 +328,31 @@ def save_(request, form, template):
 
 class AddDoc(View):
     def get(self, request, pk):
-        pass
+        caso = Case.objects.get(pk=pk)
+        titulo = caso.titulo
+        return render(request, 'conteudo/add_docs.html', {'id': pk, 'titulo': titulo})
 
     def post(self, request, pk):
-        pass
+        file_list = list()
+        try:
+            case = Case.objects.get(pk=pk, user=request.user)
+        except Exception as error:
+            print(error)
+        else:
+            ids = request.POST['file-list-id'].split(';')
+            for pk in ids:
+                if pk is not '':
+                    file_object = get_object_or_404(Files, pk=pk)
+
+                    criar_resumo(file_object.file, file_object)
+                    # gerar_tags(file_object.resumo)
+
+                    # passa as strings para a view
+                    thumb = str(file_object.thumbnail.thumbnail.url)
+                    file = str(file_object.file)
+                    file_url = str(file_object.file)
+                    file_list.append([file, [thumb, file_object.resumo]])
+
+                    case.docs.add(file_object)
+
+            return HttpResponseRedirect(reverse('conteudo:home'))

@@ -1,0 +1,99 @@
+{% extends 'conteudo/base_conteudo.html' %}
+{% load staticfiles %}
+{% block styles %}
+    <style>
+        .main-section{
+            height: calc(100vh - 4rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .add-docs-dropzone{
+            font-size: 2rem;
+            border-style: dashed;
+            border-radius: 10px;
+            padding: 5rem;
+        }
+    </style>
+{% endblock styles %}
+{% block sections %}
+    <section class="main-section">
+        <div class="add-doc-container">
+            <div class="text-muted text-center add-docs-dropzone js-upload">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem;"></i>
+                <h6>Arraste arquivos ou clique aqui para adicionar ao caso: <strong>{{ titulo }}</strong></h6>
+            </div>
+            <input id="fileupload" type="file" name="files" multiple
+                   style="display: none;"
+                   data-url="{% url 'conteudo:upload' %}"
+                   data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+            <form action="{% url 'conteudo:add-documento' id %}" method='post' id="form-files">
+                {% csrf_token %}
+                <input type="text" name="file-list-id" id="files-id" style="display:none;" value="">
+            </form>
+        </div>
+    </section>
+    <div class="modal" id="modal-progress" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Enviando...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                    </div>
+                    <div class="progress-thumbnails">
+                        - Gerando informações do(s) arquivo(s)... <i class="fas fa-spinner fa-pulse"></i>
+                    </div>
+                    <div class="progress-resumo">
+                        - Por gentileza, aguarde um momento enquanto os resumos são gerados... <i class="fas fa-spinner fa-pulse"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $(".js-upload").on('click', function () {
+                $('#fileupload').trigger('click');
+            });
+
+            /* 2. INITIALIZE THE FILE UPLOAD COMPONENT */
+            $("#fileupload").fileupload({
+                dataType: 'json',
+                start: function(e){
+                    $("#modal-progress").modal("show");
+                },
+                stop: function(e){
+                    {#$("#modal-progress").modal("hide");#}
+                    if ($('#files-id').attr('value') != ''){
+                        $('#form-files').trigger('submit');
+                        $(".progress-resumo").show();
+                    }
+                },
+                progressall: function(e, data){
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    var strProgress = progress + "%";
+                    $(".progress-bar").css({"width": strProgress});
+                    $(".progress-bar").text(strProgress);
+                    if (progress === 100){
+                        $('.progress-thumbnails').show();
+                    }
+                },
+                done: function (e, data) {  /* 3. PROCESS THE RESPONSE FROM THE SERVER */
+                    if (data.result.is_valid) {
+                        let preSet = $('#files-id').attr('value');
+                        $('#files-id').attr('value', preSet + data.result.file_id + ';')
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock scripts %}

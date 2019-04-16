@@ -12,16 +12,21 @@
                     </p>
                 </div>
                 <div class="action-buttons">
-{#                    {% if campo.editable %}#}
-                        <button type="button" class="button button-icon button-icon__actions js-card-update"
-                                data-url="{% url 'conteudo:card_update' id %}" title="Editar conteúdo do cartão">
-                            <i class="fas fa-pen"></i>
-                        </button>
-{#                    {% endif %}#}
-{#                    <a href="#" class="button button-icon button-icon__actions js-card-share"#}
-{#                       data-url="{% url 'content:card_share' id %}" title="Compartilhar">#}
-{#                        <i class="fas fa-share-alt"></i>#}
-{#                    </a>#}
+                    {#                    {% if campo.editable %}#}
+                    <button type="button" class="button button-icon button-icon__actions js-card-update"
+                            data-url="{% url 'conteudo:card_update' id %}" title="Editar conteúdo do cartão">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    {#                    {% endif %}#}
+                    {#                    <a href="#" class="button button-icon button-icon__actions js-card-share"#}
+                    {#                       data-url="{% url 'content:card_share' id %}" title="Compartilhar">#}
+                    {#                        <i class="fas fa-share-alt"></i>#}
+                    {#                    </a>#}
+                    <a class="button button-icon button-icon__actions" data-toggle="tolltip"
+                       data-placement="top" title="Adicionar documentos ao processo"
+                       href="{% url "conteudo:add-documento" id %}">
+                        <i class="fas fa-paperclip"></i>
+                    </a>
                 </div>
             </div>
             <div class="card-tags">
