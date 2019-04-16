@@ -1,5 +1,6 @@
 {% extends 'conteudo/base_conteudo.html' %}
 {% load staticfiles %}
+{% block title %}JurisIntel - {{ title }}{% endblock title %}
 {% block styles %}
     <style>
         .temas{
@@ -228,7 +229,7 @@
                 <p>{{ resumo }}</p>
             </div>
             <div class="filters">
-                <a href="#ementas">Ementas</a> |
+                <a href="">Ementas</a> |
                 <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> |
                 <a href="">Temas</a>
             </div>
