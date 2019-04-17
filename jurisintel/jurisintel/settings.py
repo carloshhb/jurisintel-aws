@@ -172,5 +172,5 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 DEFAULT_FROM_EMAIL = 'JurisIntel <noreply@jurisintel.com.br>'
 EMAIL_SUBJECT_PREFIX = '[JurisIntel] '
 
-TERMOS_DE_USO = 'https://s3.amazonaws.com/jurisintel-aws/static/terms/Termo+de+Uso+JurisIntel.pdf'
-POLITICA_PRIVACIDADE = 'https://s3.us-east-2.amazonaws.com/jurisintel-aws/terms/Termo+de+Uso+JurisIntel.pdf'
+TERMOS_DE_USO = 'https://s3.us-east-2.amazonaws.com/jurisintel-aws/terms/Termo+de+Uso+JurisIntel.pdf'
+POLITICA_PRIVACIDADE = 'https://s3.us-east-2.amazonaws.com/jurisintel-aws/terms/Pol%C3%ADtica+de+Privacidade+JurisIntel.pdf'

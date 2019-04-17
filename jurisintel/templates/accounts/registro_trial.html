@@ -43,8 +43,8 @@
                             {% csrf_token %}
                             {% include 'includes/form.html' with form=user_form %}
                             <small><b>Período de testes de 7 dias</b></small><br>
-                            <small>Ao se cadastrar você concorda com os <a href={{ termos }}>termos de uso</a>
-                                e com a nossa <a href={{ pprivacidade }}>política de privacidade</a></small>
+                            <small>Ao se cadastrar você concorda com os <a href="{{ termos }}" target="_blank">termos de uso</a>
+                                e com a nossa <a href="{{ pprivacidade }}" target="_blank">política de privacidade</a></small>
                             <button type="submit" class="btn btn-primary btn-block mt-1">Cadastrar</button>
                         </form>
                     </div>
