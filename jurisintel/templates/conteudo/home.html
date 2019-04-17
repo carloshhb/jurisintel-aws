@@ -7,7 +7,7 @@
             background-color: #f1f3f4;
         }
         .section-title{
-            padding: 3rem 3rem 0 3rem;
+            padding: 3rem 3rem 1rem 3rem;
         }
         .section-container{
             display: flex;
@@ -19,6 +19,17 @@
             border: 0;
             box-shadow: #0000001a 0 1px 20px 5px;
             cursor: pointer;
+            transition: 0.5s ease;
+        }
+        .card-container:hover{
+            transform: scale(1.1);
+        }
+        .card-container-header{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: space-between;
         }
         .inside-card{
             max-height: 10em !important;
@@ -55,7 +66,7 @@
             width: 60%;
         }
         .add-case-container{
-            margin-top: 2em;
+            padding: 2em;
         }
         .add-card-plus{
             font-size: 40pt;
@@ -70,19 +81,23 @@
             margin-top: 30px;
         }
         .card-remove-button{
-            position: absolute;
-            right: 20px;
-            top: 20px;
             cursor: pointer;
             z-index: 10;
+            margin-right: 23px;
         }
         .search-bar{
             width: 45rem !important;
         }
         .drop-zone{
+        {#padding-top: 1rem;#}
+        {#padding-bottom: 1rem;#}
+        {#border: 2px dashed #c2c2c2e6;#}
+        {#width: 60%;#}
+        {#border-radius: 0.5rem;#}
+        {#cursor: pointer;#}
             padding-top: 1rem;
             padding-bottom: 1rem;
-            border: 2px dashed #c2c2c2e6;
+            border: 2px dashed #1a7af3;
             width: 60%;
             border-radius: 0.5rem;
             cursor: pointer;
@@ -112,13 +127,23 @@
             vertical-align: middle;
             align-items: flex-start;
             z-index: 999;
+            padding-left: 10px;
         }
         .content-of-card{
             display: flex;
             flex-direction: row;
         }
-        a.button.button-icon.button-icon__actions, .button-icon, .card-remove-button {
+        .card-remove-button {
             color: #5f5f5f;
+        }
+        a.button.button-icon.button-icon__actions, .button-icon, .button-icon__actions{
+            box-shadow: 1px 1px 5px #fa3232c9;
+            background-color: #fa3232;
+            width: 20px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            border: 0;
+            color: white;
         }
     </style>
 {% endblock styles %}
@@ -127,9 +152,9 @@
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
     </li>
     {% if user.is_authenticated %}
-    <li class="nav-item active">
-        <a class="nav-link" href="{% url 'logout' %}">Sair </a>
-    </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'logout' %}">Sair </a>
+        </li>
     {% endif %}
     {% if user.is_superuser %}
         <li class="nav-item">
@@ -312,6 +337,9 @@
 
         $(function () {
 
+            let mainPanel = $('.cases-section-container');
+            let modalProcessos = $('.modal-processos');
+
             /* Functions */
             var loadForm = function () {
                 var btn = $(this);
@@ -343,7 +371,7 @@
                     success: function (data) {
                         if (data.form_is_valid) {
                             $('.modal-processos').modal("hide");
-                            $(".main-panel").html(data.html_response);
+                            mainPanel.html(data.html_response);
                         }
                         else {
                             $(".modal-processos .modal-content").html(data.html_form);
@@ -352,9 +380,6 @@
                 });
                 return false;
             };
-
-            var mainPanel = $('.cases-section-container');
-            var modalProcessos = $('.modal-processos');
 
             mainPanel.on("click", '.js-card-update', loadForm);
             modalProcessos.on('submit', '.js-process-update-form', saveForm);

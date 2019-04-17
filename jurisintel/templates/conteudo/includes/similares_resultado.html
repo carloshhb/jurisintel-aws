@@ -1,7 +1,9 @@
 {% load staticfiles %}
-<h6>Em ordem decrescente de maior para menor similaridade:</h6>
+<div class="col-12 similares-header">
+    <h6>Em ordem decrescente de maior para menor similaridade:</h6>
+</div>
 {% for k, v in resultado %}
-    <div class="file-resultado">
+    <div class="col-4 file-resultado">
         <a href='{{ v.file_url }}' target="_blank">
             <img class="open-case-thumbnail" src="{{ v.thumbnail }}" alt="Similar Thumbnail">
         </a>
