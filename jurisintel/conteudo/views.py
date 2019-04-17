@@ -153,7 +153,7 @@ def file_upload(request):
 
     else:
 
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('conteudo:home'))
 
 
 def create(request):
@@ -172,7 +172,7 @@ def create(request):
                 pre_created_case.tags.add(t)
             pre_created_case.save()
 
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('conteudo:home'))
 
 
 def open_case(request, pk):
@@ -202,7 +202,7 @@ def open_case(request, pk):
 
         return render(request, 'conteudo/open_case.html', context)
     else:
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('conteudo:home'))
 
 
 def verify_similarities(request, pk):
