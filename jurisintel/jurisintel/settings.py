@@ -173,4 +173,4 @@ DEFAULT_FROM_EMAIL = 'JurisIntel <noreply@jurisintel.com.br>'
 EMAIL_SUBJECT_PREFIX = '[JurisIntel] '
 
 TERMOS_DE_USO = 'https://s3.amazonaws.com/jurisintel-aws/static/terms/Termo+de+Uso+JurisIntel.pdf'
-POLITICA_PRIVACIDADE = 'https://s3.amazonaws.com/jurisintel-aws/static/terms/Pol%C3%ADtica%20de%20Privacidade%20JurisIntel.pdf'
+POLITICA_PRIVACIDADE = 'https://s3.us-east-2.amazonaws.com/jurisintel-aws/terms/Termo+de+Uso+JurisIntel.pdf'

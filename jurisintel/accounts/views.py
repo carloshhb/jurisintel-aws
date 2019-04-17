@@ -262,8 +262,11 @@ class RegistroTrial(TemplateView):
             return HttpResponseRedirect(reverse('conteudo:home'))
 
         user_form = TrialForm()
+        termos = settings.TERMOS_DE_USO
+        pprivacidade = settings.POLITICA_PRIVACIDADE
 
-        return render(request, 'accounts/registro_trial.html', {'user_form': user_form})
+        return render(request, 'accounts/registro_trial.html', {'user_form': user_form, 'termos': termos,
+                                                                'pprivacidade': pprivacidade})
 
     def post(self, request, *args, **kwargs):
         user_form = TrialForm(data=request.POST)
