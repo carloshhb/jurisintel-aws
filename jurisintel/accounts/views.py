@@ -14,8 +14,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 import pytz
 
-from accounts.forms import *
-from accounts.models import LawFirm, User, PlanGroup, Planos
+from .forms import *
+from .models import *
 
 from conteudo.models import Case, Files
 

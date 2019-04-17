@@ -1,77 +1,77 @@
 {% extends "base.html" %}
 
 {% block title %}Entrar - Jurisintel{% endblock %}
-{% block extrahead %}
+{% block styles %}
+    {{ block.super }}
     <style>
         .logincontainer{
             color: #222b37;
-            vertical-align: middle !important;
+            padding-top: 5rem;
         }
         h3.card-title{
             font-weight: 700;
-        }
-    .barra-nav{
-            position: relative !important;
         }
         .card-login{
             color: #303030;
         }
         .p1{
+            padding-top: 5rem;
             height: 100%;
         }
         .login-area{
             padding: 30px 0 30px 0;
         }
+        .card-login{
+            box-shadow: #0000001a 0 1px 20px 5px;
+            border: 0;
+        }
     </style>
 
 {% endblock %}
-{% block conteudo %}
-    <section class="first-part">
-        <nav class="navbar navbar-expand-lg flex-column flex-md-row bd-navbar barra-nav">
-            <div class="container">
-                <a class="navbar-brand" href="{% url 'home' %}">JurisIntel</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarNav" aria-controls="navbarNav"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <i style="color: white;" class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse navbar-links">
-                    <ul class="navbar-nav flex-row ml-md-auto d-md-flex">
-                        <li class="nav-item topnav">
-                            <a href="{% url 'home' %}">Voltar</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <section class="p1">
-            <div class="container top1">
-                <div class="container logincontainer">
-                    <div class="d-flex flex-row justify-content-center login-area">
-                        <div class="col-lg-4 col-md-6 col-sm-8">
-                            {% if msg %}
-                                <div class="alert alert-success">{{ msg }}</div>
-                            {% endif %}
-                            <div class="card card-login">
-                                <div class="card-body">
-                                    <h3 class="card-title">Login</h3>
-                                    <form method="post">
-                                        {% csrf_token %}
-                                        {% include 'includes/form.html' with form=login_form %}
-                                        <button type="submit" class="btn btn-outline-success btn-block">Entrar</button>
-                                    </form>
-                                </div>
-                                <div class="card-footer text-muted text-center">
-                                    Novo por aqui? <a href="{% url 'accounts:registro' %}">Registrar</a>
-                                </div>
+{% block navbar %}
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar" style="font-family: Muli, sans-serif;">
+        <div class="container"><a class="navbar-brand logo" href="#">JurisIntel</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                 id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{% url 'home' %}">Início</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Funcionalidades</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Preços</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Sobre</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="{% url 'contato' %}">Contato</a></li>
+                </ul>
+                <a class="btn btn-primary" role="button" href="{% url 'accounts:registro' %}">Registrar</a></div>
+        </div>
+    </nav>
+{% endblock navbar %}
+{% block main %}
+    <section class="p1 clean-block dark">
+        <div class="container top1">
+            <div class="container logincontainer">
+                <div class="d-flex flex-row justify-content-center login-area">
+                    <div class="col-lg-4 col-md-6 col-sm-8">
+                        {% if msg %}
+                            <div class="alert alert-success">{{ msg }}</div>
+                        {% endif %}
+                        <div class="card card-login">
+                            <div class="card-body">
+                                <h3 class="card-title">Login</h3>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {% include 'includes/form.html' with form=login_form %}
+                                    <button type="submit" class="btn btn-outline-success btn-block">Entrar</button>
+                                </form>
                             </div>
-                            <div class="text-center py-2">
-                                <a href="{% url 'password_reset' %}" class="text-white">Esqueceu sua senha?</a>
+                            <div class="card-footer text-muted text-center">
+                                Novo por aqui? <a href="{% url 'accounts:registro' %}">Registrar</a>
                             </div>
+                        </div>
+                        <div class="text-center py-2">
+                            <a href="{% url 'password_reset' %}" class="text-black-50">Esqueceu sua senha?</a>
                         </div>
                     </div>
                 </div>
-
-        </section>
+            </div>
+        </div>
     </section>
 {% endblock %}
