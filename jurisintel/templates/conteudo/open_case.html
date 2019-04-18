@@ -1,6 +1,6 @@
 {% extends 'conteudo/base_conteudo.html' %}
 {% load staticfiles %}
-{% block title %}JurisIntel - {{ title }}{% endblock title %}
+{% block title %}JurisIntel - {{ titulo }}{% endblock title %}
 {% block styles %}
     <style>
         .temas{
@@ -83,6 +83,10 @@
         }
         .first-part{
             padding: 2em 0 0 0;
+        }
+        .second-part{
+            text-align: justify;
+            font-size: 10pt;
         }
         .main-panel{
             display: flex;
@@ -223,6 +227,21 @@
         }
     </style>
 {% endblock styles %}
+{% block navitems %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'conteudo:home' %}">Home </a>
+    </li>
+    {% if user.is_authenticated %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'logout' %}">Sair </a>
+        </li>
+    {% endif %}
+    {% if user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+        </li>
+    {% endif %}
+{% endblock navitems %}
 {% block sections %}
     <!-- Main Panel -->
     <section class="main-panel">
@@ -230,7 +249,7 @@
             <div class="first-part">
                 <h5>{{ titulo }}</h5>
             </div>
-            <div class="second-part">
+            <div class="col-md-8 col-12 second-part">
                 <p>{{ resumo }}</p>
             </div>
             <div class="filters">
