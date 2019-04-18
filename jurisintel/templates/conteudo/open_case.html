@@ -232,7 +232,7 @@
         <a class="nav-link" href="{% url 'conteudo:home' %}">Home </a>
     </li>
     {% if user.is_authenticated %}
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">Sair </a>
         </li>
     {% endif %}
@@ -249,7 +249,7 @@
             <div class="first-part">
                 <h5>{{ titulo }}</h5>
             </div>
-            <div class="col-md-8 col-12 second-part">
+            <div class="second-part">
                 <p>{{ resumo }}</p>
             </div>
             <div class="filters">
