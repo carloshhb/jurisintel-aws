@@ -1,14 +1,17 @@
 {% comment %} Criação automática de cartões baseada nos parâmetros {% endcomment %}
-{% for id, value in parameters %}
+{% for id, v in parameters %}
     <div class="cases-card col-12 col-md-4">
         <div class="card card-container">
             <div class="card-container-header">
-                <div class="card-title">{{ value|first }}</div>
+                <div class="card-title">{{ v.titulo }}</div>
                 <i class="fas fa-times card-remove-button js-remove" data-url="{% url 'conteudo:card_delete' id %}"></i>
             </div>
             <div class="card-body content-of-card">
                 <div class="inside-card" data-url="{% url 'conteudo:open-case' id%}">
-                    <p class="card-resumo">{{ value|last }}
+                    <p class="card-resumo">{{ v.resumo }}
+                        {% if v.fit %}
+                            <strong>Ver mais</strong>
+                        {% endif %}
                     </p>
                 </div>
                 <div class="action-buttons">
@@ -17,11 +20,6 @@
                             data-url="{% url 'conteudo:card_update' id %}" title="Editar conteúdo do cartão">
                         <i class="fas fa-pen"></i>
                     </button>
-                    {#                    {% endif %}#}
-                    {#                    <a href="#" class="button button-icon button-icon__actions js-card-share"#}
-                    {#                       data-url="{% url 'content:card_share' id %}" title="Compartilhar">#}
-                    {#                        <i class="fas fa-share-alt"></i>#}
-                    {#                    </a>#}
                     <a class="button button-icon button-icon__actions" data-toggle="tolltip"
                        data-placement="top" title="Adicionar documentos ao processo"
                        href="{% url "conteudo:add-documento" id %}">

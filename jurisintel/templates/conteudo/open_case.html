@@ -87,6 +87,7 @@
         .second-part{
             text-align: justify;
             font-size: 10pt;
+            max-width: 60%;
         }
         .main-panel{
             display: flex;
@@ -180,6 +181,9 @@
         .carregando{
             max-height: 100vh;
         }
+        .filters{
+            padding-top: 10px;
+        }
         .text {
             color: #fbae17;
             display: inline-block;
@@ -250,7 +254,13 @@
                 <h5>{{ titulo }}</h5>
             </div>
             <div class="second-part">
-                <p>{{ resumo }}</p>
+                {% if resumo_fit %}
+                    <p class="ver-mais">{{ resumo_fit }}</p>
+                    <a class="ver-mais-resumo" data-resumo-fit="{{ resumo_fit }}" data-resumo="{{ resumo }}"
+                       role='button' data-expand="false" href="#">Ver mais</a>
+                {% else %}
+                    <p>{{ resumo }}</p>
+                {% endif %}
             </div>
             <div class="filters">
                 <a href="">Ementas</a> |
@@ -316,6 +326,25 @@
                     }
                 })
             });
+
+            $('.ver-mais-resumo').click(function (e) {
+                e.preventDefault();
+                let texto = $('.ver-mais');
+                let resumo = $(this).data('resumo');
+                let resumo_fit = $(this).data('resumo-fit');
+                let expand = $(this).data('expand');
+                if (expand === false){
+                    texto.text(resumo);
+                    $(this).data('expand', true);
+                    $(this).text('Ver menos');
+                }
+                else{
+                    texto.text(resumo_fit);
+                    $(this).data('expand', false);
+                    $(this).text('Ver mais');
+                }
+
+            })
 
         });
     </script>

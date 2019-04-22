@@ -27,7 +27,18 @@ def retrieve_cases(request):
 
     all_cases = Case.objects.filter(user=request.user).order_by('-created_at')
     for case in all_cases:
-        parameters.append([case.pk, [case.titulo, case.resumo]])
+        if len(case.resumo) > 411:
+            resumo = '%s ...' % case.resumo[0:411]
+            fit = True
+        else:
+            resumo = case.resumo
+            fit = False
+        param_dict = {
+            'titulo': case.titulo,
+            'resumo': resumo,
+            'fit': fit,
+        }
+        parameters.append([case.pk, param_dict])
         for tag in case.tags.all():
             tag_list.append([case.pk, [tag.__str__()]])
 
@@ -191,8 +202,15 @@ def open_case(request, pk):
         for ementa in case.ementas.all():
             ementas.append(ementa)
 
+        tamanho_resumo = len(case.resumo)
+        if tamanho_resumo > 730:
+            resumo_fit = '%s ...' % case.resumo[0:730]
+        else:
+            resumo_fit = ''
+
         context = {
             'titulo': case.titulo,
+            'resumo_fit': resumo_fit,
             'resumo': case.resumo,
             'docs': docs,
             'tags': tags,

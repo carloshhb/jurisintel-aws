@@ -103,6 +103,16 @@
         }
     </style>
 {% endblock styles %}
+{% block navitems %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'conteudo:home' %}">Home </a>
+    </li>
+    {% if user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+        </li>
+    {% endif %}
+{% endblock %}
 {% block sections %}
     <section class="main-panel d-flex flex-row">
         <div class="col-4 side-bar">
