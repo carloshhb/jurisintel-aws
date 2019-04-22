@@ -58,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     law_firm_name = models.CharField('Escritório', max_length=100, blank=True)
 
-    group_law_firm = models.ForeignKey(LawFirm, null=True, on_delete=models.PROTECT)
+    group_law_firm = models.ForeignKey(LawFirm, blank=True, null=True, on_delete=models.PROTECT)
 
     is_staff = models.BooleanField('Staff - status', default=False,
                                    help_text='Designates whether the user can log into this admin site.')

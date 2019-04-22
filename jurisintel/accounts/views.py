@@ -312,16 +312,16 @@ class RegistroTrial(TemplateView):
                 # d1 = dateutil.parser.parse(data1.strftime('%m/%d/%Y'))
                 # d2 = dateutil.parser.parse(data2.strftime('%m/%d/%Y'))
 
-                usuario = '%s %s' % (request.POST['first_name'], request.POST['last_name'])
-                subject = 'Novo cadastro do usuário %s' % usuario
-                to = ['assinaturas@jurisintel.com.br']
-                from_email = request.POST['email']
-                context = {
-                    'email': '%s' % from_email,
-                    'usuario': '%s' % usuario,
-                }
-                mensagem = render_to_string('accounts/registration/marketing_email.html', context=context)
-                send_mail(subject, mensagem, from_email, to, html_message=mensagem)
+                # usuario = '%s %s' % (request.POST['first_name'], request.POST['last_name'])
+                # subject = 'Novo cadastro do usuário %s' % usuario
+                # to = ['assinaturas@jurisintel.com.br']
+                # from_email = request.POST['email']
+                # context = {
+                #     'email': '%s' % from_email,
+                #     'usuario': '%s' % usuario,
+                # }
+                # mensagem = render_to_string('accounts/registration/marketing_email.html', context=context)
+                # send_mail(subject, mensagem, from_email, to, html_message=mensagem)
 
                 return HttpResponseRedirect(reverse('accounts:user_login'))
             else:
