@@ -16,8 +16,7 @@ from wand.image import Image as wi
 from .forms import CardForm, UpdateCaseForm
 from .models import Case, Files, Tags, Thumbnail
 from .nlp.jurisintel_resumidor import resumidor as res
-from .nlp.similar import similar_resumo
-
+from .nlp.similar import similar_resumo, similar_tags
 
 # Create your views here.
 
@@ -137,14 +136,35 @@ def file_upload(request):
     if request.POST:
         # Criar o caso antes, e se não confirmar na proxima tela, remover
         pre_case = Case.objects.create(user=request.user)
-
+        indices, tag_list = list(), list()
         ids = request.POST['file-list-id'].split(';')
         for pk in ids:
             if pk is not '':
                 file_object = get_object_or_404(Files, pk=pk)
 
                 criar_resumo(file_object.file, file_object)
-                # gerar_tags(file_object.resumo)
+
+                # TAGS COMPARISON
+                # CREATE TAG LIST
+                list_of_tags, index_list = list(), list()
+                all_tags = Tags.objects.all()
+                for t in all_tags:
+                    list_of_tags.append(t.tag)
+                    index_list.append(t.id)
+
+                # CREATE TAG SIMILARITY
+                tags_obj = similar_tags(file_object.resumo, list_of_tags)
+                for s in tags_obj:
+                    if s[1] > 0.18:
+                        indices.append([s[1], list_of_tags[s[0]], index_list[s[0]]])
+                # ORDER FOR SIMILARITY WITH TEXT
+                indices.sort(key=lambda x: x[0], reverse=True)
+
+                for x in indices:
+                    tag_dict = {
+                        'tag': x[1],
+                    }
+                    tag_list.append([x[2], tag_dict])
 
                 # passa as strings para a view
                 thumb = str(file_object.thumbnail.thumbnail.url)
@@ -157,7 +177,8 @@ def file_upload(request):
         context = {
             'files': file_list,
             'form': form,
-            'pre_case_id': pre_case.pk
+            'pre_case_id': pre_case.pk,
+            'tags_list': tag_list,
         }
 
         return render(request, 'conteudo/create_card.html', context)
@@ -190,9 +211,14 @@ def open_case(request, pk):
     case = get_object_or_404(Case, pk=pk)
     if request.user == case.user:
 
-        docs = list()
+        documentos = list()
         for doc in case.docs.all():
-            docs.append(doc)
+            docs_dict = {
+                'file_name': str(doc.file).split('/')[1],
+                'file_thumbnail': doc.thumbnail.thumbnail.url,
+                'file_url': doc.file.url,
+            }
+            documentos.append([doc.pk, docs_dict])
 
         tags = list()
         for tag in case.tags.all():
@@ -212,7 +238,7 @@ def open_case(request, pk):
             'titulo': case.titulo,
             'resumo_fit': resumo_fit,
             'resumo': case.resumo,
-            'docs': docs,
+            'documentos': documentos,
             'tags': tags,
             'ementas': ementas,
             'pk': pk,

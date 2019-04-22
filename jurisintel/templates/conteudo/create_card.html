@@ -137,10 +137,10 @@
                 <div class="side-bar add-card-tags">
                     <div class="side-bar add-card-tags">
                         <div id='id_tag'>
-                            {% for field in form.fields.tag.choices %}
+                            {% for k, v in tags_list %}
                                 <label class="ml-1">
-                                    <input type="checkbox" name="tag" value="{{ field|first }}" id="id_tag_{{ forloop.counter0 }}">
-                                    <span class="tag-add">{{ field|last }}</span>
+                                    <input type="checkbox" name="tag" value="{{ k }}" id="id_tag_{{ forloop.counter0 }}">
+                                    <span class="tag-add">{{ v.tag }}</span>
                                 </label>
                             {% endfor %}
                         </div>

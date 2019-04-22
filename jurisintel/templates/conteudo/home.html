@@ -14,15 +14,16 @@
             padding: 1rem 3rem 3rem 3rem;
         }
         .card-container{
-            max-height: 15em;
-            height: 15em;
+            max-height: 19rem;
+            height: 18rem;
             border: 0;
             box-shadow: #0000001a 0 1px 20px 5px;
             cursor: pointer;
             transition: 0.5s ease;
+            overflow-y: hidden;
         }
         .card-container:hover{
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         .card-container-header{
             display: flex;
@@ -33,13 +34,14 @@
         }
         .inside-card{
             max-height: 10em !important;
-            margin-bottom: 1em;
+            margin-bottom: 1rem;
             overflow-y: hidden;
             width: 100%;
         }
         p.card-resumo{
             font-size: 10pt;
             text-align: justify;
+            margin: 0;
         }
         .card-title{
             padding: 1em 1em 0 1em;
@@ -132,6 +134,7 @@
         .content-of-card{
             display: flex;
             flex-direction: row;
+            padding-bottom: 0;
         }
         .card-remove-button {
             color: #5f5f5f;

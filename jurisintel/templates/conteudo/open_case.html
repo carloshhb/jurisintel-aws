@@ -71,11 +71,6 @@
             top: 20px;
             cursor: pointer;
         }
-        .side-button-docs{
-            padding: 30px 0 10px 0;
-            position: absolute;
-            right: 0;
-        }
         .button-docs-text{
             padding: 8px;
             border: 1px solid #d1d1d1;
@@ -87,11 +82,7 @@
         .second-part{
             text-align: justify;
             font-size: 10pt;
-            max-width: 60%;
-        }
-        .main-panel{
-            display: flex;
-            flex-direction: row;
+            max-width: 80%;
         }
         .main-panel-content {
             display: flex;
@@ -99,10 +90,8 @@
         }
 
         .open-case-header{
-            width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
         }
         .open-case-content{
@@ -136,7 +125,7 @@
             transition: 0.5s ease;
         }
         .open-case-thumbnail:hover{
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         .open-case-sim-doc, .file-resultado{
             display: flex;
@@ -167,6 +156,43 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+        }
+
+        .main-block{
+            display: flex;
+        }
+        .side-bar{
+            position: sticky;
+            border-right: 1px solid #7e7e7e45;
+            height: calc(100vh - 4rem);
+            top: 4rem;
+            /*box-shadow: 1px 0 20px 1px #7e7e7e45;*/
+        }
+        .side-bar-items{
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem 0;
+        }
+        .side-panel{
+            padding-left: 0;
+        }
+        .side-button{
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .side-button-icon{
+            display: inline-block;
+            min-width: 2.75rem;
+            font-size: 1.0625rem;
+            line-height: 1.40625rem;
+        }
+
+        .navbar-light{
+            position: sticky;
+            top: 0;
+            z-index: 999;
         }
         .wrap {
             display: none;
@@ -229,6 +255,117 @@
                 top: 0;
             }
         }
+
+        .offcanvas-panel{
+            z-index: 1001;
+            position: fixed;
+            -webkit-overflow-scrolling: touch;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+            -webkit-transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            width: 425px !important;
+            -webkit-transition: left 0.3s ease,right 0.3s ease;
+            transition: left 0.3s ease,right 0.3s ease;
+            right: -445px;
+        }
+
+        .offcanvas-panel{
+            background-color: #fff;
+            -webkit-box-shadow: 0px 0px 28px 0px rgba(82,63,105,0.13);
+            box-shadow: 0px 0px 28px 0px rgba(82,63,105,0.13);
+            height: 100vh;
+        }
+
+        .offcanvas-panel--on {
+            -webkit-transition: left 0.3s ease, right 0.3s ease;
+            transition: left 0.3s ease, right 0.3s ease;
+            right: 0;
+        }
+        .offcanvas-panel_header{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .offcanvas-panel_body{
+            position: relative;
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            height: calc(100vh - 3rem);
+        }
+        .offcanvas-panel-close{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            background-color: #f7f8fa;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            border-radius: 4px;
+        }
+        .offcanvas-close-icon{
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            color: #a1a8c3;
+        }
+        .offcanvas-panel__title{
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #3d4465;
+            margin: 0;
+            padding: 0;
+        }
+        .panel-nav{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: start;
+            -ms-flex-align: start;
+            align-items: flex-start;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+        .panel-item {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            width: calc(50% - 3px);
+            min-height: 180px;
+            border-radius: 6px;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 1rem;
+            background: #f7f8fa;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+        .mini-thumb{
+            width: 150px;
+        }
     </style>
 {% endblock styles %}
 {% block navitems %}
@@ -247,56 +384,88 @@
     {% endif %}
 {% endblock navitems %}
 {% block sections %}
-    <!-- Main Panel -->
-    <section class="main-panel">
-        <div class="open-case-header">
-            <div class="first-part">
-                <h5>{{ titulo }}</h5>
+    <!-- Main Block -->
+    <div class="main-block">
+        <div id="panel_docs" class="offcanvas-panel">
+            <div class="offcanvas-panel_header">
+                <h3 class="offcanvas-panel__title">Documentos</h3>
+                <button id="close-offcanvas" class="btn offcanvas-panel-close">
+                    <i class="fas fa-times offcanvas-close-icon"></i>
+                </button>
             </div>
-            <div class="second-part">
-                {% if resumo_fit %}
-                    <p class="ver-mais">{{ resumo_fit }}</p>
-                    <a class="ver-mais-resumo" data-resumo-fit="{{ resumo_fit }}" data-resumo="{{ resumo }}"
-                       role='button' data-expand="false" href="#">Ver mais</a>
-                {% else %}
-                    <p>{{ resumo }}</p>
-                {% endif %}
-            </div>
-            <div class="filters">
-                <a href="">Ementas</a> |
-                <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> |
-                <a href="">Temas</a>
+            <div class="offcanvas-panel_body">
+                <div class="panel-nav">
+                    {% for id, doc in documentos %}
+                        <a class="panel-item" href="{{ doc.file_url }}" target="_blank">
+                            <img class="mini-thumb" src="{{ doc.file_thumbnail }}" alt="Thumbnail">
+                            <h6>{{ doc.file_name }}</h6>
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        <div class="side-button-docs">
-            <span class="button-docs-text">Docs</span>
-        </div>
-    </section>
-    <section class="main-panel-content">
-        <div class="open-case-content">
-            <div class="open-case-precedents">
-                {% for ementa in ementas %}
-                    <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">
-                        <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">
-                            {{ ementa }}
-                        </p>
+        <!-- Side Panel -->
+        <section class="side-panel col-2 col-md-1">
+            <div class="side-bar">
+                <div class="side-bar-items">
+                    <button class="btn side-button" id="docs" data-toggle="tooltip" data-placement="top" title="Documentos">
+                        <i class="far fa-folder-open side-button-icon"></i>
+                        <span>Docs</span>
+                    </button>
+                    <button class="btn side-button" data-toggle="tooltip" data-placement="top" title="Tags">
+                        <i class="fas fa-tags side-button-icon"></i>
+                        <span>Tags</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <!-- Main Panel -->
+        <section class="main-panel col-10">
+            <div class="open-case-header">
+                <div class="first-part">
+                    <h5>{{ titulo }}</h5>
+                </div>
+                <div class="second-part">
+                    {% if resumo_fit %}
+                        <p class="ver-mais">{{ resumo_fit }}</p>
+                        <a class="ver-mais-resumo" data-resumo-fit="{{ resumo_fit }}" data-resumo="{{ resumo }}"
+                           role='button' data-expand="false" href="#">Ver mais</a>
+                    {% else %}
+                        <p>{{ resumo }}</p>
+                    {% endif %}
+                </div>
+                <div class="filters">
+                    <a href="">Ementas</a> |
+                    <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> |
+                    <a href="">Temas</a>
+                </div>
+            </div>
+            <section class="main-panel-content">
+                <div class="open-case-content">
+                    <div class="open-case-precedents">
+                        {% for ementa in ementas %}
+                            <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">
+                                <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">
+                                    {{ ementa }}
+                                </p>
+                            </div>
+                        {% empty %}
+                            <div class="no-precedents">
+                                <p>Não existem ementas registradas ainda.</p>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% empty %}
-                    <div class="no-precedents">
-                        <p>Não existem ementas registradas ainda.</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-    </section>
-
+                </div>
+            </section>
+        </section>
+    </div>
     <div class="wrap" id="loading">
         <div class="loading">
             <div class="bounceball"></div>
             <div class="text">BUSCANDO SIMILARES</div>
         </div>
     </div>
+
 {% endblock sections %}
 {% block scripts %}
     <script>
@@ -344,8 +513,14 @@
                     $(this).text('Ver mais');
                 }
 
-            })
+            });
 
+            $('#docs').click(function () {
+                $('#panel_docs').toggleClass('offcanvas-panel--on');
+            });
+            $('#close-offcanvas').click(function () {
+                $('#panel_docs').removeClass('offcanvas-panel--on');
+            })
         });
     </script>
 {% endblock %}
