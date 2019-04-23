@@ -15,6 +15,7 @@ from wand.image import Image as wi
 
 from .forms import CardForm, UpdateCaseForm
 from .models import Case, Files, Tags, Thumbnail
+from .utils import get_documents_, get_case_tags, get_case_ementas
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
 
@@ -206,36 +207,6 @@ def create(request):
 
         return HttpResponseRedirect(reverse('conteudo:home'))
 
-
-def get_documents_(case):
-    documentos = list()
-    for doc in case.docs.all():
-        docs_dict = {
-            'file_name': str(doc.file).split('/')[1],
-            'file_thumbnail': doc.thumbnail.thumbnail.url,
-            'file_url': doc.file.url,
-            'file_id': doc.pk,
-        }
-        documentos.append([doc.pk, docs_dict])
-
-    return documentos
-
-
-def get_case_tags(case):
-    tags = list()
-    for tag in case.tags.all():
-        tags.append(tag)
-
-    return tags
-
-
-def get_case_ementas(case):
-
-    ementas = list()
-    for ementa in case.ementas.all():
-        ementas.append(ementa)
-
-    return ementas
 
 def open_case(request, pk):
     case = get_object_or_404(Case, pk=pk)

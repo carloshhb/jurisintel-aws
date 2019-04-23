@@ -163,10 +163,11 @@
         }
         .side-bar{
             position: sticky;
-            border-right: 1px solid #7e7e7e45;
+            {#border-right: 1px solid #7e7e7e45;#}
             height: calc(100vh - 4rem);
             top: 4rem;
-            /*box-shadow: 1px 0 20px 1px #7e7e7e45;*/
+            -webkit-box-shadow: 0px 0px 28px 0px rgba(82,63,105,0.08);
+            box-shadow: 0px 0px 28px 0px rgba(82,63,105,0.08);
         }
         .side-bar-items{
             justify-content: center;
@@ -181,6 +182,11 @@
             padding: 10px 0;
             display: flex;
             align-items: center;
+            color: #313752;
+            transition: color 0.3s;
+        }
+        .side-button:hover{
+            color: #5d78ff;
         }
         .side-button-icon{
             display: inline-block;
@@ -193,7 +199,30 @@
             position: sticky;
             top: 0;
             z-index: 999;
+            background-color: #fff !important;
+            -webkit-box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+            box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+            border: 0;
         }
+        .nav-item{
+            margin-right: 5px;
+        }
+        .nav-item.active .nav-link{
+            color: #5d78ff !important;
+            background-color: #f0f3ff;
+            border-radius: 4px;
+        }
+        .nav-item .nav-link{
+            color: #6c7293 !important;
+            font-weight: 500;
+            transition: color, background-color 0.3s;
+        }
+        .nav-link:hover{
+            color: #5d78ff !important;
+            background-color: #f0f3ff;
+            border-radius: 4px;
+        }
+
         .wrap {
             display: none;
             position: absolute;
@@ -369,8 +398,8 @@
     </style>
 {% endblock styles %}
 {% block navitems %}
-    <li class="nav-item active">
-        <a class="nav-link" href="{% url 'conteudo:home' %}">Home </a>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'conteudo:home' %}">Início </a>
     </li>
     {% if user.is_authenticated %}
         <li class="nav-item">
@@ -389,7 +418,7 @@
         <div id="panel_docs" class="offcanvas-panel">
             <div class="offcanvas-panel_header">
                 <h3 class="offcanvas-panel__title">Documentos</h3>
-                <button id="close-offcanvas" class="btn offcanvas-panel-close">
+                <button id="close-offcanvas-docs" class="btn offcanvas-panel-close">
                     <i class="fas fa-times offcanvas-close-icon"></i>
                 </button>
             </div>
@@ -404,6 +433,21 @@
                 </div>
             </div>
         </div>
+        <div id="panel_tags" class="offcanvas-panel">
+            <div class="offcanvas-panel_header">
+                <h3 class="offcanvas-panel__title">Tags</h3>
+                <button id="close-offcanvas-tags" class="btn offcanvas-panel-close">
+                    <i class="fas fa-times offcanvas-close-icon"></i>
+                </button>
+            </div>
+            <div class="offcanvas-panel_body">
+                <div class="panel-nav">
+                    {% for tag in tags %}
+                        <span class="badge badge-pill badge-danger tag m-1">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
         <!-- Side Panel -->
         <section class="side-panel col-2 col-md-1">
             <div class="side-bar">
@@ -412,10 +456,10 @@
                         <i class="far fa-folder-open side-button-icon"></i>
                         <span>Docs</span>
                     </button>
-{#                    <button class="btn side-button" data-toggle="tooltip" data-placement="top" title="Tags">#}
-{#                        <i class="fas fa-tags side-button-icon"></i>#}
-{#                        <span>Tags</span>#}
-{#                    </button>#}
+                    <button class="btn side-button" id="tags" data-toggle="tooltip" data-placement="top" title="Tags">
+                        <i class="fas fa-tags side-button-icon"></i>
+                        <span>Tags</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -442,19 +486,19 @@
             </div>
             <section class="main-panel-content">
                 <div class="open-case-content">
-{#                    <div class="open-case-precedents">#}
-{#                        {% for ementa in ementas %}#}
-{#                            <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">#}
-{#                                <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">#}
-{#                                    {{ ementa }}#}
-{#                                </p>#}
-{#                            </div>#}
-{#                        {% empty %}#}
-{#                            <div class="no-precedents">#}
-{#                                <p>Não existem ementas registradas ainda.</p>#}
-{#                            </div>#}
-{#                        {% endfor %}#}
-{#                    </div>#}
+                    {#                    <div class="open-case-precedents">#}
+                    {#                        {% for ementa in ementas %}#}
+                    {#                            <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">#}
+                    {#                                <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">#}
+                    {#                                    {{ ementa }}#}
+                    {#                                </p>#}
+                    {#                            </div>#}
+                    {#                        {% empty %}#}
+                    {#                            <div class="no-precedents">#}
+                    {#                                <p>Não existem ementas registradas ainda.</p>#}
+                    {#                            </div>#}
+                    {#                        {% endfor %}#}
+                    {#                    </div>#}
                     {% include 'conteudo/includes/similares.html' %}
                 </div>
             </section>
@@ -519,8 +563,15 @@
             $('#docs').click(function () {
                 $('#panel_docs').toggleClass('offcanvas-panel--on');
             });
-            $('#close-offcanvas').click(function () {
+            $('#close-offcanvas-docs').click(function () {
                 $('#panel_docs').removeClass('offcanvas-panel--on');
+            });
+
+            $('#tags').click(function () {
+                $('#panel_tags').toggleClass('offcanvas-panel--on');
+            });
+            $('#close-offcanvas-tags').click(function () {
+                $('#panel_tags').removeClass('offcanvas-panel--on');
             })
         });
     </script>

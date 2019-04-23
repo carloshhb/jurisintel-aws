@@ -3,8 +3,35 @@
 {% block title %}JurisIntel - Início{% endblock title %}
 {% block styles %}
     <style>
+        .navbar-light{
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background-color: #fff !important;
+            -webkit-box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+            box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+            border: 0;
+        }
+        .nav-item{
+            margin-right: 5px;
+        }
+        .nav-item.active .nav-link{
+            color: #5d78ff !important;
+            background-color: #f0f3ff;
+            border-radius: 4px;
+        }
+        .nav-item .nav-link{
+            color: #6c7293 !important;
+            font-weight: 500;
+            transition: color, background-color 0.3s;
+        }
+        .nav-link:hover{
+            color: #5d78ff !important;
+            background-color: #f0f3ff;
+            border-radius: 4px;
+        }
         .temas{
-            background-color: #f1f3f4;
+            background-color: #f2f3f8;
         }
         .section-title{
             padding: 3rem 3rem 1rem 3rem;
@@ -152,7 +179,7 @@
 {% endblock styles %}
 {% block navitems %}
     <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#">Início <span class="sr-only">(current)</span></a>
     </li>
     {% if user.is_authenticated %}
         <li class="nav-item">
