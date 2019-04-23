@@ -6,10 +6,10 @@
             <h6>Selecione <strong>UM</strong> documento abaixo para verificar semelhantes no seu acervo:</h6>
         </div>
         <div class="similares-docs">
-            {% for file, values in docs %}
+            {% for k, v in documentos %}
                 <div class="open-case-sim-doc">
-                    <img class="open-case-thumbnail" src="{{ values|first }}" alt="Thumbnail"
-                         id="{{ file }}_{{ forloop.counter0 }}" data-file="{{ values|last }}" data-csrf="{{ csrf_token }}"
+                    <img class="open-case-thumbnail" src="{{ v.file_thumbnail }}" alt="Thumbnail"
+                         id="{{ v.file_name }}_{{ forloop.counter0 }}" data-file="{{ v.file_id }}" data-csrf="{{ csrf_token }}"
                          data-url="{% url 'conteudo:similarities' pk %}">
                     {{ file }}
                 </div>

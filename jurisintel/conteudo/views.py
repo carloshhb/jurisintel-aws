@@ -207,26 +207,42 @@ def create(request):
         return HttpResponseRedirect(reverse('conteudo:home'))
 
 
+def get_documents_(case):
+    documentos = list()
+    for doc in case.docs.all():
+        docs_dict = {
+            'file_name': str(doc.file).split('/')[1],
+            'file_thumbnail': doc.thumbnail.thumbnail.url,
+            'file_url': doc.file.url,
+            'file_id': doc.pk,
+        }
+        documentos.append([doc.pk, docs_dict])
+
+    return documentos
+
+
+def get_case_tags(case):
+    tags = list()
+    for tag in case.tags.all():
+        tags.append(tag)
+
+    return tags
+
+
+def get_case_ementas(case):
+
+    ementas = list()
+    for ementa in case.ementas.all():
+        ementas.append(ementa)
+
+    return ementas
+
 def open_case(request, pk):
     case = get_object_or_404(Case, pk=pk)
     if request.user == case.user:
 
-        documentos = list()
-        for doc in case.docs.all():
-            docs_dict = {
-                'file_name': str(doc.file).split('/')[1],
-                'file_thumbnail': doc.thumbnail.thumbnail.url,
-                'file_url': doc.file.url,
-            }
-            documentos.append([doc.pk, docs_dict])
-
-        tags = list()
-        for tag in case.tags.all():
-            tags.append(tag)
-
-        ementas = list()
-        for ementa in case.ementas.all():
-            ementas.append(ementa)
+        documentos = get_documents_(case)
+        tags = get_case_tags(case)
 
         tamanho_resumo = len(case.resumo)
         if tamanho_resumo > 730:
@@ -240,7 +256,6 @@ def open_case(request, pk):
             'resumo': case.resumo,
             'documentos': documentos,
             'tags': tags,
-            'ementas': ementas,
             'pk': pk,
         }
 

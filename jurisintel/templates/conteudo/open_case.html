@@ -412,10 +412,10 @@
                         <i class="far fa-folder-open side-button-icon"></i>
                         <span>Docs</span>
                     </button>
-                    <button class="btn side-button" data-toggle="tooltip" data-placement="top" title="Tags">
-                        <i class="fas fa-tags side-button-icon"></i>
-                        <span>Tags</span>
-                    </button>
+{#                    <button class="btn side-button" data-toggle="tooltip" data-placement="top" title="Tags">#}
+{#                        <i class="fas fa-tags side-button-icon"></i>#}
+{#                        <span>Tags</span>#}
+{#                    </button>#}
                 </div>
             </div>
         </section>
@@ -435,26 +435,27 @@
                     {% endif %}
                 </div>
                 <div class="filters">
-                    <a href="">Ementas</a> |
-                    <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> |
-                    <a href="">Temas</a>
+                    <!-- <a href="">Ementas</a> | -->
+                    <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> <!--|-->
+                    <!-- <a href="">Temas</a> -->
                 </div>
             </div>
             <section class="main-panel-content">
                 <div class="open-case-content">
-                    <div class="open-case-precedents">
-                        {% for ementa in ementas %}
-                            <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">
-                                <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">
-                                    {{ ementa }}
-                                </p>
-                            </div>
-                        {% empty %}
-                            <div class="no-precedents">
-                                <p>Não existem ementas registradas ainda.</p>
-                            </div>
-                        {% endfor %}
-                    </div>
+{#                    <div class="open-case-precedents">#}
+{#                        {% for ementa in ementas %}#}
+{#                            <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">#}
+{#                                <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">#}
+{#                                    {{ ementa }}#}
+{#                                </p>#}
+{#                            </div>#}
+{#                        {% empty %}#}
+{#                            <div class="no-precedents">#}
+{#                                <p>Não existem ementas registradas ainda.</p>#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+                    {% include 'conteudo/includes/similares.html' %}
                 </div>
             </section>
         </section>
