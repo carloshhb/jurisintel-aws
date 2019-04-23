@@ -307,13 +307,11 @@ def verify_similarities(request, pk):
     else:
         case = get_object_or_404(Case, pk=pk)
 
-        docs = list()
-        for doc in case.docs.all():
-            docs.append([str(doc.file), [str(doc.thumbnail.thumbnail.url), doc.pk]])
+        documentos = get_documents_(case)
 
         data = dict()
         context = {
-            'docs': docs,
+            'documentos': documentos,
             'pk': pk,
         }
         data['html_similares'] = render_to_string(template_name='conteudo/includes/similares.html', context=context,
