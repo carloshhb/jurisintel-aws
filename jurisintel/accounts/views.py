@@ -3,6 +3,7 @@ import dateutil.parser
 import requests
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.decorators import login_required
 #  RegistroEspecial
 from django.core.mail import send_mail
@@ -18,7 +19,6 @@ from .forms import *
 from .models import *
 
 from conteudo.models import Case, Files
-
 
 #Views
 def index(request):
@@ -139,16 +139,17 @@ class PerfilView(TemplateView):
         except Exception as error:
             qtd_arquivos_escritorio, qtd_usuarios_por_escritorio, qtd_processos_escritorio = 0, 0, 0
 
-        user_name = '%s %s' % (request.user.first_name, request.user.last_name)
+        user_name = request.user.full_name
         context = {
             'user_name': user_name,
+            'user_email': request.user.email,
             'formulario_usuario': perfil_form,
             'quant_users_firm': qtd_usuarios_por_escritorio,
             'quant_proc_firm': qtd_processos_escritorio,
             'quant_files_firm': qtd_arquivos_escritorio,
         }
 
-        return render(request, 'accounts/new_profile.html', context)
+        return render(request, 'accounts/perfil.html', context)
 
     def post(self, request, **kwargs):
 
@@ -165,8 +166,8 @@ class PerfilView(TemplateView):
             form_user = perfil_form
             data['sucesso'] = False
 
-        user_name = '%s %s' % (request.user.first_name, request.user.last_name)
-        data['html_response'] = render_to_string('accounts/new_profile.html',
+        user_name = request.user.full_name
+        data['html_response'] = render_to_string('accounts/perfil.html',
                                                  context={'formulario_usuario': form_user,
                                                           'user_name': user_name},
                                                  request=request)
@@ -197,7 +198,7 @@ class AssinaturasView(TemplateView):
         else:
             status = 'Ativo'
 
-        user_name = '%s %s' % (request.user.first_name, request.user.last_name)
+        user_name = request.user.full_name
         context = {
             'trial': trial,
             'data_trial': d1,
@@ -223,7 +224,7 @@ class EscritorioView(TemplateView):
             form = EscritorioForm()
             has_firm = False
 
-        user_name = '%s %s' % (request.user.first_name, request.user.last_name)
+        user_name = request.user.full_name
         context = {
             'form': form,
             'user_name': user_name,
@@ -330,3 +331,8 @@ class RegistroTrial(TemplateView):
                               {'plan_exists': plan_exists, 'user_form': user_form})
         else:
             return render(request, 'accounts/registro_trial.html', {'plan_exists': plan_exists, 'user_form': user_form})
+
+
+class ChangePasswordView(PasswordChangeView):
+    def form_valid(self, form):
+        pass

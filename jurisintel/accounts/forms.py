@@ -2,7 +2,7 @@ import datetime
 
 from django import forms
 
-from .models import User, LawFirm
+from .models import User
 
 choice_estado = (
     ('AC', 'Acre'),
@@ -144,22 +144,22 @@ class PerfilForm(forms.ModelForm):
     for a in range(1900, hoje.year):
         anos.append(a)
     birthdate = forms.DateField(label='Data de Nascimento',
-                                widget=forms.SelectDateWidget(years=anos, attrs={'class': 'custom-select'}))
+                                widget=forms.SelectDateWidget(years=anos, attrs={'class': 'col-4 custom-select'}))
 
-    class Meta():
+    class Meta:
         model = User
         fields = ['email', 'first_name', 'last_name', 'birthdate']
 
 
-class EscritorioForm(forms.ModelForm):
-    law_firm = forms.CharField(label='Nome do Escritório', max_length=120, widget=forms.TextInput(
-        attrs={'class': 'form-control'}))
-    law_firm_branch = forms.CharField(label='Unidade do escritório', max_length=100, widget=forms.TextInput(
-        attrs={'class': 'form-control'}))
-
-    class Meta():
-        model = LawFirm
-        fields = ['law_firm', 'law_firm_branch']
+# class EscritorioForm(forms.ModelForm):
+#     law_firm = forms.CharField(label='Nome do Escritório', max_length=120, widget=forms.TextInput(
+#         attrs={'class': 'form-control'}))
+#     law_firm_branch = forms.CharField(label='Unidade do escritório', max_length=100, widget=forms.TextInput(
+#         attrs={'class': 'form-control'}))
+#
+#     class Meta():
+#         model = LawFirm
+#         fields = ['law_firm', 'law_firm_branch']
 
 
 planos = (

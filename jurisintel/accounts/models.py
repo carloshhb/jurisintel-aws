@@ -4,9 +4,6 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
-import datetime
-from conteudo.random_primary import RandomPrimaryIdModel
-import pytz
 
 
 class UserManager(BaseUserManager):
@@ -32,53 +29,35 @@ class UserManager(BaseUserManager):
         return user
 
 
-class LawFirm(RandomPrimaryIdModel):
-    CRYPT_KEY_LEN_MIN = 5
-    CRYPT_KEY_LEN_MAX = 12
-    id = models.CharField(max_length=CRYPT_KEY_LEN_MAX+1, auto_created=True, unique=True, primary_key=True, blank=True)
-    law_firm = models.CharField('Nome do escritório', max_length=120)
-    law_firm_branch = models.CharField('Unidade do escritório', max_length=100)
-
-    def firm_name(self):
-        return '%s - %s' % (self.law_firm, self.law_firm_branch)
-    
-    def __str__(self):
-        law_firm_fullname = "{0} - {1}".format(self.law_firm, self.law_firm_branch)
-        return law_firm_fullname.strip()
+# class Escritorio(RandomPrimaryIdModel):
+#     CRYPT_KEY_LEN_MIN = 5
+#     CRYPT_KEY_LEN_MAX = 12
+#
+#     id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
+#     created_at = models.DateTimeField('Data de cadastro', default=timezone.now)
+#
+#     class Meta:
+#         abstract = True
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField('Nome', max_length=30)
-
-    last_name = models.CharField('Nome de família', max_length=80)
-
+    last_name = models.CharField('Sobrenome', max_length=80)
     email = models.EmailField('E-mail', max_length=255, unique=True)
-
     birthdate = models.DateField()
-
-    law_firm_name = models.CharField('Escritório', max_length=100, blank=True)
-
-    group_law_firm = models.ForeignKey(LawFirm, blank=True, null=True, on_delete=models.PROTECT)
-
     is_staff = models.BooleanField('Staff - status', default=False,
                                    help_text='Designates whether the user can log into this admin site.')
-
     is_active = models.BooleanField('Usuário ativo', default=True,
                                     help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.')
-
     date_joined = models.DateTimeField('Data de inscrição', default=timezone.now)
-
     is_trusty = models.BooleanField('E-mail foi confirmado?', default=False,
                                     help_text='Designates whether this user has confirmed his account.')
-
     codigo_adesao = models.CharField('Código da adesão', max_length=32, blank=True)
-
     situacao_adesao = models.CharField('Situação da adesão', max_length=32, blank=True)
-
     telefone_contato = models.CharField('Telefone para contato', max_length=11, blank=True, null=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'birthdate', 'law_firm_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'birthdate']
 
     objects = UserManager()
 
@@ -86,15 +65,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
-    def get_full_name(self):
-        full_name = '{0} {1}'.format(self.first_name, self.last_name)
-        return full_name.strip()
-
     def get_short_name(self):
         return self.first_name
 
     def email_user(self, subject, message, from_email=None):
         send_mail(subject, message, 'nao_responda@Jurisintel.com.br', [self.email])
+
+    @property
+    def full_name(self):
+        "Returns user full name"
+        return '%s %s' % (self.first_name, self.last_name)
 
 
 class Planos(models.Model):

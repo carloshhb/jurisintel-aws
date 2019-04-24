@@ -1,111 +1,551 @@
-{% extends 'conteudo/base.html' %}
+{% extends 'conteudo/base_conteudo.html' %}
 {% load staticfiles %}
-{% block title %}Jurisintel - Perfil{% endblock %}
-{% block navitems %}
-    <li class="nav-item">
-        <a href="{% url 'conteudo:home' %}">Home</a>
-    </li>
-{% endblock %}
-{% block extrahead %}
-    {{ block.super }}
+
+{% block title %}JurisIntel - Perfil{% endblock title %}
+{% block styles %}
     <style>
-        #search-col{
-            overflow-x: hidden;
+        .navbar-light{
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background-color: #fff !important;
+            -webkit-box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+            box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+            border: 0;
+        }
+        .navbar-nav .nav-item{
+            margin-right: 5px;
+        }
+        .navbar-nav .nav-item.active .nav-link{
+            color: #5d78ff !important;
+            background-color: #f0f3ff;
+            border-radius: 4px;
+        }
+        .navbar-nav .nav-item .nav-link{
+            color: #6c7293 !important;
+            font-weight: 500;
+            transition: color, background-color 0.3s;
+        }
+        .navbar-nav .nav-link:hover{
+            color: #5d78ff !important;
+            background-color: #f0f3ff;
+            border-radius: 4px;
+        }
+        .main-block{
+            padding: 25px;
+            background-color: #f2f3f8;
+        }
+        .profile-portlet{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-shadow: 0px 0px 13px 0px rgba(82,63,105,0.05);
+            box-shadow: 0px 0px 13px 0px rgba(82,63,105,0.05);
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .profile__content{
+            padding: 2rem;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: #ebedf2;
+        }
+        .profile__main{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            border-right: 1px solid #ebedf2;
+        }
+        .profile__main-info{
+            margin: 1.5rem 0;
+        }
+        .profile__main-info-name{
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #464457;
+        }
+        .profile__main-info-position{
+            font-weight: 500;
+            color: #b2afc6;
+        }
+        .profile__contact{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-align: start;
+            -ms-flex-align: start;
+            align-items: flex-start;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            border-right: 1px solid #ebedf2;
+        }
+        .profile__contact-item{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .profile__contact-item:hover{
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+        .profile__contact-item:hover .profile__contact-item-text{
+            color: #3699ff;
+        }
+        .profile__contact-item-text{
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            font-weight: 500;
+            padding-left: 1.5rem;
+            padding-bottom: 0.15rem;
+            color: #b2afc6;
+        }
+        .profile__contact-item-icon{
+            color: #fd397a !important;
+        }
+        .profile__nav{
+            padding: 0 2rem;
+        }
+        .profile__nav .nav.nav-tabs.nav-tabs-line{
+            border-bottom: 1px solid transparent !important;
+            margin-bottom: 0;
+        }
+        .nav.nav-tabs.nav-tabs-line{
+            margin: 0 0 25px 0;
+        }
+        .nav.nav-tabs.nav-tabs-line::before, .nav.nav-tabs.nav-tabs-line::after{
+            content: " ";
+            display: table;
+        }
+        .nav.nav-tabs.nav-tabs-line::after{
+            clear: both;
+        }
+        .nav.nav-tabs.nav-tabs-line .nav-item{
+            margin-right: 4rem;
+            margin-bottom: -1px;
+        }
+        .nav.nav-tabs.nav-tabs-line .nav-item a.nav-link.active, .nav.nav-tabs.nav-tabs-line .nav-item a.nav-link:hover{
+            background: transparent;
+            color: #646c9a;
+            border-bottom: 1px solid #5d78ff;
+        }
+        .nav.nav-tabs.nav-tabs-line .nav-item a.nav-link:hover,
+        .nav.nav-tabs.nav-tabs-line .nav-item a.nav-link.active,
+        .nav.nav-tabs.nav-tabs-line .nav-item a.nav-link.active:hover{
+            transition: all 0.3s;
+            color: #3699ff !important;
+            border-bottom-width: 2px;
+        }
+        .nav.nav-tabs.nav-tabs-line .nav-item a.nav-link{
+            padding: 1.5rem 0;
+            font-weight: 500;
+            font-size: 1.1rem;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+        .nav-tabs-line .nav-item a.nav-link{
+            background: transparent;
+            color: #646c9a;
+        }
+        .nav-tabs.nav-tabs-line .nav-link{
+            border: 0;
+            border-bottom: 1px solid transparent;
+            padding: 12px 0;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .profile-portlet__body-fit{
+            padding: 0 !important;
+        }
+        .profile-portlet__body{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding: 25px;
+            border-radius: 4px;
+        }
+        .ji-nav{
+            display: block;
+            padding: 0.5rem 0;
+            margin: 20px 0;
+            list-style: none;
+            border: 0;
+        }
+        .ji-nav .ji-nav__item{
+            margin: 0;
+            width: 100%;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 0.55rem 1.75rem;
+            cursor: pointer;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link.active{
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            background-color: #f7f8fa;
+            border-left: 2px solid #5d78ff;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link{
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-left: 2px solid transparent;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link .ji-nav__link-icon{
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 30px;
+            flex: 0 0 30px;
+            font-size: 1.25rem;
+            line-height: 0;
+            color: #c5cbe3;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link.active .ji-nav__link-text{
+            color: #5d78ff;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link .ji-nav__link-text{
+            color: #646c9a;
+            font-weight: 500;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+        .ji-nav__item:hover:not(.ji-nav__item--disabled){
+            background-color: #f7f8fa;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+        .ji-nav__item:hover:not(.ji-nav__item--disabled) .ji-nav__link .ji-nav__link-icon,
+        .ji-nav__item:hover:not(.ji-nav__item--disabled) .ji-nav__link .ji-nav__link-text{
+            color: #5d78ff;
+        }
+
+        .ji-portlet__head{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: stretch;
+            -ms-flex-align: stretch;
+            align-items: stretch;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 25px;
+            border-bottom: 1px solid #ebedf2;
+            min-height: 60px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            transition: left 0.3s, right 0.3s, height 0.3s;
+        }
+        .ji-portlet__head .ji-portlet__head-label{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-line-pack: flex-first;
+        }
+        .ji-portlet__head .ji-portlet__head-label .ji-portlet__head-label-title{
+            margin: 0;
+            padding: 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #3d4465;
+        }
+        .ji-portlet__head .ji-portlet__head-label .ji-portlet__head-label-title small {
+            font-weight: 300;
+            padding-left: 0.5rem;
+            font-size: 1rem;
+            color: #a1a8c3;
+        }
+        .ji-form__body{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding: 25px;
+            border-radius: 4px;
+        }
+        .ji-form__foot{
+            padding: 25px;
+            border-top: 1px solid #ebedf2;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        .ji-form-section{
+            padding: 0;
+            margin: 0;
+        }
+        .form-group label{
+            font-size: 1rem;
+            font-weight: 400;
+            color: #646c9a;
+        }
+        .col-form-label{
+            padding-top: calc(.65rem + 1px);
+            padding-bottom: calc(.65rem + 1px);
+            margin-bottom: 0;
+            font-size: inherit;
+            line-height: 1.5;
+        }
+        a, a:hover{
+            text-decoration: none !important;
+        }
+        .btn-success{
+            color: #fff;
+            background-color: #1dc9b7;
+            border-color: #1dc9b7;
+        }
+        .btn-success:hover{
+            color: #fff;
+            background-color: #18a899;
+            border-color: #179c8e;
+        }
+        .btn-secondary{
+            background-color: transparent;
+            border: 1px solid #e2e5ec;
+            color: #646c9a;
+        }
+        .btn-secondary:hover{
+            color: #646c9a;
+            border-color: #e2e5ec !important;
+            background-color: #f4f5f8 !important;
+        }
+        .btn-danger{
+            color: #fff;
+            background-color: #fd397a;
+            border-color: #fd397a;
+        }
+        .btn-danger:hover{
+            background-color: #fd1361;
+            border-color: #fc0758;
+        }
+        @media (min-width: 1025px){
+            form label{
+                text-align: right;
+            }
         }
     </style>
-{% endblock %}
-{% block conteudo %}
-    <div class="container" id="main-container">
-        <div class="row flex-xl-nowrap" id="main-row">
-            <div class="card col-3 p-0" id="search-col" >
-                <div class="d-flex flex-column justify-content-start" style="height: 100%">
-                    <div class="p-1" id="search-tools">
-                        <ul class="nav nav-fill flex-column align-middle p-3" role="tablist" id="v-pills-tab">
-                            <li class="nav-item links mb-1" role="tab">
-                                <a class="nav-link" data-toggle="pill" id="v-profile-tab" aria-controls="v-profile" href="#v-profile">
-                                    <i class="fas fa-user"></i>Ver perfil
+{% endblock styles %}
+{% block navitems %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'conteudo:home' %}">Início </a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'accounts:perfil' %}">Perfil </a>
+    </li>
+    {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Sair </a>
+        </li>
+    {% endif %}
+    {% if user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+        </li>
+    {% endif %}
+{% endblock navitems %}
+{% block sections %}
+    <div class="main-block">
+        <div class="profile-portlet">
+            <div class="profile__content">
+                <div class="row">
+                    <div class="col-md-12 col-lg-5 col-xl-4">
+                        <div class="profile__main">
+                            <div class="profile__main-info">
+                                <div class="profile__main-info-name">{{ user_name }}</div>
+                                <div class="profile__main-info-position"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4 col-xl-4">
+                        <div class="profile__contact">
+                            <div class="profile__main-info">
+                                <a href="#" class="profile__contact-item">
+                                    <span class="profile__contact-item-icon"><i class="fas fa-at"></i></span>
+                                    <span class="profile__contact-item-text">{{ user_email }}</span>
                                 </a>
-                            </li>
-                            <li class="nav-item links mb-1">
-                                <a class="nav-link" data-toggle='pill' id='v-firm-tab' aria-controls='v-firm' href="#v-firm">
-                                    <i class="fas fa-building"></i>&nbspMeu escritório</a>
-                            </li>
-                            <li class="nav-item links mb-1" role="tab">
-                                <a class="nav-link" data-toggle="pill" id="v-plano-tab" role="tab" aria-controls="v-plano" href="#v-plano">
-                                    <i class="fas fa-money-check-alt"></i>&nbspDados do plano</a>
-                            </li>
-                            <li class="nav-item links mb-1">
-                                <a class="nav-link" role="tab" aria-controls='' href="{% url 'password_change' %}">
-                                    <i class="fas fa-user-edit"></i>&nbspAlterar senha</a>
-                            </li>
-                        </ul>
+                                <div class="profile__contact-item">
+                                    <div class="profile__contact-item-text">Co-founder</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-9 py-4 menor" id="main-col">
-                {% if mensagem != ''%}
-                    <div class="alert alert-warning" role='alert'>
-                        {{ mensagem }}
-                    </div>
-                {% endif %}
-                <section class="tab-content" id="v-pills-tabContent">
-                    <div class="tab-pane fade show active" role="tabpanel" id="v-profile" aria-labelledby="v-profile-tab">
-                        <div class="card">
-                            <div class="card-header">Perfil</div>
-                            <div class="card-body">
-                                <form method="post">
-                                    {% csrf_token %}
-                                    {% include 'includes/form.html' with form=perfil_form %}
-                                    <button type="submit" class="btn btn-success">Enviar</button>
-                                </form>
+            <div class="profile__nav">
+                <ul class="nav nav-tabs nav-tabs-line" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#ji-profile" data-toggle="tab">Conta & Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ji-escritorio" data-toggle="tab">Escritório</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="ji-profile" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4 col-xl-3">
+                        <div class="profile-portlet">
+                            <div class="profile-portlet__body profile-portlet__body-fit">
+                                <ul class="ji-nav nav nav-tabs" role="tablist">
+                                    <li class="ji-nav__item">
+                                        <a class="ji-nav__link active" data-toggle="tab" href="#ji_form_info_pessoal" role="tab">
+                                            <i class="ji-nav__link-icon far fa-address-card"></i>
+                                            <span class="ji-nav__link-text">Informações Pessoais</span>
+                                        </a>
+                                    </li>
+                                    {#                                    <li class="ji-nav__item">#}
+                                    {#                                        <a class="ji-nav__link" data-toggle="tab" href="#ji_form_info_conta" role="tab">#}
+                                    {#                                            <i class="ji-nav__link-icon far fa-user"></i>#}
+                                    {#                                            <span class="ji-nav__link-text">Informações da conta</span>#}
+                                    {#                                        </a>#}
+                                    {#                                    </li>#}
+                                    <li class="ji-nav__item">
+                                        <a class="ji-nav__link" data-toggle="tab" href="#ji_form_trocar_senha" role="tab" id="change-password">
+                                            <i class="ji-nav__link-icon fas fa-lock"></i>
+                                            <span class="ji-nav__link-text">Alterar senha</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" role="tabpanel" id="v-firm" aria-labelledby="v-firm-tab">
-                        <div class="card">
-                            <div class="card-header">Meu escritório</div>
-                            <div class="card-body">
-                                <div class="alert alert-info">
-                                    Seu escritório pode ser definido apenas UMA vez. Após isso, por gentileza,
-                                    entrar em contato com a administração.
-                                </div>
-                                <form method="post">
-                                    {% csrf_token %}
-                                    {% include 'includes/form.html' with form=escritorio_form %}
-                                    <button type="submit" class="btn btn-success">Cadastrar</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" role="tabpanel" id="v-plano" aria-labelledby="v-plano-tab" >
-                        <div class="card">
-                            <div class="card-header">Plano</div>
-                            <div class="card-body">
-                                {% if assinante == True %}
-                                    <div class="form-group">
-                                        <label for="planType">Plano adquirido</label>
-                                        <input type="text" class="form-control" id="planType" value="{{ plan_type }}" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="statusPlano">Situação do plano</label>
-                                        <input type="text" class="form-control" id="statusPlano" value="{{ status }}" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="dataPlano">Data de adesão</label>
-                                        <input type="text" class="form-control" id="dataPlano" value="{{ data }}" disabled>
-                                    </div>
-                                    {% if trial %}
-                                        <div class="form-group">
-                                            <label for="dataTrial">Data do fim do período de testes</label>
-                                            <input type="text" class="form-control" id="dataTrial" value="{{ data_trial }}" disabled>
+
+                    <div class="col-lg-8 col-xl-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="ji_form_info_pessoal" role="tabpanel">
+                                <div class="profile-portlet">
+                                    <div class="ji-portlet__head">
+                                        <div class="ji-portlet__head-label">
+                                            <h3 class="ji-portlet__head-label-title">Informações Pessoais
+                                                <small>atualize suas informações pessoais</small>
+                                            </h3>
                                         </div>
-                                    {% endif %}
-                                {% endif %}
+                                    </div>
+                                    <form action="">
+                                        <div class="ji-form__body">
+                                            <div class="ji-form-section">
+                                                {% csrf_token %}
+                                                {% include 'includes/profile_form.html' with form=formulario_usuario %}
+                                            </div>
+                                        </div>
+                                        <div class="ji-form__foot">
+                                            <div class="ji-form__actions">
+                                                <div class="col-lg-3 col-xl-3">
+                                                    <button type="submit" class="btn btn-success">Atualizar</button>
+                                                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-9 col-xl-9"></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="ji_form_trocar_senha" role="tabpanel">
+                                <div class="profile-portlet">
+                                    <div class="ji-portlet__head">
+                                        <div class="ji-portlet__head-label">
+                                            <h3 class="ji-portlet__head-label-title">Alterar senha
+                                                <small>altere senha de acesso à conta</small>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <form action="">
+                                        <div class="ji-form__body">
+                                            <div class="ji-form-section" id="password-change-section">
+
+                                            </div>
+                                        </div>
+                                        <div class="ji-form__foot">
+                                            <div class="ji-form__actions">
+                                                <div class="col-lg-3 col-xl-3">
+                                                    <button type="submit" class="btn btn-danger">Atualizar</button>
+                                                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-9 col-xl-9"></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="ji-escritorio" role="tabpanel">
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock sections %}
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#change-password').click(function () {
+                $.ajax({
+                    url: '',
+                    method: 'post',
+                })
+            })
+        });
+    </script>
+{% endblock scripts %}

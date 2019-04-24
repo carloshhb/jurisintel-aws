@@ -1,9 +1,12 @@
-from django.db import models
 from accounts.models import User
+from django.db import models
 from django.dispatch import receiver
+from django.utils import timezone
 from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 
 from .random_primary import RandomPrimaryIdModel
+
+
 # Create your models here.
 
 
@@ -106,3 +109,13 @@ def auto_delete_arquivo_on_delete(sender, instance, **kwargs):
     files = instance.docs.all()
     for file in files:
         file.delete()
+
+
+class Escritorio(RandomPrimaryIdModel):
+    CRYPT_KEY_LEN_MIN = 5
+    CRYPT_KEY_LEN_MAX = 12
+
+    id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
+    created_at = models.DateTimeField('Data de cadastro', default=timezone.now)
+    membros = models.ManyToManyField(User, blank=True)
+    cases = models.ManyToManyField(Case, blank=True)

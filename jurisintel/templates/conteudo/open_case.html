@@ -185,6 +185,9 @@
             color: #313752;
             transition: color 0.3s;
         }
+        .side-button__description, .side-button:hover{
+            font-weight: 500;
+        }
         .side-button:hover{
             color: #5d78ff;
         }
@@ -193,6 +196,7 @@
             min-width: 2.75rem;
             font-size: 1.0625rem;
             line-height: 1.40625rem;
+            font-weight: 400;
         }
 
         .navbar-light{
@@ -454,11 +458,11 @@
                 <div class="side-bar-items">
                     <button class="btn side-button" id="docs" data-toggle="tooltip" data-placement="top" title="Documentos">
                         <i class="far fa-folder-open side-button-icon"></i>
-                        <span>Docs</span>
+                        <span class="side-button__description">Docs</span>
                     </button>
                     <button class="btn side-button" id="tags" data-toggle="tooltip" data-placement="top" title="Tags">
                         <i class="fas fa-tags side-button-icon"></i>
-                        <span>Tags</span>
+                        <span class="side-button__description">Tags</span>
                     </button>
                 </div>
             </div>
