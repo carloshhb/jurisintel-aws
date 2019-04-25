@@ -111,11 +111,11 @@ def auto_delete_arquivo_on_delete(sender, instance, **kwargs):
         file.delete()
 
 
-class Escritorio(RandomPrimaryIdModel):
-    CRYPT_KEY_LEN_MIN = 5
-    CRYPT_KEY_LEN_MAX = 12
-
-    id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
-    created_at = models.DateTimeField('Data de cadastro', default=timezone.now)
-    membros = models.ManyToManyField(User, blank=True)
-    cases = models.ManyToManyField(Case, blank=True)
+# class Escritorio(RandomPrimaryIdModel):
+#     CRYPT_KEY_LEN_MIN = 5
+#     CRYPT_KEY_LEN_MAX = 12
+#
+#     id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
+#     created_at = models.DateTimeField('Data de cadastro', default=timezone.now)
+#     membros = models.ManyToManyField(User, blank=True)
+#     cases = models.ManyToManyField(Case, blank=True)
