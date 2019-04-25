@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField('Nome', max_length=30)
     last_name = models.CharField('Sobrenome', max_length=80)
     email = models.EmailField('E-mail', max_length=255, unique=True)
-    birthdate = models.DateField()
+    birthdate = models.DateField(blank=True, null=True)
     is_staff = models.BooleanField('Staff - status', default=False,
                                    help_text='Designates whether the user can log into this admin site.')
     is_active = models.BooleanField('Usuário ativo', default=True,
