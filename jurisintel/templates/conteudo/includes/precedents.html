@@ -1,0 +1,13 @@
+<div class="open-case-precedents">
+    {% for ementa in ementas %}
+        <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">
+            <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">
+                {{ ementa }}
+            </p>
+        </div>
+    {% empty %}
+        <div class="no-precedents">
+            <p>Não há ementas cadastradas ainda para este caso. Elas podem demorar até 1 dia para aparecerem. Por gentileza, aguarde um pouco.</p>
+        </div>
+    {% endfor %}
+</div>
