@@ -34,9 +34,10 @@
             dataType: 'json',
             success: function (response) {
                 $('.open-case-similares-result').html(response['html_resultado'])
-            }
+            },
         });
     });
+
 
     $(document).ajaxStart(function () {
         $('#loading').show();

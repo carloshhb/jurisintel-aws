@@ -34,6 +34,7 @@
         .main-block{
             padding: 25px;
             background-color: #f2f3f8;
+            min-height: calc(100vh - 4rem);
         }
         .profile-portlet{
             display: -webkit-box;
@@ -375,6 +376,9 @@
             background-color: #fd1361;
             border-color: #fc0758;
         }
+        .error-field input{
+            border-color: #dc3545;
+        }
         @media (min-width: 1025px){
             form label{
                 text-align: right;
@@ -420,9 +424,6 @@
                                     <span class="profile__contact-item-icon"><i class="fas fa-at"></i></span>
                                     <span class="profile__contact-item-text">{{ user_email }}</span>
                                 </a>
-                                <div class="profile__contact-item">
-                                    <div class="profile__contact-item-text">Co-founder</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -481,10 +482,9 @@
                                             </h3>
                                         </div>
                                     </div>
-                                    <form action="">
+                                    <form method="post">
                                         <div class="ji-form__body">
                                             <div class="ji-form-section">
-                                                {% csrf_token %}
                                                 {% include 'includes/profile_form.html' with form=formulario_usuario %}
                                             </div>
                                         </div>
@@ -510,10 +510,10 @@
                                             </h3>
                                         </div>
                                     </div>
-                                    <form action="">
+                                    <form id="changePasswordForm" action="{% url 'accounts:change_password' %}" method="post">
                                         <div class="ji-form__body">
                                             <div class="ji-form-section" id="password-change-section">
-
+                                                {% include 'includes/profile_form.html' with form=profile_form %}
                                             </div>
                                         </div>
                                         <div class="ji-form__foot">
@@ -539,13 +539,23 @@
 {% endblock sections %}
 {% block scripts %}
     <script>
-        $(document).ready(function () {
-            $('#change-password').click(function () {
-                $.ajax({
-                    url: '',
-                    method: 'post',
-                })
+        $('#changePasswordForm').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).prop('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                method: 'post',
+                success: function(response){
+                    if (response.is_valid){
+                        alert('senha alterada');
+                    }
+                    else{
+                        $('#password-change-section').html(response.html_response);
+                    }
+                }
             })
         });
+
     </script>
-{% endblock scripts %}
+{% endblock %}

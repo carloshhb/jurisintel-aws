@@ -420,6 +420,9 @@
             mainPanel.on("click", '.js-remove', loadForm);
             modalProcessos.on('submit', '.js-process-delete-form', saveForm);
 
+            mainPanel.on("click", '.js-add-tags', loadForm);
+            modalProcessos.on('submit', '.js-add-tags-form', saveForm);
+
         });
     </script>
 {% endblock %}

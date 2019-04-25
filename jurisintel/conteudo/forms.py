@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import formset_factory
 from .models import Tags, Case
 
 
@@ -17,3 +18,11 @@ class UpdateCaseForm(forms.ModelForm):
     class Meta:
         model = Case
         fields = ['titulo', 'resumo']
+
+
+class TagForm(forms.Form):
+
+    tag = forms.CharField(label='Tags', widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+
+TagFormset = formset_factory(TagForm, extra=1)

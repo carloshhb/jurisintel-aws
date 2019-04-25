@@ -1,6 +1,7 @@
 import datetime
 
 from django import forms
+from django.contrib.auth import forms as f
 
 from .models import User
 
@@ -184,6 +185,12 @@ class TrialForm(forms.ModelForm):
                                                               attrs={'class': 'custom-select'}))
     trial = forms.ChoiceField(label='Plano', choices=planos, widget=forms.Select(attrs={'class': 'form-control'}))
 
-    class Meta():
+    class Meta:
         model = User
         fields = ['email', 'password', 'first_name', 'last_name', 'birthdate', 'trial']
+
+
+class ProfileForm(f.PasswordChangeForm):
+    old_password = forms.CharField(label='Senha antiga', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    new_password1 = forms.CharField(label='Nova senha', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    new_password2 = forms.CharField(label='Confirme nova senha', widget=forms.PasswordInput(attrs={'class': 'form-control'}))

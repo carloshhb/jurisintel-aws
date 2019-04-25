@@ -13,7 +13,7 @@ from django.views import View
 from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
 
-from .forms import CardForm, UpdateCaseForm
+from .forms import CardForm, UpdateCaseForm, TagFormset
 from .models import Case, Files, Tags, Thumbnail
 from .utils import get_documents_, get_case_tags, get_case_ementas
 from .nlp.jurisintel_resumidor import resumidor as res
@@ -291,6 +291,23 @@ def verify_similarities(request, pk):
         return JsonResponse(data)
 
 
+def precedents(request, pk):
+
+    case = get_object_or_404(Case, pk=pk)
+
+    ementas = get_case_ementas(case)
+
+    data = dict()
+    context = {
+        'pk': pk,
+        'ementas': ementas,
+    }
+    data['html_precedents'] = render_to_string(template_name='conteudo/includes/precedents.html', context=context,
+                                               request=request)
+
+    return JsonResponse(data)
+
+
 def card_delete(request, pk):
     data = dict()
     try:
@@ -328,6 +345,16 @@ def card_update(request, pk):
     return save_(request, form, 'conteudo/includes/card_update.html')
 
 
+def add_card_tags(request, pk):
+
+    if request.POST:
+        formset = TagFormset(request.POST)
+
+    else:
+        formset = TagFormset()
+    return save_tag(request, formset, 'conteudo/includes/add_tags.html', pk)
+
+
 def save_(request, form, template):
 
     data = dict()
@@ -350,6 +377,43 @@ def save_(request, form, template):
             data['form_is_valid'] = False
 
     context = {'form': form}
+    data['html_form'] = render_to_string(template, context, request=request)
+    return JsonResponse(data)
+
+
+def save_tag(request, formset, template, pk):
+
+    data = dict()
+    if request.POST:
+
+        if formset.is_valid():
+            for form in formset:
+                tag = form.cleaned_data.get('tag')
+                if tag is not None:
+                    try:
+                        tag_obj = Tags.objects.get(tag=tag.strip())
+                    except Exception as error:
+                        tag_obj = Tags.objects.create(tag=tag.strip())
+                    finally:
+                        case = Case.objects.get(pk=pk)
+                        case.tags.add(tag_obj)
+
+            parameters, tag_list = retrieve_cases(request)
+
+            update_context = {
+                'parameters': parameters,
+                'tags': tag_list,
+            }
+            data['html_response'] = render_to_string('conteudo/includes/cards.html', update_context)
+            data['form_is_valid'] = True
+        else:
+            data['form_is_valid'] = False
+
+    formset = TagFormset()
+    context = {
+        'formset': formset,
+        'pk': pk,
+    }
     data['html_form'] = render_to_string(template, context, request=request)
     return JsonResponse(data)
 

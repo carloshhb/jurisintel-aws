@@ -25,6 +25,10 @@
                        href="{% url "conteudo:add-documento" id %}">
                         <i class="fas fa-paperclip"></i>
                     </a>
+                    <a href="#" class="button button-icon button-icon__actions js-add-tags" data-toggle="tolltip"
+                       data-placement="top" title="Adicionar tags" data-url="{% url 'conteudo:add_card_tags' id %}">
+                        <i class="fas fa-tag"></i>
+                    </a>
                 </div>
             </div>
             <div class="card-tags">

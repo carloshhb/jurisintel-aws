@@ -1,14 +1,11 @@
 # Custom imports.
-import dateutil.parser
-import requests
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 #  RegistroEspecial
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -18,9 +15,8 @@ import pytz
 from .forms import *
 from .models import *
 
-from conteudo.models import Case, Files
 
-#Views
+# Views
 def index(request):
     return render(request, 'conteudo/home.html', {})
 
@@ -126,52 +122,52 @@ class PerfilView(TemplateView):
         email = request.user.email
         user = User.objects.get(email__iexact=email)
         perfil_form = PerfilForm(instance=user)
+        profile_form = ProfileForm(user=request.user)
 
-        try:
-            lista_usuarios_por_escritorio = User.objects.filter(group_law_firm__id=request.user.group_law_firm.id)
-            qtd_usuarios_por_escritorio = lista_usuarios_por_escritorio.count()
-
-            lista_processos_escritorio = Case.objects.filter(firm__exact=request.user.group_law_firm)
-            qtd_processos_escritorio = lista_processos_escritorio.count()
-
-            lista_arquivos_escritorio = Files.objects.filter(processo__firm__exact=request.user.group_law_firm)
-            qtd_arquivos_escritorio = lista_arquivos_escritorio.count()
-        except Exception as error:
-            qtd_arquivos_escritorio, qtd_usuarios_por_escritorio, qtd_processos_escritorio = 0, 0, 0
+        # try:
+        #     lista_usuarios_por_escritorio = User.objects.filter(group_law_firm__id=request.user.group_law_firm.id)
+        #     qtd_usuarios_por_escritorio = lista_usuarios_por_escritorio.count()
+        #
+        #     lista_processos_escritorio = Case.objects.filter(firm__exact=request.user.group_law_firm)
+        #     qtd_processos_escritorio = lista_processos_escritorio.count()
+        #
+        #     lista_arquivos_escritorio = Files.objects.filter(processo__firm__exact=request.user.group_law_firm)
+        #     qtd_arquivos_escritorio = lista_arquivos_escritorio.count()
+        # except Exception as error:
+        #     qtd_arquivos_escritorio, qtd_usuarios_por_escritorio, qtd_processos_escritorio = 0, 0, 0
 
         user_name = request.user.full_name
         context = {
             'user_name': user_name,
             'user_email': request.user.email,
             'formulario_usuario': perfil_form,
-            'quant_users_firm': qtd_usuarios_por_escritorio,
-            'quant_proc_firm': qtd_processos_escritorio,
-            'quant_files_firm': qtd_arquivos_escritorio,
+            'profile_form': profile_form,
+            # 'quant_users_firm': qtd_usuarios_por_escritorio,
+            # 'quant_proc_firm': qtd_processos_escritorio,
+            # 'quant_files_firm': qtd_arquivos_escritorio,
         }
 
         return render(request, 'accounts/perfil.html', context)
 
     def post(self, request, **kwargs):
 
-        data = dict()
-
         perfil_form = PerfilForm(request.POST, instance=request.user)
 
         if perfil_form.is_valid():
             perfil_form.save()
-            form_user = PerfilForm(instance=request.user)
-            data['sucesso'] = True
-
         else:
-            form_user = perfil_form
-            data['sucesso'] = False
+            perfil_form = PerfilForm(instance=request.user)
 
+        profile_form = ProfileForm(user=request.user)
         user_name = request.user.full_name
-        data['html_response'] = render_to_string('accounts/perfil.html',
-                                                 context={'formulario_usuario': form_user,
-                                                          'user_name': user_name},
-                                                 request=request)
-        return JsonResponse(data)
+        context = {
+            'user_name': user_name,
+            'user_email': request.user.email,
+            'formulario_usuario': perfil_form,
+            'profile_form': profile_form,
+        }
+
+        return render(request, 'accounts/perfil.html', context=context)
 
 
 class AssinaturasView(TemplateView):
@@ -333,6 +329,18 @@ class RegistroTrial(TemplateView):
             return render(request, 'accounts/registro_trial.html', {'plan_exists': plan_exists, 'user_form': user_form})
 
 
-class ChangePasswordView(PasswordChangeView):
-    def form_valid(self, form):
-        pass
+def change_password(request):
+    data = dict()
+    if request.POST:
+        form = ProfileForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            data['is_valid'] = True
+        else:
+            data['is_valid'] = False
+    else:
+        form = ProfileForm(request.user)
+
+    data['html_response'] = render_to_string('includes/profile_form.html', {'form': form}, request=request)
+    return JsonResponse(data)
