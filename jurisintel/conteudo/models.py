@@ -1,20 +1,14 @@
+import secrets
+
 from accounts.models import User
 from django.db import models
 from django.dispatch import receiver
-from django.utils import timezone
 from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 
 from .random_primary import RandomPrimaryIdModel
 
 
 # Create your models here.
-
-
-class Temas(models.Model):
-    tema = models.CharField(max_length=255)
-
-    def __str__(self):
-        return '%s' % self.tema
 
 
 class Ementas(models.Model):
@@ -110,6 +104,21 @@ def auto_delete_arquivo_on_delete(sender, instance, **kwargs):
     for file in files:
         file.delete()
 
+
+def gerar_id_code():
+    return secrets.token_hex(8)
+
+
+class Tema(models.Model):
+
+    titulo_tema = models.CharField(max_length=255)
+    descricao_tema = models.TextField()
+    documentos = models.ManyToManyField(Files, blank=True)
+    ementas = models.ManyToManyField(Ementas, blank=True)
+    identifier_code = models.CharField(max_length=150, unique=True, default=gerar_id_code())
+
+    def __str__(self):
+        return '%s' % self.titulo_tema
 
 # class Escritorio(RandomPrimaryIdModel):
 #     CRYPT_KEY_LEN_MIN = 5

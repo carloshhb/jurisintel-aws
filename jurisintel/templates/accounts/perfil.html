@@ -409,6 +409,7 @@
         <div class="profile-portlet">
             <div class="profile__content">
                 <div class="row">
+                    <!-- Profile Info -->
                     <div class="col-md-12 col-lg-5 col-xl-4">
                         <div class="profile__main">
                             <div class="profile__main-info">
@@ -427,6 +428,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- End Profile Info -->
                 </div>
             </div>
             <div class="profile__nav">
@@ -434,39 +436,41 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#ji-profile" data-toggle="tab">Conta & Perfil</a>
                     </li>
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="#ji-escritorio" data-toggle="tab">Escritório</a>#}
+{#                    </li>#}
                     <li class="nav-item">
-                        <a class="nav-link" href="#ji-escritorio" data-toggle="tab">Escritório</a>
+                        <a class="nav-link" href="#ji-temas" data-toggle="tab">Temas</a>
                     </li>
                 </ul>
             </div>
         </div>
 
         <div class="tab-content">
+            <!-- Profile -->
             <div class="tab-pane fade active show" id="ji-profile" role="tabpanel">
                 <div class="row">
                     <div class="col-lg-4 col-xl-3">
                         <div class="profile-portlet">
                             <div class="profile-portlet__body profile-portlet__body-fit">
+                                <!-- Nav items -->
                                 <ul class="ji-nav nav nav-tabs" role="tablist">
                                     <li class="ji-nav__item">
                                         <a class="ji-nav__link active" data-toggle="tab" href="#ji_form_info_pessoal" role="tab">
+                                            <!-- Nav Item Icon -->
                                             <i class="ji-nav__link-icon far fa-address-card"></i>
                                             <span class="ji-nav__link-text">Informações Pessoais</span>
                                         </a>
                                     </li>
-                                    {#                                    <li class="ji-nav__item">#}
-                                    {#                                        <a class="ji-nav__link" data-toggle="tab" href="#ji_form_info_conta" role="tab">#}
-                                    {#                                            <i class="ji-nav__link-icon far fa-user"></i>#}
-                                    {#                                            <span class="ji-nav__link-text">Informações da conta</span>#}
-                                    {#                                        </a>#}
-                                    {#                                    </li>#}
                                     <li class="ji-nav__item">
                                         <a class="ji-nav__link" data-toggle="tab" href="#ji_form_trocar_senha" role="tab" id="change-password">
+                                            <!-- Nav Item Icon -->
                                             <i class="ji-nav__link-icon fas fa-lock"></i>
                                             <span class="ji-nav__link-text">Alterar senha</span>
                                         </a>
                                     </li>
                                 </ul>
+                                <!-- End Nav -->
                             </div>
                         </div>
                     </div>
@@ -482,6 +486,7 @@
                                             </h3>
                                         </div>
                                     </div>
+                                    <!-- User Profile Form -->
                                     <form method="post">
                                         <div class="ji-form__body">
                                             <div class="ji-form-section">
@@ -498,6 +503,7 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <!-- End Form -->
                                 </div>
                             </div>
 
@@ -510,6 +516,7 @@
                                             </h3>
                                         </div>
                                     </div>
+                                    <!-- Change Password Form -->
                                     <form id="changePasswordForm" action="{% url 'accounts:change_password' %}" method="post">
                                         <div class="ji-form__body">
                                             <div class="ji-form-section" id="password-change-section">
@@ -526,14 +533,78 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <!-- End Form -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- End Profile -->
+            <!-- Firm -->
             <div class="tab-pane fade" id="ji-escritorio" role="tabpanel">
             </div>
+            <!-- End Firm -->
+            <!-- Temas -->
+            <div class="tab-pane fade" id="ji-temas" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4 col-xl-3">
+                        <div class="profile-portlet">
+                            <div class="profile-portlet__body profile-portlet__body-fit">
+                                <!-- Nav Items -->
+                                <ul class="ji-nav nav nav-tabs" role="tablist">
+                                    <li class="ji-nav__item">
+                                        <a class="ji-nav__link active" data-toggle="tab" href="#ji_form_select_temas" role="tab">
+                                            <!-- Nav Item Icon -->
+                                            <i class="ji-nav__link-icon far fa-list-alt"></i>
+                                            <span class="ji-nav__link-text">Selecionar Temas</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!-- End Nav -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-xl-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="ji-form_select_temas" role="tabpanel">
+                                <div class="profile-portlet">
+                                    <div class="ji-portlet__head">
+                                        <div class="ji-portlet__head-label">
+                                            <h3 class="ji-portlet__head-label-title">Temas
+                                                <small>selecionar temas para serem acompanhados</small>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <!-- Select Tema Form -->
+                                    <form id="" action="" method="post">
+                                        <div class="ji-form__body">
+                                            <div class="ji-form-section" id="select-section">
+                                                {% for id, tema in temas %}
+                                                    {{ tema.titulo }}
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                        <div class="ji-form__foot">
+                                            <div class="ji-form__actions">
+                                                <div class="col-lg-3 col-xl-3">
+                                                    <button type="submit" class="btn btn-success">Atualizar</button>
+                                                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-9 col-xl-9"></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- End Form -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Temas -->
         </div>
     </div>
 {% endblock sections %}

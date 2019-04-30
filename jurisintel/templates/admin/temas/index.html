@@ -1,0 +1,358 @@
+{% extends 'conteudo/base_conteudo.html' %}
+
+{% block title %}Admin - Temas{% endblock %}
+{% block styles %}
+    <style>
+        .main-block{
+            padding: 25px;
+            background-color: #f2f3f8;
+            min-height: calc(100vh - 4rem);
+        }
+        .profile-portlet{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-shadow: 0px 0px 13px 0px rgba(82,63,105,0.05);
+            box-shadow: 0px 0px 13px 0px rgba(82,63,105,0.05);
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .profile-portlet__body-fit{
+            padding: 0 !important;
+        }
+        .profile-portlet__body{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding: 25px;
+            border-radius: 4px;
+        }
+        .ji-nav{
+            display: block;
+            padding: 0.5rem 0;
+            margin: 20px 0;
+            list-style: none;
+            border: 0;
+        }
+        .ji-nav .ji-nav__item{
+            margin: 0;
+            width: 100%;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 0.55rem 1.75rem;
+            cursor: pointer;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link.active{
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            background-color: #f7f8fa;
+            border-left: 2px solid #5d78ff;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link{
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-left: 2px solid transparent;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link .ji-nav__link-icon{
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 30px;
+            flex: 0 0 30px;
+            font-size: 1.25rem;
+            line-height: 0;
+            color: #c5cbe3;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link.active .ji-nav__link-text{
+            color: #5d78ff;
+        }
+        .ji-nav .ji-nav__item .ji-nav__link .ji-nav__link-text{
+            color: #646c9a;
+            font-weight: 500;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+        .ji-nav__item:hover:not(.ji-nav__item--disabled){
+            background-color: #f7f8fa;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+        .ji-nav__item:hover:not(.ji-nav__item--disabled) .ji-nav__link .ji-nav__link-icon,
+        .ji-nav__item:hover:not(.ji-nav__item--disabled) .ji-nav__link .ji-nav__link-text{
+            color: #5d78ff;
+        }
+
+        .ji-portlet__head{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: stretch;
+            -ms-flex-align: stretch;
+            align-items: stretch;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 25px;
+            border-bottom: 1px solid #ebedf2;
+            min-height: 60px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            transition: left 0.3s, right 0.3s, height 0.3s;
+        }
+        .ji-portlet__head .ji-portlet__head-label{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-line-pack: flex-first;
+        }
+        .ji-portlet__head .ji-portlet__head-label .ji-portlet__head-label-title{
+            margin: 0;
+            padding: 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #3d4465;
+        }
+        .ji-portlet__head .ji-portlet__head-label .ji-portlet__head-label-title small {
+            font-weight: 300;
+            padding-left: 0.5rem;
+            font-size: 1rem;
+            color: #a1a8c3;
+        }
+        .ji-form__body{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding: 25px;
+            border-radius: 4px;
+        }
+        .ji-form__foot{
+            padding: 25px;
+            border-top: 1px solid #ebedf2;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        .ji-form-section{
+            padding: 0;
+            margin: 0;
+        }
+        .form-group label{
+            font-size: 1rem;
+            font-weight: 400;
+            color: #646c9a;
+        }
+        .col-form-label{
+            padding-top: calc(.65rem + 1px);
+            padding-bottom: calc(.65rem + 1px);
+            margin-bottom: 0;
+            font-size: inherit;
+            line-height: 1.5;
+        }
+        a, a:hover{
+            text-decoration: none !important;
+        }
+        .btn-success{
+            color: #fff;
+            background-color: #1dc9b7;
+            border-color: #1dc9b7;
+        }
+        .btn-success:hover{
+            color: #fff;
+            background-color: #18a899;
+            border-color: #179c8e;
+        }
+        .btn-secondary{
+            background-color: transparent;
+            border: 1px solid #e2e5ec;
+            color: #646c9a;
+        }
+        .btn-secondary:hover{
+            color: #646c9a;
+            border-color: #e2e5ec !important;
+            background-color: #f4f5f8 !important;
+        }
+        .btn-danger{
+            color: #fff;
+            background-color: #fd397a;
+            border-color: #fd397a;
+        }
+        .btn-danger:hover{
+            background-color: #fd1361;
+            border-color: #fc0758;
+        }
+        .error-field input{
+            border-color: #dc3545;
+        }
+        @media (min-width: 1025px){
+            form label{
+                text-align: right;
+            }
+        }
+    </style>
+{% endblock %}
+{% block sections %}
+    <div class="main-block">
+        <div class="row">
+            <div class="col-lg-4 col-xl-3">
+                <div class="profile-portlet">
+                    <div class="profile-portlet__body profile-portlet__body-fit">
+                        <ul class="ji-nav nav nav-tabs" role="tablist">
+                            <li class="ji-nav__item">
+                                <a class="ji-nav__link active" data-toggle="tab" href="#ji_adicionar_tema" role="tab">
+                                    <i class="ji-nav__link-icon far fa-newspaper"></i>
+                                    <span class="ji-nav__link-text">Adicionar Temas</span>
+                                </a>
+                            </li>
+                            <li class="ji-nav__item">
+                                <a class="ji-nav__link" data-toggle="tab" href="#ji_editar_temas" role="tab" id="change-password">
+                                    <i class="ji-nav__link-icon far fa-edit"></i>
+                                    <span class="ji-nav__link-text">Editar Temas</span>
+                                </a>
+                            </li>
+                            <li class="ji-nav__item">
+                                <a class="ji-nav__link" data-toggle="tab" href="#ji_ver_todos_temas" role="tab" id="change-password">
+                                    <i class="ji-nav__link-icon far fa-list-alt"></i>
+                                    <span class="ji-nav__link-text">Visualizar todos os Temas</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-xl-9">
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="ji_adicionar_tema" role="tabpanel">
+                        <div class="profile-portlet">
+                            <div class="ji-portlet__head">
+                                <div class="ji-portlet__head-label">
+                                    <h3 class="ji-portlet__head-label-title">Adicionar Temas
+                                        <small>incluir temas no sistema</small>
+                                    </h3>
+                                </div>
+                            </div>
+                            <form method="post">
+                                <div class="ji-form__body">
+                                    <div class="ji-form-section">
+                                        {% include 'includes/profile_form.html' with form=tema_form %}
+                                    </div>
+                                </div>
+                                <div class="ji-form__foot">
+                                    <div class="ji-form__actions">
+                                        <div class="col-lg-3 col-xl-3">
+                                            <button type="submit" class="btn btn-success">Atualizar</button>
+                                            <button type="reset" class="btn btn-secondary">Cancelar</button>
+                                        </div>
+                                        <div class="col-lg-9 col-xl-9"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="ji_editar_temas" role="tabpanel">
+                        <div class="profile-portlet">
+                            <div class="ji-portlet__head">
+                                <div class="ji-portlet__head-label">
+                                    <h3 class="ji-portlet__head-label-title">Editar Tema
+                                        <small>edite tema do sistema</small>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="ji-form__body">
+                                <div class="ji-form-section" id="editSelectTema" data-input-data="{{ csrf_token }}"
+                                     data-url="{% url 'temas_admin:get_tema' %}">
+                                    {% include 'includes/profile_form.html' with form=edit_form %}
+                                </div>
+                            </div>
+                            <form id="editForm" action="{% url 'temas_admin:edit_tema' %}" method="post">
+                                <div class="ji-form__body">
+                                    <div class="ji-form-section" id="editTemaDados"></div>
+                                </div>
+                                <div class="ji-form__foot">
+                                    <div class="ji-form__actions">
+                                        <div class="col-lg-3 col-xl-3">
+                                            <button type="submit" class="btn btn-success">Atualizar</button>
+                                            <button type="reset" class="btn btn-secondary">Cancelar</button>
+                                        </div>
+                                        <div class="col-lg-9 col-xl-9"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="ji_ver_todos_temas" role="tabpanel">
+                        <div class="profile-portlet">
+                            <div class="ji-portlet__head">
+                                <div class="ji-portlet__head-label">
+                                    <h3 class="ji-portlet__head-label-title">Todos os Temas
+                                        <small>visualização de todos os temas</small>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="ji-form__body">
+                                <div class="ji-form-section">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock sections %}
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+
+            $('#editSelectTema select').change(function (e) {
+                let item = $('#editSelectTema option:selected').attr('value');
+                $.ajax({
+                    url: $('#editSelectTema').data('url'),
+                    data: {
+                        'item': item,
+                        'csrfmiddlewaretoken': $('#editSelectTema').data('input-data'),
+                    },
+                    dataType: 'json',
+                    method: 'post',
+                    success: function(response){
+                        if (response.is_valid){
+                            $('#editTemaDados').html(response.html_response)
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

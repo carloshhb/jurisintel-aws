@@ -34,11 +34,11 @@
             background-color: #f2f3f8;
         }
         .section-title{
-            padding: 3rem 3rem 1rem 3rem;
+            padding: 2rem 3rem 1rem 3rem;
         }
         .section-container{
             display: flex;
-            padding: 1rem 3rem 3rem 3rem;
+            padding: 0 3rem 3rem 3rem;
         }
         .card-container{
             max-height: 19rem;
@@ -118,12 +118,6 @@
             width: 45rem !important;
         }
         .drop-zone{
-        {#padding-top: 1rem;#}
-        {#padding-bottom: 1rem;#}
-        {#border: 2px dashed #c2c2c2e6;#}
-        {#width: 60%;#}
-        {#border-radius: 0.5rem;#}
-        {#cursor: pointer;#}
             padding-top: 1rem;
             padding-bottom: 1rem;
             border: 2px dashed #1a7af3;
@@ -207,49 +201,16 @@
             </div>
 
         </div>
+        {% if themes %}
+            <div class="col-12 section-container collapse show" aria-labelledby="headingOne" id="temasCollapse">
+                {% include 'conteudo/includes/cards.html' with parameters=themes %}
+            </div>
+        {% else %}
+            <div class="col-12 section-container collapse show" style="justify-content: center;" aria-labelledby="headingOne" id="temasCollapse">
+                <h6>Você não escolheu os temas para serem acompanhados ainda, na aba <strong>PERFIL</strong> é possível fazê-lo.</h6>
+            </div>
+        {% endif %}
 
-        <div class="col-12 section-container collapse show" aria-labelledby="headingOne" id="temasCollapse">
-            <div class="col-4">
-                <div class="card card-container">
-                    <div class="card-title">ICMS</div>
-                    <div class="card-body inside-card">
-                        <p class="card-resumo">Agravo regimental em recurso extraordinário com agravo. 2. Direito Tributário. ICMS. Regime especial de recolhimento. 3. A submissão de contribuinte a regime fiscal diferenciado em virtude do inadimplemento reiterado não constitui sanção política condenada pela jurisprudência desta Corte, quando não inviabiliza o exercício da atividade empresarial, como reconhecido pela origem. 4. Matéria local. Ofensa reflexa à Constituição Federal. Revolvimento do acervo fático-probatório. Súmulas 279 e 280 do STF. Precedentes. 5. Agravo regimental desprovido.
-                        </p>
-                    </div>
-                    <div class="card-tags">
-                        <span class="badge badge-pill badge-danger tag">ICMS</span>
-                        <span class="badge badge-pill badge-danger tag">TEMA 517</span>
-                        <span class="badge badge-pill badge-danger tag">Simples Nacional</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card card-container ml-4">
-                    <div class="card-title">ICMS</div>
-                    <div class="card-body inside-card">
-                        <p class="card-resumo">Agravo regimental em recurso extraordinário com agravo. 2. Direito Tributário. 3. Imposto sobre Circulação de Mercadorias e Serviços (ICMS). 4. Alegação de creditamento indevido. Utilização de critério da estimativa para glosar os créditos havidos por autoridade fiscalizadora. Assentada na ementa do Tribunal a quo a inexistência de informações quanto a haver o contribuinte fornecido todas as contas telefônicas para que fosse calculado o devido creditamento do tributo de maneira convencional e não por estimativa. 5. Matéria infraconstitucional. Ofensa reflexa à Constituição Federal. Necessidade de reexame do acervo probatório. Súmula 279 do STF. Precedentes. 6. Ausência de argumentos capazes de infirmar a decisão agravada. 7. Negativa de provimento ao agravo regimental. Sem majoração de honorários, tendo em vista a não fixação anterior pela origem.</p>
-                    </div>
-                    <div class="card-tags">
-                        <span class="badge badge-pill badge-danger tag">ICMS</span>
-                        <span class="badge badge-pill badge-danger tag">TEMA 517</span>
-                        <span class="badge badge-pill badge-danger tag">Simples Nacional</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card card-container ml-4">
-                    <div class="card-title">ICMS</div>
-                    <div class="card-body inside-card">
-                        <p class="card-resumo">EMBARGOS DE DECLARAÇÃO. ERRO MATERIAL DO ACÓRDÃO EMBARGADO. POSSIBILIDADE DE APLICAÇÃO DO TEMA 517 DA REPERCUSSÃO GERAL AO CASO. IDENTIDADE ENTRE O PRECEDENTE PARADIGMA E O PRESENTE RECURSO EXTRAORDINÁRIO. CONTROVÉRSIA. APLICAÇÃO DE DIFERENCIAL DE ALÍQUOTA DE ICMS À EMPRESA OPTANTE PELO SIMPLES NACIONAL. ACOLHIMENTO DOS DECLARATÓRIOS DA UNIÃO, COM EFEITOS INFRINGENTES, PARA DETERMINAR A DEVOLUÇÃO DOS AUTOS AO JUÍZO DE ORIGEM. 1. O acórdão embargado incorre em erro material quanto à acomodação da matéria veiculada no Recurso Extraordinário no que se discute no leading case no RE 970.821. 2. Esta CORTE tem entendimento no sentido de reconsiderar as decisões do Relator, seja por meio de agravo interno, seja por meio de embargos de declaração, quando se verifica erro material na aplicação de precedente do Plenário sob o rito da Repercussão Geral. Nesse sentido: RE 594.266 AgR-ED, Rel. Min. DIAS TOFFOLI, Primeira Turma, DJe 26/5/2017; RE 603.185 AgR-ED-ED, Rel. Min. GILMAR MENDES, Segunda Turma, DJe de 6/3/2017. 3. A rigor, a matéria controvertida no apelo extremo é abrangida pelo conteúdo do Tema 517 da Repercussão Geral, no qual se debate a seguinte questão: “Aplicação de diferencial de alíquota de ICMS à empresa optante pelo SIMPLES NACIONAL.” 4. Embargos de Declaração acolhidos, com efeitos infringentes, para determinar a devolução dos autos ao juízo de origem.</p>
-                    </div>
-                    <div class="card-tags">
-                        <span class="badge badge-pill badge-danger tag">ICMS</span>
-                        <span class="badge badge-pill badge-danger tag">TEMA 517</span>
-                        <span class="badge badge-pill badge-danger tag">Simples Nacional</span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
     <section class="add-case">
         <div class="d-flex flex-column justify-content-center align-items-center add-case-container">

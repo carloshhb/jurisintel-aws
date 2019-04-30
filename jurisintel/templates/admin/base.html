@@ -1,0 +1,192 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" />
+    {% block extrastyle %}{% endblock %}
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
+    {% block extrahead %}{% endblock %}
+    {% block responsive %}
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}" />
+        {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}" />{% endif %}
+    {% endblock %}
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+</head>
+{% load i18n %}
+<style>
+    body{
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        font-family: "Muli", sans-serif;
+        color: #333;
+        background: #ECF0F1
+    }
+
+    #tagtitulo{
+        background-color: #2C3E50;
+    }
+    a.section:link, a.section:visited {
+        color: #ECF0F1;
+        text-decoration: none;
+    }
+    .table thead th{
+        border: 0;
+    }
+
+    input.form-control{
+        border-bottom-right-radius: 0!important;
+        border-top-right-radius: 0!important;
+    }
+
+    .row{
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .navbar{
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background-color: #fff !important;
+        -webkit-box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+        box-shadow: 0px 0px 40px 0px rgba(82,63,105,0.1);
+        border: 0;
+    }
+    .navbar-nav .nav-item{
+        margin-right: 5px;
+    }
+    .navbar-nav .nav-item.active .nav-link{
+        color: #5d78ff !important;
+        background-color: #f0f3ff;
+        border-radius: 4px;
+    }
+    .navbar-nav .nav-item .nav-link{
+        color: #6c7293 !important;
+        font-weight: 500;
+        transition: color, background-color 0.3s;
+        text-transform: none !important;
+        letter-spacing: normal;
+    }
+    .navbar-nav .nav-link:hover{
+        color: #5d78ff !important;
+        background-color: #f0f3ff;
+        border-radius: 4px;
+    }
+    #user-tools{
+        align-items: center;
+    }
+    a, a:hover{
+        text-decoration: none !important;
+        border: 0 !important;
+    }
+    ul li{
+        list-style: none;
+    }
+</style>
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+      data-admin-utc-offset="{% now "Z" %}">
+
+<!-- Container -->
+<div id="container">
+
+    {% if not is_popup %}
+        <!-- Header -->
+        <nav class="navbar navbar-expand-lg flex-column flex-md-row bd-navbar">
+            <a class="navbar-brand">{% block branding %}{% endblock %}</a>
+            {% block usertools %}
+                {% if has_permission %}
+                    <div class="navbar-nav flex-row ml-md-auto d-none d-md-flex" id="user-tools">
+                        {% block welcome-msg %}
+                            {% trans 'Welcome, ' %}&nbsp;
+                            <strong>{% firstof user.get_short_name user.get_username %}</strong>.&nbsp;
+                        {% endblock %}
+                        <ul class="navbar-nav ml-auto">
+                            {% block userlinks %}
+                                <li class="nav-item">
+                                    <a class="nav-link links-admin" href="{% url 'temas_admin:temas' %}">Temas&nbsp;</a>
+                                </li>
+                                {% if site_url %}
+                                    <li class="nav-item">
+                                        <a class="nav-link links-admin" href="{{ site_url }}">{% trans 'View site' %}&nbsp;</a>
+                                    </li>
+                                {% endif %}
+                                {% if user.is_active and user.is_staff %}
+                                    <li class="nav-item">
+                                        {% url 'django-admindocs-docroot' as docsroot %}
+                                    </li>
+                                    {% if docsroot %}
+                                        <li class="nav-item">
+                                            <a href="{{ docsroot }}">{% trans 'Documentation' %}&nbsp;</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                                {% if user.has_usable_password %}
+                                    <li class="nav-item">
+                                        <a class="nav-link links-admin" href="{% url 'admin:password_change' %}">{% trans 'Change password' %}&nbsp;</a>
+                                    </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link links-admin" href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+                                </li>
+                            {% endblock %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endblock %}
+            {% block nav-global %}{% endblock %}
+        </nav>
+        <!-- END Header -->
+        {% block breadcrumbs %}
+            <div class="breadcrumbs">
+                <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+                {% if title %} &rsaquo; {{ title }}{% endif %}
+            </div>
+        {% endblock %}
+    {% endif %}
+
+    {% block messages %}
+        {% if messages %}
+            <ul class="messagelist">{% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
+
+    <!-- Content -->
+
+    <div class="row">
+        <div class="col-9 p-3">
+            {% block content %}
+                {% block object-tools %}{% endblock %}
+                {{ content }}
+            {% endblock %}
+        </div>
+        <div class="col-3 p-3">
+            {% block sidebar %}{% endblock %}
+        </div>
+        <br class="clear" />
+    </div>
+
+
+    {#    <div id="content" class="{% block coltype %}colM{% endblock %}">#}
+    {#        #}
+    {#    </div>#}
+    <!-- END Content -->
+
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
+
+</body>
+
+</html>

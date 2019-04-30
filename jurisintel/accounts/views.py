@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-#  RegistroEspecial
+from conteudo.views import retrieve_themes
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -123,7 +123,7 @@ class PerfilView(TemplateView):
         user = User.objects.get(email__iexact=email)
         perfil_form = PerfilForm(instance=user)
         profile_form = ProfileForm(user=request.user)
-
+        temas = retrieve_themes(request)
         # try:
         #     lista_usuarios_por_escritorio = User.objects.filter(group_law_firm__id=request.user.group_law_firm.id)
         #     qtd_usuarios_por_escritorio = lista_usuarios_por_escritorio.count()
@@ -142,6 +142,7 @@ class PerfilView(TemplateView):
             'user_email': request.user.email,
             'formulario_usuario': perfil_form,
             'profile_form': profile_form,
+            'temas': temas,
             # 'quant_users_firm': qtd_usuarios_por_escritorio,
             # 'quant_proc_firm': qtd_processos_escritorio,
             # 'quant_files_firm': qtd_arquivos_escritorio,

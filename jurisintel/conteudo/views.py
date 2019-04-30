@@ -10,11 +10,13 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse, get_object_or_404
 from django.template.loader import render_to_string
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
 
-from .forms import CardForm, UpdateCaseForm, TagFormset
-from .models import Case, Files, Tags, Thumbnail
+from .forms import CardForm, UpdateCaseForm, TagFormset, TemaForm, EditTemaForm
+from .models import Case, Files, Tags, Thumbnail, Tema
 from .utils import get_documents_, get_case_tags, get_case_ementas
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
@@ -37,6 +39,7 @@ def retrieve_cases(request):
             'titulo': case.titulo,
             'resumo': resumo,
             'fit': fit,
+            'possible_edit': True,
         }
         parameters.append([case.pk, param_dict])
         for tag in case.tags.all():
@@ -45,14 +48,38 @@ def retrieve_cases(request):
     return parameters, tag_list
 
 
+def retrieve_themes(request):
+    all_themes = Tema.objects.all()
+    parameters = list()
+    for tema in all_themes:
+        if len(tema.descricao_tema) > 411:
+            resumo = '%s ...' % tema.descricao_tema[0:411]
+            fit = True
+        else:
+            resumo = tema.descricao_tema
+            fit = False
+        param_dict = {
+            'titulo': tema.titulo_tema,
+            'resumo': resumo,
+            'fit': fit,
+            'possible_edit': False,
+            'tema': True,
+        }
+        parameters.append([tema.pk, param_dict])
+
+    return parameters
+
+
 @login_required(login_url='user_login')
 def home(request):
 
     parameters, tag_list = retrieve_cases(request)
+    themes = retrieve_themes(request)
 
     context = {
         'parameters': parameters,
         'tags': tag_list,
+        'themes': themes,
     }
 
     return render(request, 'conteudo/home.html', context)
@@ -448,3 +475,63 @@ class AddDoc(View):
                     case.docs.add(file_object)
 
             return HttpResponseRedirect(reverse('conteudo:home'))
+
+
+@method_decorator(login_required, name='dispatch')
+class TemasView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'tema_form': TemaForm(),
+            'edit_form': EditTemaForm(),
+        }
+        return render(request, 'admin/temas/index.html', context)
+
+    def post(self, request):
+        tema_form = TemaForm(request.POST)
+        print(tema_form)
+
+
+    def upload_file_tema(self, request, pk):
+
+        data = dict()
+        if request.POST:
+            tema = Tema.objects.get(pk=pk)
+            s3_file = PublicMediaStorage()
+            s3_file.file_overwrite = False
+
+            for file in request.FILES.getlist('files'):
+                arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
+                path = '%s/%s/%s' % (str(tema.identifier_code), str(pk), arquivo)
+                uploaded_file = s3_file.save(path, file)
+                save_file = Files.objects.create(file=uploaded_file)
+
+                tema.documentos.add(save_file)
+                tema.save()
+
+            return JsonResponse(data)
+
+
+def get_tema_admin(request):
+
+    if request.POST:
+        data = dict()
+        try:
+            tema = get_object_or_404(Tema, pk=request.POST['item'])
+        except Exception as error:
+            print(error)
+        else:
+            edit_form = TemaForm(instance=tema)
+            context = {
+                'form': edit_form,
+            }
+            data['html_response'] = render_to_string('includes/profile_form.html', context, request=request)
+            data['is_valid'] = True
+            return JsonResponse(data)
+
+
+def edit_tema(request):
+    if request.POST:
+        tema = TemaForm(request.POST)
+        if tema.is_valid():
+            tema.save()
+            return HttpResponseRedirect(reverse('temas_admin:temas'))

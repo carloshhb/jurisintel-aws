@@ -4,40 +4,47 @@
         <div class="card card-container">
             <div class="card-container-header">
                 <div class="card-title">{{ v.titulo }}</div>
-                <i class="fas fa-times card-remove-button js-remove" data-url="{% url 'conteudo:card_delete' id %}"></i>
+                {% if v.possible_edit %}
+                    <i class="fas fa-times card-remove-button js-remove" data-url="{% url 'conteudo:card_delete' id %}"></i>
+                {% endif %}
             </div>
             <div class="card-body content-of-card">
-                <div class="inside-card" data-url="{% url 'conteudo:open-case' id%}">
-                    <p class="card-resumo">{{ v.resumo }}
-                        {% if v.fit %}
+                {% if v.tema %}
+                    <div class="inside-card">
+                {% else %}
+                    <div class="inside-card" data-url="{% url 'conteudo:open-case' id%}">
+                {% endif %}
+                        <p class="card-resumo">{{ v.resumo }}
+                    {% if v.fit %}
                             <strong>Ver mais</strong>
-                        {% endif %}
-                    </p>
-                </div>
-                <div class="action-buttons">
-                    {#                    {% if campo.editable %}#}
-                    <button type="button" class="button button-icon button-icon__actions js-card-update"
-                            data-url="{% url 'conteudo:card_update' id %}" title="Editar conteúdo do cartão">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <a class="button button-icon button-icon__actions" data-toggle="tolltip"
-                       data-placement="top" title="Adicionar documentos ao processo"
-                       href="{% url "conteudo:add-documento" id %}">
-                        <i class="fas fa-paperclip"></i>
-                    </a>
-                    <a href="#" class="button button-icon button-icon__actions js-add-tags" data-toggle="tolltip"
-                       data-placement="top" title="Adicionar tags" data-url="{% url 'conteudo:add_card_tags' id %}">
-                        <i class="fas fa-tag"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="card-tags">
-                {% for idT, v in tags %}
-                    {% if idT == id %}
-                        <span class="badge badge-pill badge-danger tag">{{ v|first }}</span>
                     {% endif %}
-                {% endfor %}
+                        </p>
+                    </div>
+                <div class="action-buttons">
+                    {% if v.possible_edit %}
+                        <button type="button" class="button button-icon button-icon__actions js-card-update"
+                                data-url="{% url 'conteudo:card_update' id %}" title="Editar conteúdo do cartão">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <a class="button button-icon button-icon__actions" data-toggle="tolltip"
+                           data-placement="top" title="Adicionar documentos ao processo"
+                           href="{% url "conteudo:add-documento" id %}">
+                            <i class="fas fa-paperclip"></i>
+                        </a>
+                        <a href="#" class="button button-icon button-icon__actions js-add-tags" data-toggle="tolltip"
+                           data-placement="top" title="Adicionar tags" data-url="{% url 'conteudo:add_card_tags' id %}">
+                            <i class="fas fa-tag"></i>
+                        </a>
+                    {% endif %}
+                </div>
+                </div>
+                <div class="card-tags">
+                    {% for idT, v in tags %}
+                        {% if idT == id %}
+                            <span class="badge badge-pill badge-danger tag">{{ v|first }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
 {% endfor %}
