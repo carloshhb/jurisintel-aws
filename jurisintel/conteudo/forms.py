@@ -54,4 +54,23 @@ class EditTemaForm(forms.ModelForm):
         fields = ['titulo_tema']
 
 
+class UserTema(forms.ModelForm):
+    titulo_tema = forms.ModelMultipleChoiceField(queryset=Tema.objects.none(), required=False, widget=forms.SelectMultiple(
+        attrs={'class': 'form-control'}
+    ))
+
+    class Meta:
+        model = Tema
+        fields = ['titulo_tema']
+
+    def __init__(self, mode, user, *args, **kwargs):
+        super(UserTema, self).__init__(*args, **kwargs)
+        if mode is None:
+            self.fields['titulo_tema'].queryset = Tema.objects.all().exclude(usuarios=user)
+            self.fields['titulo_tema'].label = 'Temas disponíveis'
+        else:
+            self.fields['titulo_tema'].queryset = Tema.objects.filter(usuarios=user)
+            self.fields['titulo_tema'].label = 'Temas acompanhados'
+
+
 TagFormset = formset_factory(TagForm, extra=1)

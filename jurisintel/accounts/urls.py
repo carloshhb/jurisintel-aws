@@ -15,4 +15,5 @@ urlpatterns=[
     url(r'perfil/assinatura$', AssinaturasView.as_view(template_name='accounts/profile_plans.html'), name='profile_plans'),
     url(r'perfil/escritorio$', EscritorioView.as_view(template_name='accounts/firm_view.html'), name='escritorio'),
     url(r'alterar-senha/', views.change_password, name='change_password'),
+    url(r'add-tema/', views.add_temas_observe, name='add-temas'),
 ]

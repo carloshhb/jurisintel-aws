@@ -379,6 +379,11 @@
         .error-field input{
             border-color: #dc3545;
         }
+        .temas-form-actions{
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
         @media (min-width: 1025px){
             form label{
                 text-align: right;
@@ -436,9 +441,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#ji-profile" data-toggle="tab">Conta & Perfil</a>
                     </li>
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="#ji-escritorio" data-toggle="tab">Escritório</a>#}
-{#                    </li>#}
+                    {#                    <li class="nav-item">#}
+                    {#                        <a class="nav-link" href="#ji-escritorio" data-toggle="tab">Escritório</a>#}
+                    {#                    </li>#}
                     <li class="nav-item">
                         <a class="nav-link" href="#ji-temas" data-toggle="tab">Temas</a>
                     </li>
@@ -578,13 +583,16 @@
                                         </div>
                                     </div>
                                     <!-- Select Tema Form -->
-                                    <form id="" action="" method="post">
+                                    <form id="form-select-temas" action="{% url 'accounts:add-temas' %}" method="post">
                                         <div class="ji-form__body">
+                                            {% csrf_token %}
                                             <div class="ji-form-section" id="select-section">
-                                                {% for id, tema in temas %}
-                                                    {{ tema.titulo }}
-                                                {% endfor %}
-
+                                                {% include 'includes/form.html' with form=ut %}
+                                                <div class="temas-form-actions">
+                                                    <button class="btn-secondary add-tema"><i class="fas fa-chevron-up"></i></button>
+                                                    <button class="btn-secondary remove-tema"><i class="fas fa-chevron-down"></i></button>
+                                                </div>
+                                                {% include 'includes/form.html' with form=at %}
                                             </div>
                                         </div>
                                         <div class="ji-form__foot">
@@ -610,6 +618,45 @@
 {% endblock sections %}
 {% block scripts %}
     <script>
+        $(document).ready(function () {
+            $('.add-tema').click(function () {
+                $.each($('#id_avb-titulo_tema option:selected'), function(){
+                    let numero = $(this).attr('value');
+                    let texto = $(this).text();
+                    let tt = document.getElementById('id_titulo_tema');
+                    tt[tt.options.length] = new Option(texto, numero);
+                    $(this).remove();
+                });
+            });
+
+            $('.remove-tema').click(function () {
+                $.each($('#id_titulo_tema option:selected'), function(){
+                    let numero = $(this).attr('value');
+                    let texto = $(this).text();
+                    let tt = document.getElementById('id_avb-titulo_tema');
+                    tt[tt.options.length] = new Option(texto, numero);
+                    $(this).remove();
+                });
+            });
+
+            $('#form-select-temas').submit(function (e) {
+                e.preventDefault();
+                let tt = document.getElementById('id_titulo_tema');
+                for (let i = 0; i < tt.options.length; i++){
+                    tt.options[i].selected = true;
+                }
+                $.ajax({
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    method: 'post',
+                    success: function (response) {
+                        console.log(response);
+                    }
+                })
+            })
+
+        });
         $('#changePasswordForm').submit(function (e) {
             e.preventDefault();
             $.ajax({
@@ -627,6 +674,7 @@
                 }
             })
         });
+
 
     </script>
 {% endblock %}

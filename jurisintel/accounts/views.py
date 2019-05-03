@@ -3,6 +3,8 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from conteudo.views import retrieve_themes
+from conteudo.forms import UserTema
+from conteudo.models import Tema
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -123,7 +125,10 @@ class PerfilView(TemplateView):
         user = User.objects.get(email__iexact=email)
         perfil_form = PerfilForm(instance=user)
         profile_form = ProfileForm(user=request.user)
-        temas = retrieve_themes(request)
+        user_temas, all_temas = retrieve_themes(request)
+
+        ut = UserTema(mode=True, user=request.user)
+        at = UserTema(mode=None, user=request.user, prefix='avb')
         # try:
         #     lista_usuarios_por_escritorio = User.objects.filter(group_law_firm__id=request.user.group_law_firm.id)
         #     qtd_usuarios_por_escritorio = lista_usuarios_por_escritorio.count()
@@ -142,7 +147,9 @@ class PerfilView(TemplateView):
             'user_email': request.user.email,
             'formulario_usuario': perfil_form,
             'profile_form': profile_form,
-            'temas': temas,
+            'temas': user_temas,
+            'ut': ut,
+            'at': at,
             # 'quant_users_firm': qtd_usuarios_por_escritorio,
             # 'quant_proc_firm': qtd_processos_escritorio,
             # 'quant_files_firm': qtd_arquivos_escritorio,
@@ -344,4 +351,17 @@ def change_password(request):
         form = ProfileForm(request.user)
 
     data['html_response'] = render_to_string('includes/profile_form.html', {'form': form}, request=request)
+    return JsonResponse(data)
+
+
+def add_temas_observe(request):
+    data = dict()
+    if request.POST:
+        for tema_id in request.POST['titulo_tema']:
+            tema = Tema.objects.get(pk=tema_id)
+            try:
+                tema.usuarios.objects.filter(usuarios=request.user)
+            except Exception as error:
+                tema.usuarios.add(request.user)
+        data['is_valid'] = True
     return JsonResponse(data)

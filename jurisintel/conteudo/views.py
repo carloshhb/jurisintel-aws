@@ -50,8 +50,9 @@ def retrieve_cases(request):
 
 def retrieve_themes(request):
     all_themes = Tema.objects.all()
-    parameters = list()
-    for tema in all_themes:
+    tema_user = all_themes.filter(usuarios=request.user)
+    user_themes = list()
+    for tema in tema_user:
         if len(tema.descricao_tema) > 411:
             resumo = '%s ...' % tema.descricao_tema[0:411]
             fit = True
@@ -65,21 +66,29 @@ def retrieve_themes(request):
             'possible_edit': False,
             'tema': True,
         }
+        user_themes.append([tema.pk, param_dict])
+
+    parameters = list()
+
+    for tema in all_themes:
+        param_dict = {
+            'titulo': tema.titulo_tema,
+        }
         parameters.append([tema.pk, param_dict])
 
-    return parameters
+    return user_themes, parameters
 
 
 @login_required(login_url='user_login')
 def home(request):
 
     parameters, tag_list = retrieve_cases(request)
-    themes = retrieve_themes(request)
+    user_themes, all_themes = retrieve_themes(request)
 
     context = {
         'parameters': parameters,
         'tags': tag_list,
-        'themes': themes,
+        'themes': user_themes,
     }
 
     return render(request, 'conteudo/home.html', context)

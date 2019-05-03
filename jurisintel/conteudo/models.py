@@ -116,6 +116,7 @@ class Tema(models.Model):
     documentos = models.ManyToManyField(Files, blank=True)
     ementas = models.ManyToManyField(Ementas, blank=True)
     identifier_code = models.CharField(max_length=150, unique=True, default=gerar_id_code())
+    usuarios = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return '%s' % self.titulo_tema
