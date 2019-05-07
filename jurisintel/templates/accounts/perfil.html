@@ -619,18 +619,21 @@
 {% block scripts %}
     <script>
         $(document).ready(function () {
-            $('.add-tema').click(function () {
+
+            $('.add-tema').click(function (e) {
+                e.preventDefault();
                 $.each($('#id_avb-titulo_tema option:selected'), function(){
                     let numero = $(this).attr('value');
                     let texto = $(this).text();
-                    let tt = document.getElementById('id_titulo_tema');
+                    let tt = document.getElementById('titulo_tema');
                     tt[tt.options.length] = new Option(texto, numero);
                     $(this).remove();
                 });
             });
 
-            $('.remove-tema').click(function () {
-                $.each($('#id_titulo_tema option:selected'), function(){
+            $('.remove-tema').click(function (e) {
+                e.preventDefault();
+                $.each($('#titulo_tema option:selected'), function(){
                     let numero = $(this).attr('value');
                     let texto = $(this).text();
                     let tt = document.getElementById('id_avb-titulo_tema');
@@ -641,7 +644,7 @@
 
             $('#form-select-temas').submit(function (e) {
                 e.preventDefault();
-                let tt = document.getElementById('id_titulo_tema');
+                let tt = document.getElementById('titulo_tema');
                 for (let i = 0; i < tt.options.length; i++){
                     tt.options[i].selected = true;
                 }
@@ -651,7 +654,22 @@
                     dataType: 'json',
                     method: 'post',
                     success: function (response) {
-                        console.log(response);
+                        iziToast.settings({
+                            timeout: 3000,
+                            position: 'center',
+                        });
+                        if(response.is_valid){
+                            iziToast.success({
+                                title: 'Sucesso',
+                                message: 'Temas atualizados',
+                            });
+                        }
+                        else{
+                            iziToast.error({
+                                title: 'Erro!',
+                                message: 'Falha ao atualizar',
+                            });
+                        }
                     }
                 })
             })

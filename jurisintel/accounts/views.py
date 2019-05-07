@@ -127,7 +127,7 @@ class PerfilView(TemplateView):
         profile_form = ProfileForm(user=request.user)
         user_temas, all_temas = retrieve_themes(request)
 
-        ut = UserTema(mode=True, user=request.user)
+        ut = UserTema(mode=True, user=request.user, auto_id=True)
         at = UserTema(mode=None, user=request.user, prefix='avb')
         # try:
         #     lista_usuarios_por_escritorio = User.objects.filter(group_law_firm__id=request.user.group_law_firm.id)
@@ -357,11 +357,18 @@ def change_password(request):
 def add_temas_observe(request):
     data = dict()
     if request.POST:
-        for tema_id in request.POST['titulo_tema']:
+
+        temas = Tema.objects.filter(usuarios=request.user)
+        for t in temas:
+            to_remove = Tema.objects.get(pk=t.pk)
+            to_remove.usuarios.remove(request.user)
+
+        for tema_id in request.POST.getlist('titulo_tema'):
             tema = Tema.objects.get(pk=tema_id)
             try:
-                tema.usuarios.objects.filter(usuarios=request.user)
+                tema.usuarios.objects.get(usuarios=request.user)
             except Exception as error:
                 tema.usuarios.add(request.user)
+
         data['is_valid'] = True
     return JsonResponse(data)
