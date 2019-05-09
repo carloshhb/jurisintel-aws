@@ -372,3 +372,18 @@ def add_temas_observe(request):
 
         data['is_valid'] = True
     return JsonResponse(data)
+
+
+def onboard_first_step(request, mode):
+    if request.POST:
+        data = dict()
+        if mode == '1':
+            request.user.profile.first_login_step = True
+            request.user.profile.save()
+            data['first_login_step'] = True
+        elif mode == '2':
+            request.user.profile.first_case_step = True
+            request.user.profile.save()
+            data['first_case_step'] = True
+
+        return JsonResponse(data)

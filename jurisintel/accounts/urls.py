@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
 from accounts import views
+from django.urls import path
 from .views import PerfilView, RegistroTrial, AssinaturasView, EscritorioView
 # SET THE NAMESPACE!
 app_name = 'accounts'
@@ -16,4 +17,6 @@ urlpatterns=[
     url(r'perfil/escritorio$', EscritorioView.as_view(template_name='accounts/firm_view.html'), name='escritorio'),
     url(r'alterar-senha/', views.change_password, name='change_password'),
     url(r'add-tema/', views.add_temas_observe, name='add-temas'),
+
+    path('first-step/<str:mode>', views.onboard_first_step, name='onboard_first_step')
 ]

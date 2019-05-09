@@ -169,6 +169,19 @@
             border: 0;
             color: white;
         }
+        .mySkip{
+            width: 180px !important;
+        }
+        .upload-error-list {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            transition: 0.5s ease-in;
+        }
+        .error-file{
+            color: red;
+        }
+
     </style>
 {% endblock styles %}
 {% block navitems %}
@@ -176,7 +189,7 @@
         <a class="nav-link" href="#">Início <span class="sr-only">(current)</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'accounts:perfil' %}">Perfil </a>
+        <a class="nav-link perfil-link" href="{% url 'accounts:perfil' %}">Perfil </a>
     </li>
     {% if user.is_authenticated %}
         <li class="nav-item">
@@ -190,6 +203,13 @@
     {% endif %}
 {% endblock navitems %}
 {% block sections %}
+    {% if not user.profile.first_login_step %}
+        <input class="onb_first_step" type="hidden" data-run="true" data-mode="1" data-url="{% url 'accounts:onboard_first_step' 1 %}"
+               data-data="{{ csrf_token }}">
+    {% elif user.profile.first_login_step and not user.profile.first_case_step %}
+        <input class="onb_first_step" type="hidden" data-run="true" data-mode="2" data-url="{% url 'accounts:onboard_first_step' 2 %}"
+               data-data="{{ csrf_token }}">
+    {% endif %}
     <!-- Main Panel -->
     <section class="temas">
         <div class="section-title">
@@ -216,7 +236,7 @@
         <div class="d-flex flex-column justify-content-center align-items-center add-case-container">
             <div class="text-muted text-center drop-zone js-upload">
                 <i class="fas fa-cloud-upload-alt" style="font-size: 1rem;"></i>
-                <h6>Arraste arquivos de um <strong>NOVO</strong> caso aqui</h6>
+                <h6>Arraste arquivos de um <strong>NOVO</strong> caso/processo aqui. Apenas PDF máx. 5MB</h6>
             </div>
             <input id="fileupload" type="file" name="files" multiple
                    style="display: none;"
@@ -246,12 +266,19 @@
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
                     </div>
+                    <div class="upload-error-list" style="display: none;">
+                        <small>Estes arquivos são maiores que o tamanho permitido (5 MB):</small>
+                    </div>
                     <div class="progress-thumbnails">
-                        - Gerando informações do(s) arquivo(s)... <i class="fas fa-spinner fa-pulse"></i>
+                        <small>- Encriptando e protegendo arquivo(s)... <i class="fas fa-spinner fa-pulse"></i></small>
                     </div>
                     <div class="progress-resumo">
-                        - Por gentileza, aguarde um momento enquanto os resumos são gerados... <i class="fas fa-spinner fa-pulse"></i>
+                        <small>- Por gentileza, aguarde um momento enquanto os resumos são gerados... <i class="fas fa-spinner fa-pulse"></i></small>
                     </div>
+                </div>
+                <div class="modal-footer" style="display: none;">
+                    <small>O envio falhou, feche e tente novamente.</small>
+                    <button class="btn btn-danger modal-close">Fechar</button>
                 </div>
             </div>
         </div>
@@ -276,7 +303,6 @@
                 let url = $(this).data('url');
                 window.open(url, '_blank');
             };
-
             $('.casos').on("click", '.inside-card', openCase);
 
             let temasCollapse = $('#temasCollapse');
@@ -293,6 +319,11 @@
                 btnIcon.addClass('fas fa-chevron-circle-up');
             });
 
+            $('.modal-close').click(function (e) {
+                $('#modal-progress').modal('hide');
+                location.reload();
+            });
+
             $(".js-upload").on('click', function () {
                 $('#fileupload').trigger('click');
             });
@@ -305,7 +336,7 @@
                 },
                 stop: function(e){
                     {#$("#modal-progress").modal("hide");#}
-                    if ($('#files-id').attr('value') != ''){
+                    if ($('#files-id').attr('value').length !== 0){
                         $('#form-files').trigger('submit');
                         $(".progress-resumo").show();
                     }
@@ -316,17 +347,126 @@
                     $(".progress-bar").css({"width": strProgress});
                     $(".progress-bar").text(strProgress);
                     if (progress === 100){
-                        $('.progress-thumbnails').show();
+                        if ($('#files-id').attr('value').length !== 0){
+                            $('.progress-thumbnails').show();
+                        }
                     }
                 },
                 done: function (e, data) {  /* 3. PROCESS THE RESPONSE FROM THE SERVER */
                     if (data.result.is_valid) {
                         let preSet = $('#files-id').attr('value');
-                        $('#files-id').attr('value', preSet + data.result.file_id + ';')
+                        $('#files-id').attr('value', preSet + data.result.file_id + ';');
                     }
-                    console.log(data.result)
+                    else{
+                        $('.modal-close').parent('.modal-footer').show();
+                    }
+                    if (data.result.file_error.length !== 0){
+                        $('.upload-error-list').show();
+                        for (let i=0; i < data.result.file_error.length; i++){
+                            let listItemSmall = document.createElement('small');
+                            $(listItemSmall).addClass('error-file');
+                            $(listItemSmall).text('- ' + data.result.file_error[i][0] + ' | ' + data.result.file_error[i][1]);
+                            $('.upload-error-list').append(listItemSmall);
+                        }
+                    }
                 }
             });
+
+            if ($('.onb_first_step').data('run') === true && $('.onb_first_step').data('mode') === 1){
+
+                let firstStepClose = function (){
+                    $.ajax({
+                        url: $('.onb_first_step').data('url'),
+                        data: {
+                            'csrfmiddlewaretoken': $('.onb_first_step').data('data')
+                        },
+                        method: 'post',
+                        success: function (response) {
+                            console.log(response);
+                        }
+                    })
+                };
+
+                let intro = introJs();
+                intro.onexit(firstStepClose);
+                intro.oncomplete(firstStepClose);
+                intro.setOptions({
+                    steps: [
+                        {
+                            element: '.add-case-container .drop-zone',
+                            intro: 'Clique aqui ou arraste documentos PDF para gerar o caso/processo',
+                            position: 'right'
+                        },
+                    ],
+                    nextLabel: 'Continuar',
+                    prevLabel: 'Voltar',
+                    skipLabel: 'Fim',
+                    doneLabel: 'Fim',
+                    hidePrev: true,
+                    exitOnEsc: true,
+                    exitOnOverlayClick: false,
+                    disableInteractions: true
+                });
+                intro.start();
+
+            }
+            else if ($('.onb_first_step').data('run') === true && $('.onb_first_step').data('mode') === 2) {
+                let firstStepClose = function (){
+                    $.ajax({
+                        url: $('.onb_first_step').data('url'),
+                        data: {
+                            'csrfmiddlewaretoken': $('.onb_first_step').data('data')
+                        },
+                        method: 'post',
+                        success: function (response) {
+                            console.log(response);
+                        }
+                    })
+                };
+
+                let intro = introJs();
+                intro.onexit(firstStepClose);
+                intro.oncomplete(firstStepClose);
+                intro.setOptions({
+                    steps: [
+                        {
+                            element: '.cases-section-container .cases-card .card .card-body .inside-card',
+                            intro: 'Ao clicar aqui você abre o conteudo do caso/processo',
+                            position: 'right'
+                        },
+                        {
+                            element: '.card-container-header',
+                            intro: 'Ao clicar aqui no X você remove o caso/processo e todo seu conteúdo. É irreversível!',
+                            position: 'right'
+                        },
+                        {
+                            element: '.js-card-update',
+                            intro: 'Aqui você atualiza o caso/processo',
+                            position: 'right'
+                        },
+                        {
+                            element: '.js-add-docs',
+                            intro: 'Aqui você pode adicionar documentos ao caso/processo já criado',
+                            position: 'right'
+                        },
+                        {
+                            element: '.js-add-tags',
+                            intro: 'Aqui você atualiza o caso/processo',
+                            position: 'right'
+                        },
+                    ],
+                    nextLabel: 'Continuar',
+                    prevLabel: 'Voltar',
+                    skipLabel: 'Fim',
+                    doneLabel: 'Fim',
+                    hidePrev: true,
+                    exitOnEsc: true,
+                    exitOnOverlayClick: false,
+                    disableInteractions: true
+                });
+                intro.start();
+            }
+
         });
 
         $(function () {

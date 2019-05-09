@@ -4,6 +4,8 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class UserManager(BaseUserManager):
@@ -95,5 +97,24 @@ class PlanGroup(models.Model):
     status_assinatura = models.BooleanField(blank=True)
     end_date = models.DateTimeField(blank=True)
 
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_login_step = models.BooleanField(default=False)
+    first_case_step = models.BooleanField(default=False)
+
+    def __str__(self):
+        return 'Usuário: %s - %s' % (self.user.full_name, self.user.email)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, created, **kwargs):
+    instance.profile.save()
 
 # auditlog.register(LawFirm)

@@ -17,7 +17,7 @@ from wand.image import Image as wi
 
 from .forms import CardForm, UpdateCaseForm, TagFormset, TemaForm, EditTemaForm
 from .models import Case, Files, Tags, Thumbnail, Tema
-from .utils import get_documents_, get_case_tags, get_case_ementas
+from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
 
@@ -97,7 +97,7 @@ def home(request):
 def upload(request):
 
     data = dict()
-
+    file_error = list()
     if request.POST:
         s3_file = PublicMediaStorage()
         s3_file.file_overwrite = False
@@ -106,40 +106,47 @@ def upload(request):
         s3_thumb.file_overwrite = False
 
         for file in request.FILES.getlist('files'):
-            try:
-                pdf = wi(file=file, resolution=200)
-                arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
-                path = '%s/%s' % (str(request.user.pk), arquivo)
-                uploaded_file = s3_file.save(path, file)
-                save_file = Files.objects.create(file=uploaded_file)
-            except Exception as error:
-                print(error)
-            else:
-                if save_file:
-                    data['is_valid'] = True
-                    data['file_id'] = save_file.pk
-                else:
-                    data['is_valid'] = False
-
+            if not file.size > 5000000:
                 try:
-                    thumbnail_image = pdf.convert("jpeg")
-                    temp_image = tempfile.SpooledTemporaryFile()
-                    pdf_name = str(arquivo).split('.pdf')
-                    thumb_name = '%s.jpg' % pdf_name[0]
-
-                    with thumbnail_image.sequence[0] as img:
-                        page = wi(image=img)
-                        page.width = 150
-                        page.height = 200
-                        page.strip()
-                        page.save(file=temp_image)
-                        img_file = s3_thumb.save(thumb_name, temp_image)
-                        thumbnail = Thumbnail.objects.create(thumbnail=img_file)
-                        save_file.thumbnail = thumbnail
-                        save_file.save()
+                    pdf = wi(file=file, resolution=200)
+                    arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
+                    path = '%s/%s' % (str(request.user.pk), arquivo)
+                    uploaded_file = s3_file.save(path, file)
+                    save_file = Files.objects.create(file=uploaded_file)
                 except Exception as error:
                     print(error)
+                else:
+                    if save_file:
+                        data['is_valid'] = True
+                        data['file_id'] = save_file.pk
+                    else:
+                        data['is_valid'] = False
 
+                    try:
+                        thumbnail_image = pdf.convert("jpeg")
+                        temp_image = tempfile.SpooledTemporaryFile()
+                        pdf_name = str(arquivo).split('.pdf')
+                        thumb_name = '%s.jpg' % pdf_name[0]
+
+                        with thumbnail_image.sequence[0] as img:
+                            page = wi(image=img)
+                            page.width = 150
+                            page.height = 200
+                            page.strip()
+                            page.save(file=temp_image)
+                            img_file = s3_thumb.save(thumb_name, temp_image)
+                            thumbnail = Thumbnail.objects.create(thumbnail=img_file)
+                            save_file.thumbnail = thumbnail
+                            save_file.save()
+                    except Exception as error:
+                        print(error)
+            else:
+                arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
+                file_error.append([arquivo, get_printable_size(file.size)])
+
+        data['file_error'] = file_error
+        if len(data['file_error']) != 0:
+            data['is_valid'] = False
         return JsonResponse(data)
 
 
