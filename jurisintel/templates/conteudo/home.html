@@ -211,27 +211,27 @@
                data-data="{{ csrf_token }}">
     {% endif %}
     <!-- Main Panel -->
-    <section class="temas">
-        <div class="section-title">
-            <div class="d-flex flex-row justify-content-between">
-                <h5>Temas</h5>
-                <button class="btn toggle-temas" data-toggle="collapse" data-target="#temasCollapse" aria-expanded="false" aria-controls="temasCollapse">
-                    <i class="fas fa-chevron-circle-up icon"></i>
-                </button>
-            </div>
-
-        </div>
-        {% if themes %}
-            <div class="col-12 section-container collapse show" aria-labelledby="headingOne" id="temasCollapse">
-                {% include 'conteudo/includes/cards.html' with parameters=themes %}
-            </div>
-        {% else %}
-            <div class="col-12 section-container collapse show" style="justify-content: center;" aria-labelledby="headingOne" id="temasCollapse">
-                <h6>Você não escolheu os temas para serem acompanhados ainda, na aba <strong>PERFIL</strong> é possível fazê-lo.</h6>
-            </div>
-        {% endif %}
-
-    </section>
+{#    <section class="temas">#}
+{#        <div class="section-title">#}
+{#            <div class="d-flex flex-row justify-content-between">#}
+{#                <h5>Temas</h5>#}
+{#                <button class="btn toggle-temas" data-toggle="collapse" data-target="#temasCollapse" aria-expanded="false" aria-controls="temasCollapse">#}
+{#                    <i class="fas fa-chevron-circle-up icon"></i>#}
+{#                </button>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+{#        {% if themes %}#}
+{#            <div class="col-12 section-container collapse show" aria-labelledby="headingOne" id="temasCollapse">#}
+{#                {% include 'conteudo/includes/cards.html' with parameters=themes %}#}
+{#            </div>#}
+{#        {% else %}#}
+{#            <div class="col-12 section-container collapse show" style="justify-content: center;" aria-labelledby="headingOne" id="temasCollapse">#}
+{#                <h6>Você não escolheu os temas para serem acompanhados ainda, na aba <strong>PERFIL</strong> é possível fazê-lo.</h6>#}
+{#            </div>#}
+{#        {% endif %}#}
+{##}
+{#    </section>#}
     <section class="add-case">
         <div class="d-flex flex-column justify-content-center align-items-center add-case-container">
             <div class="text-muted text-center drop-zone js-upload">

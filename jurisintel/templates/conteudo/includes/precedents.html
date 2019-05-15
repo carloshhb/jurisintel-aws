@@ -12,3 +12,16 @@
         </div>
     {% endfor %}
 </div>
+<script>
+    $('.precedents-text').click(function () {
+        let size = $(this).height();
+        let card = $(this).parent('.precedents-card');
+        console.log(size);
+        if (card.height() === size)
+            card.css('maxHeight', '20rem');
+        else if (card.height() === '20rem')
+            card.css('maxHeight', size+10);
+        else
+            console.log(card.height())
+    });
+</script>
