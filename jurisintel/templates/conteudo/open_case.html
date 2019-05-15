@@ -561,8 +561,8 @@
                     global: false,
                     success: function (response) {
                         if (response.is_valid){
-                            $('#js-docs-panel-nav').html(response.html_docs);
-                            $('.similares-docs').html(response.html_docs);
+                            $('#js-docs-panel-nav').empty().html(response.html_docs);
+                            $('.similares-docs').empty().html(response.html_docs);
                         }
                     }
                 })
