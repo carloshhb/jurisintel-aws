@@ -17,4 +17,5 @@ urlpatterns = [
     path('remove-card/<str:pk>', views.card_delete, name='card_delete'),
     path('add-tag/<str:pk>', views.add_card_tags, name='add_card_tags'),
     path('add-doc/<str:pk>', views.AddDoc.as_view(), name='add-documento'),
+    path('rem-doc/<str:pk>', views.remover_arquivo, name='remover_arquivo'),
 ]

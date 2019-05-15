@@ -278,6 +278,24 @@ def open_case(request, pk):
         return HttpResponseRedirect(reverse('conteudo:home'))
 
 
+def remover_arquivo(request, pk):
+    if request.POST:
+        data = dict()
+
+        arquivo = Files.objects.get(pk=pk)
+        arquivo.delete()
+
+        case_pk = request.POST['case_id']
+        case = Case.objects.get(pk=case_pk)
+        documentos = get_documents_(case)
+        context = {
+            'documentos': documentos
+        }
+        data['is_valid'] = True
+        data['html_docs'] = render_to_string('conteudo/includes/docs_view.html', context=context, request=request)
+        return JsonResponse(data)
+
+
 def verify_similarities(request, pk):
     if request.POST:
         file_to_verify = Files.objects.get(pk=request.POST['file'])

@@ -1,0 +1,13 @@
+{% for id, doc in documentos %}
+    <div class="panel-item">
+        <a class="panel-item__link" href="{{ doc.file_url }}" target="_blank">
+            <img class="mini-thumb" src="{{ doc.file_thumbnail }}" alt="Thumbnail">
+            <small>{{ doc.file_name }}</small>
+        </a>
+        <button type="button" class="btn btn-link btn-icon js-remover-arquivo"
+                data-url="{% url 'conteudo:remover_arquivo' doc.file_id %}" data-data="{{ csrf_token }}"
+                data-find="{{ pk }}">
+            Remover
+        </button>
+    </div>
+{% endfor %}

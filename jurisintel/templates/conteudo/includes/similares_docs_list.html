@@ -1,0 +1,8 @@
+{% for k, v in documentos %}
+    <div class="open-case-sim-doc" id="{{ forloop.counter0 }}">
+        <img class= "open-case-thumbnail" src="{{ v.file_thumbnail }}" alt="Thumbnail"
+             id="{{ v.file_name }}_{{ forloop.counter0 }}" data-file="{{ v.file_id }}" data-csrf="{{ csrf_token }}"
+             data-url="{% url 'conteudo:similarities' pk %}">
+        <small>{{ v.file_name }}</small>
+    </div>
+{% endfor %}
