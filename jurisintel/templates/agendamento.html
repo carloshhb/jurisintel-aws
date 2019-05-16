@@ -1,0 +1,41 @@
+{% extends 'conteudo/base_conteudo.html' %}
+{% block title %}JurisIntel - Agendamento de Onboard{% endblock title %}
+{% block styles %}
+    <style>
+        .agendamento{
+            padding: 2rem;
+            color: #666A73;
+        }
+    </style>
+{% endblock styles %}
+{% block navitems %}
+    {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+    {% endif %}
+{% endblock navitems %}
+{% block sections %}
+    <div class="agendamento">
+        <div class="container">
+            <p>Olá! Ficamos muito entusiasmados com o seu interesse na JurisIntel!</p>
+
+            <p>O próximo passo para iniciar o seu teste será agendarmos uma breve conversa online de apresentação e demonstração, tocando nos seguintes pontos:</p>
+            <ul class="">
+                <li class="">Sua atuação e desafios;</li>
+                <li class="">Apresentar o que fazemos;</li>
+                <li class="">Funcionamento e duração da fase de testes;</li>
+                <li class="">Como tirar o máximo da JurisIntel, e qualquer dúvida que você tenha.</li>
+            </ul>
+            <p>Para facilitar encontrarmos um horário, <strong>utilizando o calendário abaixo para agendamento</strong> você pode escolher qualquer horário que lhe agrade.</p>
+
+            <p>Aguardamos o seu agendamento!</p>
+            <div class="agendamento-footer">
+                <p>Time da JurisIntel.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Widget em linha do Calendly - início -->
+    <div class="calendly-inline-widget" data-url="https://calendly.com/victor-jurisintel" style="min-width:320px;height:580px;"></div>
+    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+    <!-- Widget em linha do Calendly - fim -->
+{% endblock sections %}

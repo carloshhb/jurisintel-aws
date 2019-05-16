@@ -18,5 +18,6 @@ urlpatterns=[
     url(r'alterar-senha/', views.change_password, name='change_password'),
     url(r'add-tema/', views.add_temas_observe, name='add-temas'),
 
+    path('agendamento/', views.agendamento, name='agendamento'),
     path('first-step/<str:mode>', views.onboard_first_step, name='onboard_first_step')
 ]

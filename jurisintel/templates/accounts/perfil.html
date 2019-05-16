@@ -441,12 +441,12 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#ji-profile" data-toggle="tab">Conta & Perfil</a>
                     </li>
-                    {#                    <li class="nav-item">#}
-                    {#                        <a class="nav-link" href="#ji-escritorio" data-toggle="tab">Escritório</a>#}
-                    {#                    </li>#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="#ji-temas" data-toggle="tab">Temas</a>#}
-{#                    </li>#}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ji-escritorio" data-toggle="tab">Escritório</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ji-temas" data-toggle="tab">Temas</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -551,67 +551,67 @@
             </div>
             <!-- End Firm -->
             <!-- Temas -->
-{#            <div class="tab-pane fade" id="ji-temas" role="tabpanel">#}
-{#                <div class="row">#}
-{#                    <div class="col-lg-4 col-xl-3">#}
-{#                        <div class="profile-portlet">#}
-{#                            <div class="profile-portlet__body profile-portlet__body-fit">#}
-{#                                <!-- Nav Items -->#}
-{#                                <ul class="ji-nav nav nav-tabs" role="tablist">#}
-{#                                    <li class="ji-nav__item">#}
-{#                                        <a class="ji-nav__link active" data-toggle="tab" href="#ji_form_select_temas" role="tab">#}
-{#                                            <!-- Nav Item Icon -->#}
-{#                                            <i class="ji-nav__link-icon far fa-list-alt"></i>#}
-{#                                            <span class="ji-nav__link-text">Selecionar Temas</span>#}
-{#                                        </a>#}
-{#                                    </li>#}
-{#                                </ul>#}
-{#                                <!-- End Nav -->#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{##}
-{#                    <div class="col-lg-8 col-xl-9">#}
-{#                        <div class="tab-content">#}
-{#                            <div class="tab-pane fade active show" id="ji-form_select_temas" role="tabpanel">#}
-{#                                <div class="profile-portlet">#}
-{#                                    <div class="ji-portlet__head">#}
-{#                                        <div class="ji-portlet__head-label">#}
-{#                                            <h3 class="ji-portlet__head-label-title">Temas#}
-{#                                                <small>selecionar temas para serem acompanhados</small>#}
-{#                                            </h3>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                    <!-- Select Tema Form -->#}
-{#                                    <form id="form-select-temas" action="{% url 'accounts:add-temas' %}" method="post">#}
-{#                                        <div class="ji-form__body">#}
-{#                                            {% csrf_token %}#}
-{#                                            <div class="ji-form-section" id="select-section">#}
-{#                                                {% include 'includes/form.html' with form=ut %}#}
-{#                                                <div class="temas-form-actions">#}
-{#                                                    <button class="btn-secondary add-tema"><i class="fas fa-chevron-up"></i></button>#}
-{#                                                    <button class="btn-secondary remove-tema"><i class="fas fa-chevron-down"></i></button>#}
-{#                                                </div>#}
-{#                                                {% include 'includes/form.html' with form=at %}#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                        <div class="ji-form__foot">#}
-{#                                            <div class="ji-form__actions">#}
-{#                                                <div class="col-lg-3 col-xl-3">#}
-{#                                                    <button type="submit" class="btn btn-success">Atualizar</button>#}
-{#                                                    <button type="reset" class="btn btn-secondary">Cancelar</button>#}
-{#                                                </div>#}
-{#                                                <div class="col-lg-9 col-xl-9"></div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                    </form>#}
-{#                                    <!-- End Form -->#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
+            <div class="tab-pane fade" id="ji-temas" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4 col-xl-3">
+                        <div class="profile-portlet">
+                            <div class="profile-portlet__body profile-portlet__body-fit">
+                                <!-- Nav Items -->
+                                <ul class="ji-nav nav nav-tabs" role="tablist">
+                                    <li class="ji-nav__item">
+                                        <a class="ji-nav__link active" data-toggle="tab" href="#ji_form_select_temas" role="tab">
+                                            <!-- Nav Item Icon -->
+                                            <i class="ji-nav__link-icon far fa-list-alt"></i>
+                                            <span class="ji-nav__link-text">Selecionar Temas</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!-- End Nav -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-xl-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="ji-form_select_temas" role="tabpanel">
+                                <div class="profile-portlet">
+                                    <div class="ji-portlet__head">
+                                        <div class="ji-portlet__head-label">
+                                            <h3 class="ji-portlet__head-label-title">Temas
+                                                <small>selecionar temas para serem acompanhados</small>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <!-- Select Tema Form -->
+                                    <form id="form-select-temas" action="{% url 'accounts:add-temas' %}" method="post">
+                                        <div class="ji-form__body">
+                                            {% csrf_token %}
+                                            <div class="ji-form-section" id="select-section">
+                                                {% include 'includes/form.html' with form=ut %}
+                                                <div class="temas-form-actions">
+                                                    <button class="btn-secondary add-tema"><i class="fas fa-chevron-up"></i></button>
+                                                    <button class="btn-secondary remove-tema"><i class="fas fa-chevron-down"></i></button>
+                                                </div>
+                                                {% include 'includes/form.html' with form=at %}
+                                            </div>
+                                        </div>
+                                        <div class="ji-form__foot">
+                                            <div class="ji-form__actions">
+                                                <div class="col-lg-3 col-xl-3">
+                                                    <button type="submit" class="btn btn-success">Atualizar</button>
+                                                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                                                </div>
+                                                <div class="col-lg-9 col-xl-9"></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- End Form -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- End Temas -->
         </div>
     </div>

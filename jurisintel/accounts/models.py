@@ -102,6 +102,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_login_step = models.BooleanField(default=False)
     first_case_step = models.BooleanField(default=False)
+    allow_entrance = models.BooleanField(default=False)
 
     def __str__(self):
         return 'Usuário: %s - %s' % (self.user.full_name, self.user.email)

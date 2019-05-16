@@ -87,7 +87,10 @@ def registro(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('conteudo:home'))
+        if request.user.profile.allow_entrance:
+            return HttpResponseRedirect(reverse('conteudo:home'))
+        else:
+            return HttpResponseRedirect(reverse('accounts:agendamento'))
 
     error_msg = False
 
@@ -99,17 +102,22 @@ def user_login(request):
         user = authenticate(email=email, password=password)
 
         if user:
-            if user.is_active:
+            if user.profile.allow_entrance:
                 login(request, user)
                 return HttpResponseRedirect(reverse('conteudo:home'))
             else:
-                return HttpResponse("Sua conta não está ativa.")
+                login(request, user)
+                return HttpResponseRedirect(reverse('accounts:agendamento'))
         else:
             error_msg = 'Credenciais inválidas.'
     else:
         login_form = LoginForm()
 
     return render(request, 'accounts/login.html', {'login_form': login_form, 'error_msg': error_msg})
+
+
+def agendamento(request):
+    return render(request, 'agendamento.html', {})
 
 
 def reset_password(request):
