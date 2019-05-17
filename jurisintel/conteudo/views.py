@@ -2,6 +2,7 @@ import mimetypes
 import os
 import secrets
 import tempfile
+import csv
 import unicodedata
 
 import requests
@@ -16,7 +17,7 @@ from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
 
 from .forms import CardForm, UpdateCaseForm, TagFormset, TemaForm, EditTemaForm
-from .models import Case, Files, Tags, Thumbnail, Tema
+from .models import Case, Files, Tags, Thumbnail, Tema, Ementas
 from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
@@ -294,6 +295,25 @@ def remover_arquivo(request, pk):
         data['is_valid'] = True
         data['html_docs'] = render_to_string('conteudo/includes/docs_view.html', context=context, request=request)
         return JsonResponse(data)
+
+
+def save_ementas(doc):
+    with open(doc, encoding='UTF-8') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        data = {}
+        for row in reader:
+            for header, value in row.items():
+                try:
+                    data[header].append(value)
+                except KeyError:
+                    data[header] = [value]
+    ementas_set = set()
+    for x in data['ementa']:
+        ementas_set.add(x)
+    ementas_list = list(ementas_set)
+
+    for k in ementas_list:
+        Ementas.objects.create(orgao='CARF', texto=k)
 
 
 def verify_similarities(request, pk):

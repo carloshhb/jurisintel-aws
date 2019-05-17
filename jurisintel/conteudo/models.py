@@ -12,6 +12,7 @@ from .random_primary import RandomPrimaryIdModel
 
 
 class Ementas(models.Model):
+    orgao = models.CharField(max_length=150, blank=True, null=True)
     texto = models.TextField()
 
     def __str__(self):

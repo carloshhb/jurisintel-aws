@@ -17,10 +17,14 @@ class TemaSite(AdminSite):
         return urls + custom_urls
 
 
+class CaseAdmin(admin.ModelAdmin):
+    list_display = ['user', 'titulo', 'created_at']
+
+
 admin_site = TemaSite(name='temas_admin')
 admin.site.register(Files)
 admin.site.register(Ementas)
-admin.site.register(Case)
+admin.site.register(Case, CaseAdmin)
 admin.site.register(Tags)
 admin.site.register(Tema)
 admin.site.register(Thumbnail)
