@@ -22,8 +22,8 @@ class CaseAdmin(admin.ModelAdmin):
 
 
 admin_site = TemaSite(name='temas_admin')
-admin.site.register(Files)
-admin.site.register(Ementas)
+admin.site.register(File)
+admin.site.register(Ementa)
 admin.site.register(Case, CaseAdmin)
 admin.site.register(Tags)
 admin.site.register(Tema)

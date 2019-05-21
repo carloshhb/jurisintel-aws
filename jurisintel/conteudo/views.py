@@ -16,9 +16,9 @@ from django.views.generic import TemplateView
 from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
 
-from .forms import CardForm, UpdateCaseForm, TagFormset, TemaForm, EditTemaForm
-from .models import Case, Files, Tags, Thumbnail, Tema, Ementas
-from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size
+from .forms import CardForm, UpdateCaseForm, TagsFormset, TemaForm, EditTemaForm
+from .models import Case, File, Tags, Thumbnail, Tema, Ementa
+from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
 
@@ -113,7 +113,7 @@ def upload(request):
                     arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
                     path = '%s/%s' % (str(request.user.pk), arquivo)
                     uploaded_file = s3_file.save(path, file)
-                    save_file = Files.objects.create(file=uploaded_file)
+                    save_file = File.objects.create(file=uploaded_file)
                 except Exception as error:
                     print(error)
                 else:
@@ -185,7 +185,7 @@ def file_upload(request):
         ids = request.POST['file-list-id'].split(';')
         for pk in ids:
             if pk is not '':
-                file_object = get_object_or_404(Files, pk=pk)
+                file_object = get_object_or_404(File, pk=pk)
 
                 criar_resumo(file_object.file, file_object)
 
@@ -279,11 +279,29 @@ def open_case(request, pk):
         return HttpResponseRedirect(reverse('conteudo:home'))
 
 
+def open_tema(request, pk):
+    tema = get_object_or_404(Tema, pk=pk)
+    ementas = get_case_ementas(tema)
+    documentos = get_documents_tema(tema)
+    # tags = get_case_tags(tema)
+
+    context = {
+        'titulo': tema.titulo_tema,
+        'resumo': tema.descricao_tema,
+        'documentos': documentos,
+        'ementas': ementas,
+        'pk': pk,
+        # 'tags': tags,
+    }
+
+    return render(request, 'conteudo/open_tema.html', context)
+
+
 def remover_arquivo(request, pk):
     if request.POST:
         data = dict()
 
-        arquivo = Files.objects.get(pk=pk)
+        arquivo = File.objects.get(pk=pk)
         arquivo.delete()
 
         case_pk = request.POST['case_id']
@@ -293,6 +311,8 @@ def remover_arquivo(request, pk):
             'documentos': documentos
         }
         data['is_valid'] = True
+        data['html_docs_similares'] = render_to_string('conteudo/includes/similares_docs_list.html', context=context,
+                                                       request=request)
         data['html_docs'] = render_to_string('conteudo/includes/docs_view.html', context=context, request=request)
         return JsonResponse(data)
 
@@ -313,13 +333,13 @@ def save_ementas(doc):
     ementas_list = list(ementas_set)
 
     for k in ementas_list:
-        Ementas.objects.create(orgao='CARF', texto=k)
+        Ementa.objects.create(orgao='CARF', texto=k)
 
 
 def verify_similarities(request, pk):
     if request.POST:
-        file_to_verify = Files.objects.get(pk=request.POST['file'])
-        list_of_files = Files.objects.filter(case__user=request.user).exclude(file=file_to_verify)
+        file_to_verify = File.objects.get(pk=request.POST['file'])
+        list_of_files = File.objects.filter(case__user=request.user).exclude(file=file_to_verify)
 
         resumo_referencia = file_to_verify.resumo
 
@@ -340,7 +360,7 @@ def verify_similarities(request, pk):
 
         simm = list()
         for k in indices:
-            f = Files.objects.get(pk=k[2])
+            f = File.objects.get(pk=k[2])
             simdict = {
                 'file_name': str(f.file).split('/')[1],
                 'indice_sim': k[0],
@@ -370,6 +390,21 @@ def verify_similarities(request, pk):
                                                   request=request)
 
         return JsonResponse(data)
+
+
+def conteudo_juridico(request, pk):
+    tema = get_object_or_404(Tema, pk=pk)
+    ementas = get_case_ementas(tema)
+
+    data = dict()
+    context = {
+        'pk': pk,
+        'ementas': ementas,
+    }
+    data['html_precedents'] = render_to_string(template_name='conteudo/includes/precedents.html', context=context,
+                                             request=request)
+
+    return JsonResponse(data)
 
 
 def precedents(request, pk):
@@ -429,10 +464,10 @@ def card_update(request, pk):
 def add_card_tags(request, pk):
 
     if request.POST:
-        formset = TagFormset(request.POST)
+        formset = TagsFormset(request.POST)
 
     else:
-        formset = TagFormset()
+        formset = TagsFormset()
     return save_tag(request, formset, 'conteudo/includes/add_tags.html', pk)
 
 
@@ -490,7 +525,7 @@ def save_tag(request, formset, template, pk):
         else:
             data['form_is_valid'] = False
 
-    formset = TagFormset()
+    formset = TagsFormset()
     context = {
         'formset': formset,
         'pk': pk,
@@ -515,7 +550,7 @@ class AddDoc(View):
             ids = request.POST['file-list-id'].split(';')
             for pk in ids:
                 if pk is not '':
-                    file_object = get_object_or_404(Files, pk=pk)
+                    file_object = get_object_or_404(File, pk=pk)
 
                     criar_resumo(file_object.file, file_object)
                     # gerar_tags(file_object.resumo)
@@ -557,7 +592,7 @@ class TemasView(TemplateView):
                 arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
                 path = '%s/%s/%s' % (str(tema.identifier_code), str(pk), arquivo)
                 uploaded_file = s3_file.save(path, file)
-                save_file = Files.objects.create(file=uploaded_file)
+                save_file = File.objects.create(file=uploaded_file)
 
                 tema.documentos.add(save_file)
                 tema.save()

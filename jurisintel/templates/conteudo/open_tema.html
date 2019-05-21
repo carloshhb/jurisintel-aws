@@ -464,10 +464,10 @@
                         <i class="far fa-folder-open side-button-icon"></i>
                         <span class="side-button__description">Docs</span>
                     </button>
-                    <button class="btn side-button" id="tags" data-toggle="tooltip" data-placement="top" title="Tags">
-                        <i class="fas fa-tags side-button-icon"></i>
-                        <span class="side-button__description">Tags</span>
-                    </button>
+{#                    <button class="btn side-button" id="tags" data-toggle="tooltip" data-placement="top" title="Tags">#}
+{#                        <i class="fas fa-tags side-button-icon"></i>#}
+{#                        <span class="side-button__description">Tags</span>#}
+{#                    </button>#}
                 </div>
             </div>
         </section>
@@ -487,14 +487,15 @@
                     {% endif %}
                 </div>
                 <div class="filters">
-                    <a href="{% url 'conteudo:precedents' pk %}" id="js-precedentes">Ementas</a> |
-                    <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> <!--|-->
+                    <a href="{% url 'conteudo:temas-precedents' pk %}" id="js-precedentes">Conteúdo Jurídico</a> <!--|-->
+{#                    <a href="{% url 'conteudo:similarities' pk %}" id="js-similar">Similares</a> <!--|-->#}
                     <!-- <a href="">Temas</a> -->
                 </div>
             </div>
             <section class="main-panel-content">
                 <div class="open-case-content">
-                    {% include 'conteudo/includes/similares.html' %}
+{#                    {% include 'conteudo/includes/similares.html' %}#}
+                    {% include 'conteudo/includes/precedents.html' %}
                 </div>
             </section>
         </section>

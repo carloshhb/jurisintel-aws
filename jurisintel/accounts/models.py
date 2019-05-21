@@ -79,7 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return '%s %s' % (self.first_name, self.last_name)
 
 
-class Planos(models.Model):
+class Plano(models.Model):
 
     tipo = models.CharField(max_length=7, blank=True)
     preco = models.FloatField(blank=True)
@@ -92,7 +92,7 @@ class Planos(models.Model):
 class PlanGroup(models.Model):
 
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    plan = models.ForeignKey(Planos, on_delete=models.DO_NOTHING, blank=True)
+    plan = models.ForeignKey(Plano, on_delete=models.DO_NOTHING, blank=True)
     trial_status = models.BooleanField(blank=True)
     status_assinatura = models.BooleanField(blank=True)
     end_date = models.DateTimeField(blank=True)

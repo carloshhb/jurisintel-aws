@@ -10,7 +10,7 @@
             </div>
             <div class="card-body content-of-card">
                 {% if v.tema %}
-                    <div class="inside-card">
+                    <div class="inside-card" data-url="{% url 'conteudo:open-tema' id%}">
                 {% else %}
                     <div class="inside-card" data-url="{% url 'conteudo:open-case' id%}">
                 {% endif %}

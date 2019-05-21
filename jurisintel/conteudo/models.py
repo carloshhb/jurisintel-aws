@@ -11,7 +11,7 @@ from .random_primary import RandomPrimaryIdModel
 # Create your models here.
 
 
-class Ementas(models.Model):
+class Ementa(models.Model):
     orgao = models.CharField(max_length=150, blank=True, null=True)
     texto = models.TextField()
 
@@ -26,7 +26,7 @@ class Thumbnail(models.Model):
         return '%s' % self.thumbnail
 
 
-class Files(models.Model):
+class File(models.Model):
     file = models.FileField(max_length=255)
     thumbnail = models.ForeignKey(Thumbnail, null=True, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -36,7 +36,7 @@ class Files(models.Model):
         return '%s' % self.file
 
     # def save(self, *args, **kwargs):
-    #     super(Files, self).save(*args, **kwargs)
+    #     super(File, self).save(*args, **kwargs)
     #     self.generate_thumbnail()
     #
     # def generate_thumbnail(self):
@@ -58,10 +58,10 @@ class Files(models.Model):
     #     # self.save()
 
 
-@receiver(models.signals.post_delete, sender=Files)
+@receiver(models.signals.post_delete, sender=File)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """
-    Deletes file from filesystem
+    Deletes file from Fileystem
     when model object is deleted
     """
     if instance.file:
@@ -83,8 +83,8 @@ class Case(RandomPrimaryIdModel):
 
     id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    docs = models.ManyToManyField(Files, blank=True)
-    ementas = models.ManyToManyField(Ementas, blank=True)
+    docs = models.ManyToManyField(File, blank=True)
+    ementas = models.ManyToManyField(Ementa, blank=True)
     tags = models.ManyToManyField(Tags, blank=True)
     resumo = models.TextField()
     titulo = models.CharField(max_length=60)
@@ -98,11 +98,11 @@ class Case(RandomPrimaryIdModel):
 @receiver(models.signals.pre_delete, sender=Case)
 def auto_delete_arquivo_on_delete(sender, instance, **kwargs):
     """
-    Deletes file from filesystem
+    Deletes file from Fileystem
     when model object is deleted
     """
-    files = instance.docs.all()
-    for file in files:
+    File = instance.docs.all()
+    for file in File:
         file.delete()
 
 
@@ -114,8 +114,8 @@ class Tema(models.Model):
 
     titulo_tema = models.CharField(max_length=255)
     descricao_tema = models.TextField()
-    documentos = models.ManyToManyField(Files, blank=True)
-    ementas = models.ManyToManyField(Ementas, blank=True)
+    documentos = models.ManyToManyField(File, blank=True)
+    ementas = models.ManyToManyField(Ementa, blank=True)
     identifier_code = models.CharField(max_length=150, unique=True, default=gerar_id_code())
     usuarios = models.ManyToManyField(User, blank=True)
 

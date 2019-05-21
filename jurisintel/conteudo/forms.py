@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from .models import Case, Ementas, Tags, Tema
+from .models import Case, Ementa, Tags, Tema
 
 
 class CardForm(forms.Form):
@@ -20,7 +20,7 @@ class UpdateCaseForm(forms.ModelForm):
         fields = ['titulo', 'resumo']
 
 
-class TagForm(forms.Form):
+class TagsForm(forms.Form):
 
     tag = forms.CharField(label='Tags', widget=forms.TextInput(attrs={'class': 'form-control'}))
 
@@ -34,7 +34,7 @@ class TemaForm(forms.ModelForm):
         )
     )
     ementas = forms.ModelMultipleChoiceField(
-        queryset=Ementas.objects.all(),
+        queryset=Ementa.objects.all(),
         widget=forms.widgets.CheckboxSelectMultiple()
     )
 
@@ -73,4 +73,4 @@ class UserTema(forms.ModelForm):
             self.fields['titulo_tema'].label = 'Temas acompanhados'
 
 
-TagFormset = formset_factory(TagForm, extra=1)
+TagsFormset = formset_factory(TagsForm, extra=1)

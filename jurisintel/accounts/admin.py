@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import User, PlanGroup, Planos, Profile
+from .models import User, PlanGroup, Plano, Profile
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -23,6 +23,6 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Planos)
+admin.site.register(Plano)
 admin.site.register(PlanGroup)
 admin.site.register(Profile)

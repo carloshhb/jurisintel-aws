@@ -66,20 +66,21 @@ def similar(arquivo_referencia, lista_pets_escritorio):
 def similar_resumo(resumo_referencia, lista_resumos_escritorio):
     referencia = nlp(resumo_referencia)
     for ref in lista_resumos_escritorio:
-        yield (
-            lista_resumos_escritorio.index(ref),
-            similarity.word_movers(referencia,
-                                   nlp(ref),
-                                   metric='canberra')
-        )
+        yield(lista_resumos_escritorio.index(ref), similarity.word_movers(referencia, nlp(ref), metric='canberra'))
 
 
 def similar_tags(resumo_ref, tag_list):
     referencia = nlp(resumo_ref)
     for ref in tag_list:
+        yield (tag_list.index(ref), similarity.word_movers(referencia, nlp(ref), metric='canberra'))
+
+
+def similar_ementas(ref, list):
+    referencia = nlp(ref)
+    for reference in list:
         yield (
-            tag_list.index(ref),
+            list.index(reference),
             similarity.word_movers(referencia,
-                                   nlp(ref),
-                                   metric='canberra')
+                                   nlp(reference),
+                                   metric='cosine')
         )

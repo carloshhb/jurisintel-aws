@@ -13,6 +13,9 @@ urlpatterns = [
     path('caso/<str:pk>/similares', views.verify_similarities, name='similarities'),
     path('caso/<str:pk>/precedents', views.precedents, name='precedents'),
 
+    path('tema/<str:pk>/', views.open_tema, name='open-tema'),
+    path('tema/<str:pk>/precedents/', views.conteudo_juridico, name='temas-precedents'),
+
     path('update-card/<str:pk>', views.card_update, name='card_update'),
     path('remove-card/<str:pk>', views.card_delete, name='card_delete'),
     path('add-tag/<str:pk>', views.add_card_tags, name='add_card_tags'),
