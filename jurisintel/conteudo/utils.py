@@ -20,7 +20,7 @@ def get_documents_tema(tema):
     documentos = list()
     for doc in tema.documentos.all():
         docs_dict = {
-            'file_name': str(doc.file).split('/')[1],
+            'file_name': str(doc.file),
             'file_thumbnail': doc.thumbnail.thumbnail.url,
             'file_url': doc.file.url,
             'file_id': doc.pk,
