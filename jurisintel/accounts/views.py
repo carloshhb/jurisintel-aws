@@ -311,7 +311,7 @@ class RegistroTrial(TemplateView):
                 # Update with Hashed password
                 user.save()
 
-                plano = Planos.objects.get(tipo__iexact=plan_type)
+                plano = Plano.objects.get(tipo__iexact=plan_type)
 
                 data1 = datetime.datetime.now(tz=pytz.UTC)
                 data2 = data1 + datetime.timedelta(days=7)
