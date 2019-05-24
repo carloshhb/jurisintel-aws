@@ -21,6 +21,7 @@ from .models import Case, File, Tags, Thumbnail, Tema, Ementa
 from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
+from .decorators import user_allowed
 
 # Create your views here.
 
@@ -82,17 +83,19 @@ def retrieve_themes(request):
 
 @login_required(login_url='user_login')
 def home(request):
+    if request.user.profile.allow_entrance:
+        parameters, tag_list = retrieve_cases(request)
+        user_themes, all_themes = retrieve_themes(request)
 
-    parameters, tag_list = retrieve_cases(request)
-    user_themes, all_themes = retrieve_themes(request)
+        context = {
+            'parameters': parameters,
+            'tags': tag_list,
+            'themes': user_themes,
+        }
 
-    context = {
-        'parameters': parameters,
-        'tags': tag_list,
-        'themes': user_themes,
-    }
-
-    return render(request, 'conteudo/home.html', context)
+        return render(request, 'conteudo/home.html', context)
+    else:
+        return HttpResponseRedirect(reverse('accounts:agendamento'))
 
 
 def upload(request):
@@ -402,7 +405,7 @@ def conteudo_juridico(request, pk):
         'ementas': ementas,
     }
     data['html_precedents'] = render_to_string(template_name='conteudo/includes/precedents.html', context=context,
-                                             request=request)
+                                               request=request)
 
     return JsonResponse(data)
 

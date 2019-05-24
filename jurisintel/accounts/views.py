@@ -128,42 +128,44 @@ def reset_password(request):
 class PerfilView(TemplateView):
 
     def get(self, request, *args, **kwargs):
+        if request.user.profile.allow_entrance:
+            email = request.user.email
+            user = User.objects.get(email__iexact=email)
+            perfil_form = PerfilForm(instance=user)
+            profile_form = ProfileForm(user=request.user)
+            user_temas, all_temas = retrieve_themes(request)
 
-        email = request.user.email
-        user = User.objects.get(email__iexact=email)
-        perfil_form = PerfilForm(instance=user)
-        profile_form = ProfileForm(user=request.user)
-        user_temas, all_temas = retrieve_themes(request)
+            ut = UserTema(mode=True, user=request.user, auto_id=True)
+            at = UserTema(mode=None, user=request.user, prefix='avb')
+            # try:
+            #     lista_usuarios_por_escritorio = User.objects.filter(group_law_firm__id=request.user.group_law_firm.id)
+            #     qtd_usuarios_por_escritorio = lista_usuarios_por_escritorio.count()
+            #
+            #     lista_processos_escritorio = Case.objects.filter(firm__exact=request.user.group_law_firm)
+            #     qtd_processos_escritorio = lista_processos_escritorio.count()
+            #
+            #     lista_arquivos_escritorio = Files.objects.filter(processo__firm__exact=request.user.group_law_firm)
+            #     qtd_arquivos_escritorio = lista_arquivos_escritorio.count()
+            # except Exception as error:
+            #     qtd_arquivos_escritorio, qtd_usuarios_por_escritorio, qtd_processos_escritorio = 0, 0, 0
 
-        ut = UserTema(mode=True, user=request.user, auto_id=True)
-        at = UserTema(mode=None, user=request.user, prefix='avb')
-        # try:
-        #     lista_usuarios_por_escritorio = User.objects.filter(group_law_firm__id=request.user.group_law_firm.id)
-        #     qtd_usuarios_por_escritorio = lista_usuarios_por_escritorio.count()
-        #
-        #     lista_processos_escritorio = Case.objects.filter(firm__exact=request.user.group_law_firm)
-        #     qtd_processos_escritorio = lista_processos_escritorio.count()
-        #
-        #     lista_arquivos_escritorio = Files.objects.filter(processo__firm__exact=request.user.group_law_firm)
-        #     qtd_arquivos_escritorio = lista_arquivos_escritorio.count()
-        # except Exception as error:
-        #     qtd_arquivos_escritorio, qtd_usuarios_por_escritorio, qtd_processos_escritorio = 0, 0, 0
+            user_name = request.user.full_name
+            context = {
+                'user_name': user_name,
+                'user_email': request.user.email,
+                'formulario_usuario': perfil_form,
+                'profile_form': profile_form,
+                'temas': user_temas,
+                'ut': ut,
+                'at': at,
+                # 'quant_users_firm': qtd_usuarios_por_escritorio,
+                # 'quant_proc_firm': qtd_processos_escritorio,
+                # 'quant_files_firm': qtd_arquivos_escritorio,
+            }
 
-        user_name = request.user.full_name
-        context = {
-            'user_name': user_name,
-            'user_email': request.user.email,
-            'formulario_usuario': perfil_form,
-            'profile_form': profile_form,
-            'temas': user_temas,
-            'ut': ut,
-            'at': at,
-            # 'quant_users_firm': qtd_usuarios_por_escritorio,
-            # 'quant_proc_firm': qtd_processos_escritorio,
-            # 'quant_files_firm': qtd_arquivos_escritorio,
-        }
-
-        return render(request, 'accounts/perfil.html', context)
+            return render(request, 'accounts/perfil.html', context)
+        else:
+            return HttpResponseRedirect(reverse('accounts:agendamento'))
 
     def post(self, request, **kwargs):
 
