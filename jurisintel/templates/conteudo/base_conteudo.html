@@ -15,6 +15,18 @@
     <link rel="stylesheet" href="{% static 'css/iziToast.min.css' %}">
     <script src="{% static 'js/iziToast.min.js' %}"></script>
 
+     {% block analytics %}
+        <!-- GOOGLE ANALYTICS -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124051180-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-124051180-1');
+        </script>
+    {% endblock analytics %}
+
     {% block styles %}{% endblock %}
 </head>
 <body style="font-family: 'Muli', sans-serif;">
