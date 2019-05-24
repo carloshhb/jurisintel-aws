@@ -15,7 +15,15 @@
     <link rel="stylesheet" href="{% static 'css/iziToast.min.css' %}">
     <script src="{% static 'js/iziToast.min.js' %}"></script>
 
-     {% block analytics %}
+    {% block analytics %}
+        <!-- Anti-flicker snippet (recommended)  -->
+        <style>.async-hide { opacity: 0 !important} </style>
+        <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
+            h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
+            (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+        })(window,document.documentElement,'async-hide','dataLayer',4000,
+            {'GTM-T9DQMPD':true});</script>
+
         <!-- GOOGLE ANALYTICS -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124051180-1"></script>
         <script>
@@ -38,10 +46,10 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="ml-auto mr-auto">
-{#            <form class="form-inline my-2 my-lg-0">#}
-{#                <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Buscar" aria-label="Search">#}
-{#                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>#}
-{#            </form>#}
+            {#            <form class="form-inline my-2 my-lg-0">#}
+            {#                <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Buscar" aria-label="Search">#}
+            {#                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>#}
+            {#            </form>#}
         </div>
         <div class="align-items-end justify-content-end">
             <ul class="navbar-nav ml-auto">
