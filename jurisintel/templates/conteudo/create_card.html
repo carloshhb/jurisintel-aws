@@ -155,14 +155,14 @@
         </div>
 
         <div class="col-8 main-div">
-            {% for item, values in files %}
+            {% for index, values in dados %}
                 <div class="doc-brief-container">
                     <div class="col-4 d-flex flex-column align-items-center">
-                        <img class="thumbnail-img" src="{{ values|first }} " alt="{{ item }}">
-                        <h6 class="doc-brief-name">{{ item }}</h6>
+                        <img class="thumbnail-img" src="{{ values.thumbnail }} " alt="{{ values.arquivo }}">
+                        <h6 class="doc-brief-name">{{ values.arquivo }}</h6>
                     </div>
                     <div class="col-8">
-                        {{ values|last }}
+                        {{ values.resumo }}
                     </div>
                 </div>
 

@@ -178,7 +178,7 @@ def criar_resumo(arquivo, objeto):
 
 def file_upload(request):
 
-    file_list = list()
+    dados = list()
     form = CardForm()
 
     if request.POST:
@@ -216,14 +216,21 @@ def file_upload(request):
 
                 # passa as strings para a view
                 thumb = str(file_object.thumbnail.thumbnail.url)
-                file = str(file_object.file)
-                file_url = str(file_object.file)
-                file_list.append([file, [thumb, file_object.resumo]])
+                try:
+                    file = str(file_object.file).split('/')[1]
+                except Exception as error:
+                    file = str(file_object.file)
+                contexto = {
+                    'arquivo': file,
+                    'thumbnail': thumb,
+                    'resumo': file_object.resumo,
+                }
+                dados.append([file_object.pk, contexto])
 
                 pre_case.docs.add(file_object)
 
         context = {
-            'files': file_list,
+            'dados': dados,
             'form': form,
             'pre_case_id': pre_case.pk,
             'tags_list': tag_list,

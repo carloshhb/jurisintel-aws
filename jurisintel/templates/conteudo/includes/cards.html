@@ -6,7 +6,7 @@
                 {% if v.tema %}
                     <div class="card-title">{{ v.titulo }} - <a href="{% url 'conteudo:open-tema' id %}">Abrir</a></div>
                 {% else %}
-                    <div class="card-title">{{ v.titulo }} - <a href="{% url 'conteudo:open-case' id %}">Abrir</a></div>
+                    <div class="card-title">{{ v.titulo }} - <a href="{% url 'conteudo:open-case' id %}">Ver conteúdo</a></div>
                 {% endif %}
                 {% if v.possible_edit %}
                     <i class="fas fa-times card-remove-button js-remove" data-url="{% url 'conteudo:card_delete' id %}"></i>
