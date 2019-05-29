@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import formset_factory
 from .models import Case, Ementa, Tags, Tema
+from accounts.models import User
 
 
 class CardForm(forms.Form):
@@ -71,6 +72,18 @@ class UserTema(forms.ModelForm):
         else:
             self.fields['titulo_tema'].queryset = Tema.objects.filter(usuarios=user)
             self.fields['titulo_tema'].label = 'Temas acompanhados'
+
+
+class CaseAdminForm(forms.ModelForm):
+    user = forms.ModelChoiceField(label="Usuário", queryset=User.objects.all(), required=True,
+                                  widget=forms.Select(attrs={'class': 'form-control'}))
+    titulo = forms.CharField(label="Título", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    resumo = forms.CharField(label='Descrição', widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '8'}))
+    docs = forms.FileField(label='Documentos', widget=forms.FileInput(attrs={'class': 'form-control', 'multiple': True}))
+
+    class Meta:
+        model = Case
+        fields = ['user', 'titulo', 'resumo', 'docs']
 
 
 TagsFormset = formset_factory(TagsForm, extra=1)

@@ -16,6 +16,8 @@ from django.views.generic import TemplateView
 from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
 
+from accounts.models import User
+
 from .forms import CardForm, UpdateCaseForm, TagsFormset, TemaForm, EditTemaForm
 from .models import Case, File, Tags, Thumbnail, Tema, Ementa
 from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema
@@ -589,7 +591,6 @@ class TemasView(TemplateView):
         tema_form = TemaForm(request.POST)
         print(tema_form)
 
-
     def upload_file_tema(self, request, pk):
 
         data = dict()
@@ -608,6 +609,77 @@ class TemasView(TemplateView):
                 tema.save()
 
             return JsonResponse(data)
+
+
+@method_decorator(login_required, name='dispatch')
+class CaseAdminView(TemplateView):
+    from .forms import CaseAdminForm
+
+    def get(self, request, *args, **kwargs):
+        context = {
+            'case_form': self.CaseAdminForm(),
+            # 'edit_form': EditTemaForm(),
+        }
+        return render(request, 'admin/cases/index.html', context)
+
+    def post(self, request):
+        if request.POST['mode'] == '1':
+            resultado = self.upload_files(request)
+            titulo = request.POST['titulo']
+            resumo = request.POST['resumo']
+            user = User.objects.get(pk=request.POST['user'])
+
+            case = Case.objects.create(titulo=titulo, resumo=resumo, user=user)
+            for file in resultado:
+                case.docs.add(file)
+            case.save()
+
+            return HttpResponseRedirect(reverse('cases_admin:casos'))
+
+    def upload_files(self, request):
+        file_list = list()
+        if request.POST:
+            s3_file = PublicMediaStorage()
+            s3_file.file_overwrite = False
+
+            s3_thumb = ThumbnailStorage()
+            s3_thumb.file_overwrite = False
+            i = 0
+            for file in request.FILES.getlist('docs'):
+                if not file.size > 5000000:
+                    try:
+                        pdf = wi(file=file, resolution=200)
+                        arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
+                        path = '%s/%s' % (str(request.user.pk), arquivo)
+                        uploaded_file = s3_file.save(path, file)
+                        save_file = File.objects.create(file=uploaded_file)
+                    except Exception as error:
+                        print(error)
+                    else:
+                        if save_file:
+                            file_list.append(save_file)
+
+                        try:
+                            thumbnail_image = pdf.convert("jpeg")
+                            temp_image = tempfile.SpooledTemporaryFile()
+                            pdf_name = str(arquivo).split('.pdf')
+                            thumb_name = '%s.jpg' % pdf_name[0]
+
+                            with thumbnail_image.sequence[0] as img:
+                                page = wi(image=img)
+                                page.width = 150
+                                page.height = 200
+                                page.strip()
+                                page.save(file=temp_image)
+                                img_file = s3_thumb.save(thumb_name, temp_image)
+                                thumbnail = Thumbnail.objects.create(thumbnail=img_file)
+                                save_file.thumbnail = thumbnail
+                                save_file.save()
+                        except Exception as error:
+                            print(error)
+                i += 1
+
+            return file_list
 
 
 def get_tema_admin(request):

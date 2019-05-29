@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 # from conteudo.admin import admin_site as temas_admin
+from conteudo.admin import admin_site as cases_admin
 
 from accounts import views as acc_views
 from . import views
@@ -52,8 +53,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     # path('admin/', temas_admin.urls),
+    path('admin/', cases_admin.urls),
     path('', views.index, name="home"),
-    path('inicio/', views.landing_page, name="landing-page"),
     path('logout/', acc_views.user_logout, name='logout'),
     path('contato/', views.contato, name='contato'),
     path('home/', include('conteudo.urls')),
