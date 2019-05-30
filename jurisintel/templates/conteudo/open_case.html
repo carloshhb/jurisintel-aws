@@ -101,6 +101,19 @@
             <div class="text">BUSCANDO SIMILARES</div>
         </div>
     </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="case-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="open-case__modal-body"></div>
+            </div>
+        </div>
+    </div>
 
 {% endblock sections %}
 {% block scripts %}
@@ -198,6 +211,16 @@
             });
             $('#close-offcanvas-tags').click(function () {
                 $('#panel_tags').removeClass('offcanvas-panel--on');
+            });
+
+            $('.js-doc-resumo').click(function () {
+                let resumo = $(this).data('text');
+                let titulo = $(this).data('doc');
+                let modal = $('#case-modal');
+                let modal_title = $('.modal-title');
+                modal.modal('show');
+                modal_title.html(titulo);
+                $('#open-case__modal-body').html(resumo);
             })
         });
     </script>

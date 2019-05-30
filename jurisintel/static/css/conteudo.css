@@ -621,7 +621,21 @@ input[type=checkbox]:checked:hover + span {
 .mini-thumb{
     width: 150px;
 }
-
+.btn-primary{
+    background-color: #3975fd;
+    border-color: #3975fd;
+}
+.btn-primary:hover{
+    background-color: #0d4cff;
+    border-color: #0d4cff;
+}
+.btn-primary:active{
+    background-color: #0d20ff;
+    border-color: #0d20ff;
+}
+.js-doc-resumo{
+    margin-bottom: 5px;
+}
 /*
 
 

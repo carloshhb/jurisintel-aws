@@ -4,6 +4,10 @@
             <img class="mini-thumb" src="{{ doc.file_thumbnail }}" alt="Thumbnail">
             <small>{{ doc.file_name }}</small>
         </a>
+        <button type="button" class="btn btn-primary btn-sm js-doc-resumo" data-doc="{{ doc.file_name }}"
+                data-text="{{ doc.file_resumo }}">
+            Resumo
+        </button>
         <button type="button" class="btn btn-danger btn-sm js-remover-arquivo"
                 data-url="{% url 'conteudo:remover_arquivo' doc.file_id %}" data-data="{{ csrf_token }}"
                 data-find="{{ pk }}">
