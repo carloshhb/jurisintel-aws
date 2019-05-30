@@ -313,8 +313,12 @@ def remover_arquivo(request, pk):
     if request.POST:
         data = dict()
 
-        arquivo = File.objects.get(pk=pk)
-        arquivo.delete()
+        try:
+            arquivo = File.objects.get(pk=pk)
+            arquivo.delete()
+            data['is_valid'] = True
+        except Exception:
+            data['is_valid'] = False
 
         case_pk = request.POST['case_id']
         case = Case.objects.get(pk=case_pk)

@@ -3,7 +3,14 @@
 {% block title %}JurisIntel - {{ titulo }}{% endblock title %}
 {% block styles %}
     <style>
-
+        div#loading-not-similar{
+            z-index: 9999;
+            background-color: #1111116b !important;
+        }
+        .loading.fa-3x{
+            left: 49% !important;
+            color: #fff;
+        }
     </style>
 {% endblock styles %}
 {% block navitems %}
@@ -101,6 +108,11 @@
             <div class="text">BUSCANDO SIMILARES</div>
         </div>
     </div>
+    <div class="wrap" id="loading-not-similar">
+        <div class="loading fa-3x">
+            <i class="fas fa-spinner fa-pulse"></i>
+        </div>
+    </div>
     <div class="modal fade" tabindex="-1" role="dialog" id="case-modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -170,12 +182,16 @@
                         'csrfmiddlewaretoken': csrf,
                         'case_id': find,
                     },
+                    beforeSend: function(){
+                        $('#loading-not-similar').show()
+                    },
                     global: false,
                     success: function (response) {
                         if (response.is_valid){
                             $('#js-docs-panel-nav').empty().html(response.html_docs);
                             $('.similares-docs').empty().html(response.html_docs_similares);
                         }
+                        $('#loading-not-similar').hide()
                     }
                 })
             });
