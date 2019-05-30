@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from django.contrib.admin import AdminSite
 from django.conf.urls import url
 from .models import *
@@ -28,6 +29,7 @@ class CaseSite(AdminSite):
 
 class CaseAdmin(admin.ModelAdmin):
     list_display = ['user', 'titulo', 'created_at']
+    raw_id_fields = ['ementas']
 
 
 # admin_site = TemaSite(name='temas_admin')
