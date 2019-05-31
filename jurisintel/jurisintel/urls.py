@@ -54,6 +54,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('admin/', temas_admin.urls),
     path('admin/', cases_admin.urls),
+
+    # OAUTH2 URLS
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
+
     path('', views.index, name="home"),
     path('logout/', acc_views.user_logout, name='logout'),
     path('contato/', views.contato, name='contato'),
