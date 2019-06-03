@@ -1,7 +1,11 @@
 # IMPORTS HERE IF NEEDED
-
+import re
 
 # HELPER FUNCTIONS
+
+TAG_RE = re.compile(r'<[^>]+>')
+
+
 def get_documents_(case):
     documentos = list()
     for doc in case.docs.all():
@@ -43,7 +47,11 @@ def get_case_ementas(case):
 
     ementas = list()
     for ementa in case.ementas.all():
-        ementas.append(ementa)
+        ementa_dict = {
+            'ementa_orgao': ementa.orgao,
+            'ementa_texto': TAG_RE.sub('', ementa.texto),
+        }
+        ementas.append(ementa_dict)
 
     return ementas
 

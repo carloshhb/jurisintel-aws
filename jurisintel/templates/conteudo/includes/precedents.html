@@ -1,9 +1,15 @@
 <div class="open-case-precedents">
-    {% for ementa in ementas %}
-        <div class="precedents-card" id="js-preCard-{{ forloop.counter0 }}">
-            <p class="precedents-text" id="js-textCard-{{ forloop.counter0 }}">
-                {{ ementa }}
-            </p>
+    {% for keys in ementas %}
+        <div class="card precedents-card" id="js-preCard-{{ forloop.counter0 }}">
+            <div class="card-header">
+               {{ keys.ementa_orgao }}
+            </div>
+{#            <div class="card-block">#}
+{#                Copiar ementa sem formatação#}
+{#            </div>#}
+            <div class="card-body" id="js-textCard-{{ forloop.counter0 }}">
+                {{ keys.ementa_texto }}
+            </div>
         </div>
     {% empty %}
         <div class="no-precedents">

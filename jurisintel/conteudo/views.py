@@ -23,7 +23,6 @@ from .models import Case, File, Tags, Thumbnail, Tema, Ementa
 from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
-from .decorators import user_allowed
 
 # Create your views here.
 
@@ -524,7 +523,7 @@ def save_tag(request, formset, template, pk):
                 if tag is not None:
                     try:
                         tag_obj = Tags.objects.get(tag=tag.strip())
-                    except Exception as error:
+                    except Exception:
                         tag_obj = Tags.objects.create(tag=tag.strip())
                     finally:
                         case = Case.objects.get(pk=pk)

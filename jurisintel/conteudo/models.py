@@ -14,6 +14,14 @@ from .random_primary import RandomPrimaryIdModel
 class Ementa(models.Model):
     orgao = models.CharField(max_length=150, blank=True, null=True)
     texto = models.TextField()
+    citacao = models.CharField(max_length=255, blank=True, null=True)
+    data_sessao = models.DateField(blank=True, null=True)
+    tipo_recurso = models.CharField(max_length=150, blank=True, null=True)
+    numero_processo = models.CharField(max_length=150, blank=True, null=True)
+    numero_acordao = models.CharField(max_length=150, blank=True, null=True)
+    relator = models.CharField(max_length=150, blank=True, null=True)
+    materia = models.CharField(max_length=255, blank=True, null=True)
+    decisao = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return '%s' % self.texto
