@@ -32,3 +32,20 @@ def find_names(arquivo):
             if names_seq((texto_nlp[token.i - 4].pos_, texto_nlp[token.i - 3].pos_, texto_nlp[token.i - 2].pos_, texto_nlp[token.i - 1].pos_)):
                 names += texto_nlp[token.i - 4].text + " " + texto_nlp[token.i - 3].text + " " + texto_nlp[token.i - 2].text + " " + texto_nlp[token.i - 1].text + "\t"
     return names
+
+
+def find_names_from_text(texto):
+    """
+    Gera nomes a partir de um texto
+    :param texto: Texto padrão UTF-8
+    :return: Nomes (str)
+    """
+    dez_pc = int(len(texto)/10)
+    cabeca = texto[:dez_pc]
+    texto_nlp = nlp(cabeca)
+    names = str()
+    for token in texto_nlp:
+        if token.pos_ == 'PUNCT':
+            if names_seq((texto_nlp[token.i - 4].pos_, texto_nlp[token.i - 3].pos_, texto_nlp[token.i - 2].pos_, texto_nlp[token.i - 1].pos_)):
+                names += texto_nlp[token.i - 4].text + " " + texto_nlp[token.i - 3].text + " " + texto_nlp[token.i - 2].text + " " + texto_nlp[token.i - 1].text + "\t"
+    return names

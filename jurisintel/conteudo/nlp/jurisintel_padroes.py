@@ -39,6 +39,25 @@ def resumo(arquivo):
     return res
 
 
+def resumo_texto(texto):
+    dez_pc = int(len(texto) / 10)
+    corpo = texto[dez_pc:(-1 * (dez_pc))]
+    termos = set()
+    texto_nlp = nlp(corpo)
+    for expressao, indice in keyterms.key_terms_from_semantic_network(texto_nlp, normalize='lower', window_width=5,
+                                                                      edge_weighting='cooc_freq', join_key_words=True,
+                                                                      n_keyterms=0.002):
+        termos.add(expressao)
+    matches = matcher(texto_nlp)
+    for match_id, start, end in matches:
+        span = texto_nlp[start:end]
+        termos.add(span.text.lower())
+    res = str()
+    for expressao in keyterms.aggregate_term_variants(termos, fuzzy_dedupe=True):
+        res += str((sorted(list(expressao), key=len)[-1])).capitalize() + '. '
+
+    return res
+
 matcher = Matcher(nlp.vocab)
 
 # LISTA GERAL DOS PADRÕES - ARTS

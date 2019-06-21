@@ -28,7 +28,7 @@ class Ementa(models.Model):
 
 
 class Thumbnail(models.Model):
-    thumbnail = models.ImageField(storage=ThumbnailStorage(), max_length=255)
+    thumbnail = models.ImageField(storage=ThumbnailStorage(), max_length=255, blank=True, null=True)
 
     def __str__(self):
         return '%s' % self.thumbnail
@@ -41,7 +41,11 @@ class File(models.Model):
     resumo = models.TextField(null=True)
 
     def __str__(self):
-        return '%s' % self.file
+        splitted = str(self.file).split('/')
+        if len(splitted) > 1:
+            return 'User ID: %s. Arquivo: %s' % (splitted[0], splitted[1])
+        else:
+            return '%s' % str(self.file)
 
     # def save(self, *args, **kwargs):
     #     super(File, self).save(*args, **kwargs)
@@ -94,7 +98,7 @@ class Case(RandomPrimaryIdModel):
     docs = models.ManyToManyField(File, blank=True)
     ementas = models.ManyToManyField(Ementa, blank=True)
     tags = models.ManyToManyField(Tags, blank=True)
-    resumo = models.TextField()
+    resumo = models.TextField(blank=True, null=True)
     titulo = models.CharField(max_length=60)
     created_at = models.DateTimeField(auto_now_add=True)
     finished_creation = models.BooleanField(default=False)

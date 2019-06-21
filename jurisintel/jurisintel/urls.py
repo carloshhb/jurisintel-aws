@@ -63,6 +63,7 @@ urlpatterns = [
     path('contato/', views.contato, name='contato'),
     path('home/', include('conteudo.urls')),
     path('contas/', include('accounts.urls')),
+    path('api/', include('api.urls')),
 ]
 
 admin.site.site_header = "Jurisintel Admin"

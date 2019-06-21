@@ -1,6 +1,7 @@
 from django.conf.urls import url
-from . import views
 from django.urls import path
+
+from . import views
 
 app_name = 'conteudo'
 
@@ -12,6 +13,9 @@ urlpatterns = [
     path('caso/<str:pk>', views.open_case, name='open-case'),
     path('caso/<str:pk>/similares', views.verify_similarities, name='similarities'),
     path('caso/<str:pk>/precedents', views.precedents, name='precedents'),
+
+    path('search=<str:word>', views.filter_by_word, name='filter-cases-word'),
+    path('search-sentence=<str:sentence>', views.filter_by_sentence, name='filter-cases-sentence'),
 
     path('tema/<str:pk>/', views.open_tema, name='open-tema'),
     path('tema/<str:pk>/precedents/', views.conteudo_juridico, name='temas-precedents'),

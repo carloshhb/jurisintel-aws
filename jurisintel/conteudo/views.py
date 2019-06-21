@@ -12,6 +12,7 @@ from django.shortcuts import render, reverse, get_object_or_404
 from django.template.loader import render_to_string
 from django.views import View
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
@@ -32,12 +33,15 @@ def retrieve_cases(request):
 
     all_cases = Case.objects.filter(user=request.user).order_by('-created_at')
     for case in all_cases:
-        if len(case.resumo) > 411:
-            resumo = '%s ...' % case.resumo[0:411]
-            fit = True
-        else:
-            resumo = case.resumo
-            fit = False
+        try:
+            if len(case.resumo) > 411:
+                resumo = '%s ...' % case.resumo[0:411]
+                fit = True
+            else:
+                resumo = case.resumo
+                fit = False
+        except Exception:
+            resumo, fit = '', False
         param_dict = {
             'titulo': case.titulo,
             'resumo': resumo,
@@ -269,11 +273,14 @@ def open_case(request, pk):
 
         documentos = get_documents_(case)
         tags = get_case_tags(case)
-
-        tamanho_resumo = len(case.resumo)
-        if tamanho_resumo > 730:
-            resumo_fit = '%s ...' % case.resumo[0:730]
-        else:
+        print(documentos)
+        try:
+            tamanho_resumo = len(case.resumo)
+            if tamanho_resumo > 730:
+                resumo_fit = '%s ...' % case.resumo[0:730]
+            else:
+                resumo_fit = ''
+        except Exception:
             resumo_fit = ''
 
         context = {
@@ -638,6 +645,10 @@ class CaseAdminView(TemplateView):
             case.save()
 
             return HttpResponseRedirect(reverse('cases_admin:casos'))
+        elif request.POST['mode'] == '2':
+            self.create_case_by_title(request, request.POST['titulo'])
+
+            return HttpResponseRedirect(reverse('cases_admin:casos'))
 
     def upload_files(self, request):
         file_list = list()
@@ -684,6 +695,34 @@ class CaseAdminView(TemplateView):
 
             return file_list
 
+    def create_case_by_title(self, request, title):
+        """
+        Creates the case with the title to be the main folder, and subsequent files to be inside.
+        Allows the upload of multiple files to extract text with AWS Lambda integration on S3.
+        :param request: Request
+        :param title: Title of the case/card
+        :return: Nothing
+        """
+        if request.POST:
+            user = User.objects.get(pk=request.POST['user'])
+            case = Case.objects.create(titulo=title, user=user)
+            s3_file = PublicMediaStorage()
+            s3_file.file_overwrite = False
+
+            for file in request.FILES.getlist('docs'):
+                try:
+                    arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
+                    path = '%s/%s/%s/%s' % (str(request.user.pk), str(case.pk), title, arquivo)
+                    uploaded_file = s3_file.save(path, file)
+                    file_uploaded = File.objects.create(file=uploaded_file)
+                    case.docs.add(file_uploaded)
+                except Exception as error:
+                    print(error)
+
+            case.save()
+
+        return True
+
 
 def get_tema_admin(request):
 
@@ -709,3 +748,76 @@ def edit_tema(request):
         if tema.is_valid():
             tema.save()
             return HttpResponseRedirect(reverse('temas_admin:temas'))
+
+
+def filter_by_word(request, word):
+    filtered_cases = Case.objects.filter(user=request.user, titulo__istartswith=word).order_by('titulo')
+    parameters, tag_list = list(), list()
+    for case in filtered_cases:
+        if len(case.resumo) > 411:
+            resumo = '%s ...' % case.resumo[0:411]
+            fit = True
+        else:
+            resumo = case.resumo
+            fit = False
+        param_dict = {
+            'titulo': case.titulo,
+            'resumo': resumo,
+            'fit': fit,
+            'possible_edit': True,
+        }
+        parameters.append([case.pk, param_dict])
+        for tag in case.tags.all():
+            tag_list.append([case.pk, [tag.__str__()]])
+
+    user_themes, all_themes = retrieve_themes(request)
+
+    context = {
+        'parameters': parameters,
+        'tags': tag_list,
+        'themes': user_themes,
+    }
+    return render(request, 'conteudo/home.html', context)
+
+
+def filter_by_sentence(request, sentence):
+    filtered_cases = Case.objects.filter(docs__resumo__icontains=sentence)
+    parameters, tag_list = list(), list()
+    for case in filtered_cases:
+        if len(case.resumo) > 411:
+            resumo = '%s ...' % case.resumo[0:411]
+            fit = True
+        else:
+            resumo = case.resumo
+            fit = False
+        param_dict = {
+            'titulo': case.titulo,
+            'resumo': resumo,
+            'fit': fit,
+            'possible_edit': True,
+        }
+        parameters.append([case.pk, param_dict])
+        for tag in case.tags.all():
+            tag_list.append([case.pk, [tag.__str__()]])
+
+    user_themes, all_themes = retrieve_themes(request)
+
+    context = {
+        'parameters': parameters,
+        'tags': tag_list,
+        'themes': user_themes,
+    }
+    return render(request, 'conteudo/home.html', context)
+
+
+def handle_file_upload(request, arquivo):
+
+    # for arquivo in request.FILES.getlist('files'):
+    filename = unicodedata.normalize('NFD', str(arquivo)).encode('ASCII', 'ignore').decode('ASCII')
+    path = 'tmp/%s/%s' % (str(request.user.pk), filename)
+    dir_path = 'tmp/%s/' % str(request.user.pk)
+    if not os.path.exists(dir_path):
+        os.mkdir(path, mode=0o777)
+    with open(path, 'wb+') as destination:
+        for chunk in arquivo.chunks():
+            destination.write(chunk)

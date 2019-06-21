@@ -63,3 +63,21 @@ def acao(arquivo):
         for match_id, start, end in matches:
             string_id = nlp.vocab.strings[match_id]
             return txt_nlp[start:end].string
+
+
+def acao_from_text(texto):
+    """
+    Retira o nome da ação a partir de um texto gerado de um documento
+    :param texto: Texto padrão UTF-8
+    :return: Nome da ação (str)
+    """
+    num_corte = int(len(texto)/10)
+    corpo = texto[:num_corte]
+    txt_nlp = nlp(corpo.lower())
+    matches = matcher_acoes(txt_nlp)
+    if len(matches) == 0:
+        return ' '
+    if len(matches) > 0:
+        for match_id, start, end in matches:
+            string_id = nlp.vocab.strings[match_id]
+            return txt_nlp[start:end].string

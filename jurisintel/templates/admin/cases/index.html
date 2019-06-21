@@ -234,6 +234,12 @@
                                 </a>
                             </li>
                             <li class="ji-nav__item">
+                                <a class="ji-nav__link" data-toggle="tab" href="#ji_adicionar_caso_titulo" role="tab">
+                                    <i class="ji-nav__link-icon fas fa-folder-plus"></i>
+                                    <span class="ji-nav__link-text">Adicionar Caso (AWS LAMBDA)</span>
+                                </a>
+                            </li>
+                            <li class="ji-nav__item">
                                 <a class="ji-nav__link" data-toggle="tab" href="#ji_editar_casos" role="tab" id="change-password">
                                     <i class="ji-nav__link-icon far fa-edit"></i>
                                     <span class="ji-nav__link-text">Editar Caso</span>
@@ -265,6 +271,35 @@
                                 <div class="ji-form__body">
                                     <div class="ji-form-section">
                                         <input type="hidden" name="mode" value="1">
+                                        {% include 'includes/profile_form.html' with form=case_form %}
+                                    </div>
+                                </div>
+                                <div class="ji-form__foot">
+                                    <div class="ji-form__actions">
+                                        <div class="col-lg-3 col-xl-3">
+                                            <button type="submit" class="btn btn-success">Enviar</button>
+                                            <button type="reset" class="btn btn-secondary">Cancelar</button>
+                                        </div>
+                                        <div class="col-lg-9 col-xl-9"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="ji_adicionar_caso_titulo" role="tabpanel">
+                        <div class="profile-portlet">
+                            <div class="ji-portlet__head">
+                                <div class="ji-portlet__head-label">
+                                    <h3 class="ji-portlet__head-label-title">Adicionar Caso (AWS LAMBDA)
+                                        <small>incluir casos no usuário selecionado, com vários documentos (AWS LAMBDA)</small>
+                                    </h3>
+                                </div>
+                            </div>
+                            <form method="post" enctype="multipart/form-data">
+                                <div class="ji-form__body">
+                                    <div class="ji-form-section">
+                                        <input type="hidden" name="mode" value="2">
                                         {% include 'includes/profile_form.html' with form=case_form %}
                                     </div>
                                 </div>

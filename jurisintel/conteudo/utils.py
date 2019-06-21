@@ -9,13 +9,22 @@ TAG_RE = re.compile(r'<[^>]+>')
 def get_documents_(case):
     documentos = list()
     for doc in case.docs.all():
-        docs_dict = {
-            'file_name': str(doc.file).split('/')[1],
-            'file_thumbnail': doc.thumbnail.thumbnail.url,
-            'file_resumo': doc.resumo,
-            'file_url': doc.file.url,
-            'file_id': doc.pk,
-        }
+        try:
+            docs_dict = {
+                'file_name': str(doc.file).split('/')[1],
+                'file_thumbnail': doc.thumbnail.thumbnail.url,
+                'file_resumo': doc.resumo,
+                'file_url': doc.file.url,
+                'file_id': doc.pk,
+            }
+        except Exception:
+            docs_dict = {
+                'file_name': str(doc.file).split('/')[1],
+                'file_thumbnail': '',
+                'file_resumo': doc.resumo,
+                'file_url': doc.file.url,
+                'file_id': doc.pk,
+            }
         documentos.append([doc.pk, docs_dict])
 
     return documentos

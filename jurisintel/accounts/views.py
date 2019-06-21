@@ -81,7 +81,7 @@ def registro(request):
         user_form = RegisterForm()
     termos = settings.TERMOS_DE_USO
     pprivacidade = settings.POLITICA_PRIVACIDADE
-    return render(request, 'accounts/registro.html', {'user_form':user_form, 'registered':registered, 'termos': termos,
+    return render(request, 'accounts/registro.html', {'user_form': user_form, 'registered': registered, 'termos': termos,
                                                       'pprivacidade': pprivacidade})
 
 
@@ -90,7 +90,7 @@ def user_login(request):
         if request.user.profile.allow_entrance:
             return HttpResponseRedirect(reverse('conteudo:home'))
         else:
-            return HttpResponseRedirect(reverse('accounts:agendamento'))
+            return HttpResponseRedirect(reverse('accounts:video-intro'))
 
     error_msg = False
 
@@ -107,7 +107,7 @@ def user_login(request):
                 return HttpResponseRedirect(reverse('conteudo:home'))
             else:
                 login(request, user)
-                return HttpResponseRedirect(reverse('accounts:agendamento'))
+                return HttpResponseRedirect(reverse('accounts:video-intro'))
         else:
             error_msg = 'Credenciais inválidas.'
     else:
@@ -118,6 +118,10 @@ def user_login(request):
 
 def agendamento(request):
     return render(request, 'agendamento.html', {})
+
+
+def video_intro(request):
+    return render(request, 'intro.html', {})
 
 
 def reset_password(request):
@@ -165,7 +169,7 @@ class PerfilView(TemplateView):
 
             return render(request, 'accounts/perfil.html', context)
         else:
-            return HttpResponseRedirect(reverse('accounts:agendamento'))
+            return HttpResponseRedirect(reverse('accounts:video-intro'))
 
     def post(self, request, **kwargs):
 

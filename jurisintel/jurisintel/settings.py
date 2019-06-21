@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Internal Apps
     'accounts',
     'conteudo',
+    'api',
 ]
 
 AUTHENTICATION_BACKENDS = (
