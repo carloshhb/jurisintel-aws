@@ -54,7 +54,11 @@ def criar_resumo(texto, pk=None, filename=None):
     for doc in docs:
         file_name = FILENAME.search(str(doc.file))
         if file_name.group() == filename:
-            doc.resumo = res(texto)
+            resumo = res(texto)
+            if resumo < 50:
+                doc.resumo = texto
+            else:
+                doc.resumo = res(texto)
             doc.save()
             return doc.resumo
     return 'Arquivo não encontrado'
