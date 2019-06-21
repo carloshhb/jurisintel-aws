@@ -30,6 +30,7 @@ def receive_data(request):
         else:
             ftext += ' ' + word
 
+    print(ftext)
     if request.POST['case_id'] is not None:
         criar_resumo(ftext, request.POST['case_id'], request.POST['file_name'])
     else:
@@ -45,5 +46,6 @@ def criar_resumo(texto, pk=None, filename=None):
     for doc in docs:
         file_name = re.search(FILENAME, str(doc.file))
         if file_name.group() == filename:
+            print('True')
             doc.resumo = res(texto)
             doc.save()
