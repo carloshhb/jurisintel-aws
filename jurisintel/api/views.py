@@ -40,6 +40,7 @@ def receive_data(request):
         resumo = criar_resumo(ftext, filename=request.POST['file_name'])
 
     data = {
+        'ftext': ftext,
         'resumo': resumo,
     }
 
