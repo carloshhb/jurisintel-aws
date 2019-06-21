@@ -40,5 +40,5 @@ def criar_resumo(texto, pk=None, filename=None):
     docs = case.docs.all()
     for doc in docs:
         if str(doc.file).split('/')[-1] == filename:
-            case.resumo = res(texto)
-            case.save()
+            doc.resumo = res(texto)
+            doc.save()
