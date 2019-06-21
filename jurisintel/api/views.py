@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from conteudo.models import Case, File
 from conteudo.nlp.jurisintel_resumidor import resumidor_from_texto as res
@@ -36,7 +37,11 @@ def receive_data(request):
     else:
         resumo = criar_resumo(ftext, filename=request.POST['file_name'])
 
-    return resumo
+    data = {
+        'resumo': resumo,
+    }
+
+    return JsonResponse(data)
 
 
 def criar_resumo(texto, pk=None, filename=None):
