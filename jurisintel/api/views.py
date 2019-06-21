@@ -55,7 +55,7 @@ def criar_resumo(texto, pk=None, filename=None):
         file_name = FILENAME.search(str(doc.file))
         if file_name.group() == filename:
             resumo = res(texto)
-            if resumo < 50:
+            if len(resumo) < 50:
                 doc.resumo = texto
             else:
                 doc.resumo = res(texto)
