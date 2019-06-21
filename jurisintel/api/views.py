@@ -13,7 +13,7 @@ def receive_data(request):
     :return: Status
     """
     clean_text = ''
-    texto_completo = request.POST['texto'].decode()
+    texto_completo = request.POST['texto']
     for word in texto_completo:
         if word != '\n':
             clean_text += word
