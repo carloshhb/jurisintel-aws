@@ -30,22 +30,24 @@ def receive_data(request):
         else:
             ftext += ' ' + word
 
-    print(ftext)
     if request.POST['case_id'] is not None:
-        criar_resumo(ftext, request.POST['case_id'], request.POST['file_name'])
+        resumo = criar_resumo(ftext, request.POST['case_id'], request.POST['file_name'])
     else:
-        criar_resumo(ftext, filename=request.POST['file_name'])
+        resumo = criar_resumo(ftext, filename=request.POST['file_name'])
 
-    return render(request, 'conteudo/home.html', {})
+    return resumo
 
 
 def criar_resumo(texto, pk=None, filename=None):
 
     case = Case.objects.get(pk=pk)
     docs = case.docs.all()
+    resumo = ''
     for doc in docs:
         file_name = re.search(FILENAME, str(doc.file))
         if file_name.group() == filename:
-            print('True')
-            doc.resumo = res(texto)
+            resumo = res(texto)
+            doc.resumo = resumo
             doc.save()
+
+    return resumo
