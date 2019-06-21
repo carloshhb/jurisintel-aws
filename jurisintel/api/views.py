@@ -9,14 +9,9 @@ from conteudo.nlp.jurisintel_resumidor import resumidor_from_texto as res
 import re
 # Create your views here.
 
-<<<<<<< HEAD
-# Filename Regex
-FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf)$')
-
-=======
 # Global Variable Settings
 FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf)$')
->>>>>>> 66006bde3642e442fc0c08420e2fb2986fda188c
+
 
 @csrf_exempt
 def receive_data(request):
