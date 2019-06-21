@@ -1,9 +1,13 @@
+import re
+
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from conteudo.models import Case, File
 from conteudo.nlp.jurisintel_resumidor import resumidor_from_texto as res
 # Create your views here.
 
+# Global Variable Settings
+FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf)$')
 
 @csrf_exempt
 def receive_data(request):
@@ -39,6 +43,7 @@ def criar_resumo(texto, pk=None, filename=None):
     case = Case.objects.get(pk=pk)
     docs = case.docs.all()
     for doc in docs:
-        if str(doc.file).split('/')[-1] == filename:
+        file_name = re.search(FILENAME, str(doc.file))
+        if file_name.group() == filename:
             doc.resumo = res(texto)
             doc.save()
