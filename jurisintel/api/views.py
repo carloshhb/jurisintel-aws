@@ -22,25 +22,28 @@ def receive_data(request):
     """
     clean_text = ''
     texto_completo = request.POST['texto']
-    for word in texto_completo:
+    text = texto_completo.split()
+
+    for word in text:
         if word != '\n':
             clean_text += word
 
     text = clean_text.split()
-    ftext = ''
-    for word in text:
-        if ftext == '':
-            ftext += word
-        else:
-            ftext += ' ' + word
+
+    # ftext = ''
+    # for word in text:
+    #     if ftext == '':
+    #         ftext += word
+    #     else:
+    #         ftext += ' ' + word
 
     if request.POST['case_id'] is not None:
-        resumo = criar_resumo(ftext, request.POST['case_id'], request.POST['file_name'])
+        resumo = criar_resumo(clean_text, request.POST['case_id'], request.POST['file_name'])
     else:
-        resumo = criar_resumo(ftext, filename=request.POST['file_name'])
+        resumo = criar_resumo(clean_text, filename=request.POST['file_name'])
 
     data = {
-        'ftext': ftext,
+        'ftext': clean_text,
         'resumo': resumo,
     }
 
