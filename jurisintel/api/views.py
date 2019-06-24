@@ -26,9 +26,7 @@ def receive_data(request):
 
     for word in text:
         if word != '\n':
-            clean_text += word
-        else:
-            clean_text += ' '
+            clean_text += ' ' + word
 
     text = clean_text.split()
 
@@ -45,7 +43,6 @@ def receive_data(request):
         resumo = criar_resumo(clean_text, filename=request.POST['file_name'])
 
     data = {
-        'texto_completo': texto_completo,
         'ftext': clean_text,
         'resumo': resumo,
     }
