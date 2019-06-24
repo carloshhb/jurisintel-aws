@@ -30,20 +30,20 @@ def receive_data(request):
 
     text = clean_text.split()
 
-    ftext = ''
-    for word in text:
-        if ftext == '':
-            ftext += word
-        else:
-            ftext += ' ' + word
+    # ftext = ''
+    # for word in text:
+    #     if ftext == '':
+    #         ftext += word
+    #     else:
+    #         ftext += ' ' + word
 
     if request.POST['case_id'] is not None:
-        resumo = criar_resumo(ftext, request.POST['case_id'], request.POST['file_name'])
+        resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'])
     else:
-        resumo = criar_resumo(ftext, filename=request.POST['file_name'])
+        resumo = criar_resumo(clean_text, filename=request.POST['file_name'])
 
     data = {
-        'ftext': ftext,
+        'ftext': clean_text,
         'resumo': resumo,
     }
 
@@ -57,11 +57,7 @@ def criar_resumo(texto, pk=None, filename=None):
     for doc in docs:
         file_name = FILENAME.search(str(doc.file))
         if file_name.group() == filename:
-            resumo = res(texto)
-            if len(resumo) < 50:
-                doc.resumo = texto
-            else:
-                doc.resumo = res(texto)
+            doc.resumo = res(texto)
             doc.save()
             return doc.resumo
     return 'Arquivo não encontrado'
