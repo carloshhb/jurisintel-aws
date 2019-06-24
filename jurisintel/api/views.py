@@ -1,12 +1,14 @@
 import re
+import unicodedata
 
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+
+from accounts.models import User
 from conteudo.models import Case, File
 from conteudo.nlp.jurisintel_resumidor import resumidor_from_texto as res
+from jurisintel.storage_backends import PublicMediaStorage
 
-import re
 # Create your views here.
 
 # Global Variable Settings
@@ -65,3 +67,25 @@ def criar_resumo(texto, pk=None, filename=None):
             doc.save()
             return doc.resumo
     return 'Arquivo não encontrado'
+
+
+@csrf_exempt
+def teste(request):
+    user = User.objects.get(pk=1)
+    title = request.POST['titulo']
+    case = Case.objects.create(user=user, titulo=title)
+
+    s3_file = PublicMediaStorage()
+    s3_file.file_overwrite = False
+
+    for file in request.FILES.getlist('files'):
+        try:
+            arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
+            # Selected user ID
+            path = '%s/%s/%s/%s' % (str(user.pk), str(case.pk), title, arquivo)
+            uploaded_file = s3_file.save(path, file)
+            file_uploaded = File.objects.create(file=uploaded_file)
+            case.docs.add(file_uploaded)
+        except Exception as error:
+            print(error)
+    case.save()
