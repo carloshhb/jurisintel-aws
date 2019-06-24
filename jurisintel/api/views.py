@@ -1,19 +1,23 @@
 import re
 
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from conteudo.models import Case, File
 from conteudo.nlp.jurisintel_resumidor import resumidor_from_texto as res
+
+import re
 # Create your views here.
 
 # Global Variable Settings
 FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf)$')
 
+
 @csrf_exempt
 def receive_data(request):
     """
-    Receives data from AWS Lambda. The function extracts the text from the file uploaded and return it to EC2 server
-    save content in database.
+    Receives data from AWS Lambda. The function extracts the text from the
+    file uploaded and return it to EC2 server save content in database.
     :return: Status
     """
     clean_text = ''
@@ -35,19 +39,26 @@ def receive_data(request):
     else:
         resumo = criar_resumo(ftext, filename=request.POST['file_name'])
 
-    return resumo
+    data = {
+        'ftext': ftext,
+        'resumo': resumo,
+    }
+
+    return JsonResponse(data)
 
 
 def criar_resumo(texto, pk=None, filename=None):
 
     case = Case.objects.get(pk=pk)
     docs = case.docs.all()
-    resumo = ''
     for doc in docs:
-        file_name = re.search(FILENAME, str(doc.file))
+        file_name = FILENAME.search(str(doc.file))
         if file_name.group() == filename:
             resumo = res(texto)
-            doc.resumo = resumo
+            if len(resumo) < 50:
+                doc.resumo = texto
+            else:
+                doc.resumo = res(texto)
             doc.save()
-
-    return resumo
+            return doc.resumo
+    return 'Arquivo não encontrado'
