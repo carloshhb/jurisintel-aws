@@ -712,7 +712,7 @@ class CaseAdminView(TemplateView):
             for file in request.FILES.getlist('docs'):
                 try:
                     arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
-                    path = '%s/%s/%s/%s' % (str(request.user.pk), str(case.pk), title, arquivo)
+                    path = '%s/%s/%s/%s' % (str(user.pk), str(case.pk), title, arquivo)
                     uploaded_file = s3_file.save(path, file)
                     file_uploaded = File.objects.create(file=uploaded_file)
                     case.docs.add(file_uploaded)
