@@ -45,7 +45,7 @@ class File(models.Model):
         file_name = re.search(FILENAME, str(self.file)).group()
         splitted = str(self.file).split('/')
         if len(splitted) > 1:
-            return 'User ID: %s. Caso: %s. Arquivo: %s' % (splitted[0], splitted[2], file_name)
+            return 'User ID: %s. Arquivo: %s' % (splitted[0], file_name)
         else:
             return '%s' % str(self.file)
 
