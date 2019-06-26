@@ -25,8 +25,8 @@ def receive_data(request):
     clean_text = ''
     texto_completo = request.POST['texto']
     text = texto_completo.split()
-    thumbnail = request.FILES['thumbnail']
-
+    thumbnail = request.FILES['file']
+    thumb_name = request.POST['thumb_name']
     for word in text:
         if word != '\n':
             clean_text += ' ' + word
@@ -41,9 +41,9 @@ def receive_data(request):
     #         ftext += ' ' + word
 
     if request.POST['case_id'] is not None:
-        resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail)
+        resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail, thumb_name=thumb_name)
     else:
-        resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail=thumbnail)
+        resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail=thumbnail, thumb_name=thumb_name)
 
     data = {
         'ftext': clean_text,
@@ -53,11 +53,11 @@ def receive_data(request):
     return JsonResponse(data)
 
 
-def criar_resumo(texto, pk=None, filename=None, thumbnail=None):
+def criar_resumo(texto, pk=None, filename=None, thumbnail=None, thumb_name=None):
 
     s3_thumb = ThumbnailStorage()
     s3_thumb.file_overwrite = False
-
+    thumb = s3_thumb.save(thumb_name, temp_image)
     case = Case.objects.get(pk=pk)
     docs = case.docs.all()
 
@@ -71,7 +71,7 @@ def criar_resumo(texto, pk=None, filename=None, thumbnail=None):
                 doc.resumo = texto
 
             if thumbnail:
-                thumb = Thumbnail.objects.create(thumbnail=thumbnail)
+                thumb_saved = Thumbnail.objects.create(thumbnail=thumb)
                 doc.thumbnail = thumb
 
             doc.save()
