@@ -57,7 +57,7 @@ def receive_data(request):
         data = {
             'error': error,
         }
-        return JsonResponse()
+        return JsonResponse(data)
 
 
 def criar_resumo(texto, pk=None, filename=None, thumbnail=None, thumb_name=None):
