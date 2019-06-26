@@ -43,7 +43,7 @@ def receive_data(request):
     if request.POST['case_id'] is not None:
         resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail)
     else:
-        resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail)
+        resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail=thumbnail)
 
     data = {
         'ftext': clean_text,
