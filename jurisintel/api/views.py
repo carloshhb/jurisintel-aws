@@ -22,35 +22,42 @@ def receive_data(request):
     file uploaded and return it to EC2 server save content in database.
     :return: Status
     """
-    clean_text = ''
-    texto_completo = request.POST['texto']
-    text = texto_completo.split()
-    thumbnail = request.FILES['file']
-    thumb_name = request.POST['thumb_name']
-    for word in text:
-        if word != '\n':
-            clean_text += ' ' + word
+    
+    try:
+        clean_text = ''
+        texto_completo = request.POST['texto']
+        text = texto_completo.split()
+        thumbnail = request.FILES['file']
+        thumb_name = request.POST['thumb_name']
+        for word in text:
+            if word != '\n':
+                clean_text += ' ' + word
 
-    text = clean_text.split()
+        text = clean_text.split()
 
-    # ftext = ''
-    # for word in text:
-    #     if ftext == '':
-    #         ftext += word
-    #     else:
-    #         ftext += ' ' + word
+        # ftext = ''
+        # for word in text:
+        #     if ftext == '':
+        #         ftext += word
+        #     else:
+        #         ftext += ' ' + word
 
-    if request.POST['case_id'] is not None:
-        resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail, thumb_name=thumb_name)
-    else:
-        resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail=thumbnail, thumb_name=thumb_name)
+        if request.POST['case_id'] is not None:
+            resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail, thumb_name=thumb_name)
+        else:
+            resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail=thumbnail, thumb_name=thumb_name)
 
-    data = {
-        'ftext': clean_text,
-        'resumo': resumo,
-    }
+        data = {
+            'ftext': clean_text,
+            'resumo': resumo,
+        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
+    except Exception as error:
+        data = {
+            'error': error,
+        }
+        return JsonResponse()
 
 
 def criar_resumo(texto, pk=None, filename=None, thumbnail=None, thumb_name=None):
