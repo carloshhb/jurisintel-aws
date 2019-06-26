@@ -12,7 +12,7 @@ from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 # Create your views here.
 
 # Global Variable Settings
-FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf)$')
+FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf|.docx|.doc)$')
 
 
 @csrf_exempt

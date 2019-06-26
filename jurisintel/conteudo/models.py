@@ -1,4 +1,5 @@
 import secrets
+import re
 
 from accounts.models import User
 from django.db import models
@@ -43,7 +44,7 @@ class File(models.Model):
     def __str__(self):
         splitted = str(self.file).split('/')
         if len(splitted) > 1:
-            return 'User ID: %s. Arquivo: %s' % (splitted[0], splitted[1])
+            return 'User ID: %s. Arquivo: %s' % (splitted[0], splitted[3])
         else:
             return '%s' % str(self.file)
 
