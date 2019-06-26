@@ -42,9 +42,10 @@ class File(models.Model):
     resumo = models.TextField(null=True)
 
     def __str__(self):
+        file_name = re.search(FILENAME, self.file).group()
         splitted = str(self.file).split('/')
         if len(splitted) > 1:
-            return 'User ID: %s. Arquivo: %s' % (splitted[0], splitted[3])
+            return 'User ID: %s. Caso: %s. Arquivo: %s' % (splitted[0], splitted[2], file_name)
         else:
             return '%s' % str(self.file)
 
