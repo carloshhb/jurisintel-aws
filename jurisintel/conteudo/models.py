@@ -8,7 +8,7 @@ from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 
 from .random_primary import RandomPrimaryIdModel
 
-
+FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf|.docx|.doc)$')
 # Create your models here.
 
 
