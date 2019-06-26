@@ -3,11 +3,11 @@ import unicodedata
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from wand.image import Image as wi
 from accounts.models import User
-from conteudo.models import Case, File
+from conteudo.models import Case, File, Thumbnail
 from conteudo.nlp.jurisintel_resumidor import resumidor_from_texto as res
-from jurisintel.storage_backends import PublicMediaStorage
+from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 
 # Create your views here.
 
@@ -25,6 +25,7 @@ def receive_data(request):
     clean_text = ''
     texto_completo = request.POST['texto']
     text = texto_completo.split()
+    thumbnail = request.FILES['thumbnail']
 
     for word in text:
         if word != '\n':
@@ -40,9 +41,9 @@ def receive_data(request):
     #         ftext += ' ' + word
 
     if request.POST['case_id'] is not None:
-        resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'])
+        resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail)
     else:
-        resumo = criar_resumo(clean_text, filename=request.POST['file_name'])
+        resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail)
 
     data = {
         'ftext': clean_text,
@@ -52,10 +53,14 @@ def receive_data(request):
     return JsonResponse(data)
 
 
-def criar_resumo(texto, pk=None, filename=None):
+def criar_resumo(texto, pk=None, filename=None, thumbnail=None):
+
+    s3_thumb = ThumbnailStorage()
+    s3_thumb.file_overwrite = False
 
     case = Case.objects.get(pk=pk)
     docs = case.docs.all()
+
     for doc in docs:
         file_name = FILENAME.search(str(doc.file))
         if file_name.group() == filename:
@@ -64,14 +69,21 @@ def criar_resumo(texto, pk=None, filename=None):
                 doc.resumo = resumo
             else:
                 doc.resumo = texto
+
+            if thumbnail:
+                thumb = Thumbnail.objects.create(thumbnail=thumbnail)
+                doc.thumbnail = thumb
+
             doc.save()
+
             return doc.resumo
+
     return 'Arquivo não encontrado'
 
 
 @csrf_exempt
 def teste(request):
-    user = User.objects.get(pk=1)
+    user = User.objects.get(pk=45)
     title = request.POST['titulo']
     case = Case.objects.create(user=user, titulo=title)
 
