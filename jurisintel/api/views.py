@@ -57,7 +57,9 @@ def criar_resumo(texto, pk=None, filename=None, thumbnail=None, thumb_name=None)
 
     s3_thumb = ThumbnailStorage()
     s3_thumb.file_overwrite = False
-    thumb = s3_thumb.save(thumb_name, temp_image)
+    if thumbnail:
+        thumb = s3_thumb.save(thumb_name, thumbnail)
+
     case = Case.objects.get(pk=pk)
     docs = case.docs.all()
 
@@ -72,7 +74,7 @@ def criar_resumo(texto, pk=None, filename=None, thumbnail=None, thumb_name=None)
 
             if thumbnail:
                 thumb_saved = Thumbnail.objects.create(thumbnail=thumb)
-                doc.thumbnail = thumb
+                doc.thumbnail = thumb_saved
 
             doc.save()
 
