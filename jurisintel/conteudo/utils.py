@@ -4,6 +4,7 @@ import re
 # HELPER FUNCTIONS
 
 TAG_RE = re.compile(r'<[^>]+>')
+FILENAME = re.compile('([+a-zA-Z0-9\s_\\.\-\(\):])+(.pdf|.docx|.doc)$')
 
 
 def get_documents_(case):

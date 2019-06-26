@@ -87,7 +87,8 @@ def criar_resumo(texto, pk=None, filename=None, thumbnail=None, thumb_name=None)
 def teste(request):
     user = User.objects.get(pk=45)
     title = request.POST['titulo']
-    case = Case.objects.create(user=user, titulo=title)
+    descricao = title
+    case = Case.objects.create(user=user, titulo=title, resumo=descricao)
 
     s3_file = PublicMediaStorage()
     s3_file.file_overwrite = False

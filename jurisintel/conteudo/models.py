@@ -50,28 +50,6 @@ class File(models.Model):
         #     return '%s' % str(self.file)
         return str(self.file)
 
-    # def save(self, *args, **kwargs):
-    #     super(File, self).save(*args, **kwargs)
-    #     self.generate_thumbnail()
-    #
-    # def generate_thumbnail(self):
-    #     file = str(self.file)
-    #     pdf = wi(filename=file, resolution=300)
-    #     thumbnail_image = pdf.convert("jpeg")
-    #
-    #     thumbnail_name = '%s.%s' % (file.split('.pdf')[0], 'jpg')
-    #
-    #     with thumbnail_image.sequence[0] as img:
-    #         page = wi(image=img)
-    #         resized_img = page.resize(200, 150)
-    #         resized_img.save(filename=thumbnail_name)
-    #
-    #     thumbnail = Thumbnail()
-    #     thumbnail.thumbnail = resized_img
-    #
-    #     self.thumbnail = thumbnail.save()
-    #     # self.save()
-
 
 @receiver(models.signals.post_delete, sender=File)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
