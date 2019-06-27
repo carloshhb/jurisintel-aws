@@ -27,8 +27,11 @@ def receive_data(request):
         clean_text = ''
         texto_completo = request.POST['texto']
         text = texto_completo.split()
-        thumbnail = request.FILES['file']
-        thumb_name = request.POST['thumb_name']
+        thumbnail = False
+        thumb_name = ''
+        if len(request.FILES.getlist()) > 0:
+            thumbnail = request.FILES['file']
+            thumb_name = request.POST['thumb_name']
         for word in text:
             if word != '\n':
                 clean_text += ' ' + word
@@ -43,9 +46,12 @@ def receive_data(request):
         #         ftext += ' ' + word
 
         if request.POST['case_id'] is not None:
-            resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail, thumb_name=thumb_name)
-        else:
-            resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail=thumbnail, thumb_name=thumb_name)
+            if thumbnail:
+                resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail=thumbnail, thumb_name=thumb_name)
+            else:
+                resumo = criar_resumo(texto_completo, request.POST['case_id'], request.POST['file_name'], thumbnail=None, thumb_name=thumb_name)
+        # else:
+        #     resumo = criar_resumo(clean_text, filename=request.POST['file_name'], thumbnail=thumbnail, thumb_name=thumb_name)
 
         data = {
             'ftext': clean_text,
