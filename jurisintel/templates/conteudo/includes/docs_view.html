@@ -3,7 +3,7 @@
     <div class="panel-item">
         <a class="panel-item__link" href="{{ doc.file_url }}" target="_blank">
             {% if doc.file.thumbnail == 'img/docx-file.jpg' %}
-                <img class="mini-thumb" src="{% static 'img/docx-file.jpg' %}" alt="Thumbnail">
+                <img class="mini-thumb" src="https://jurisintel-aws.s3.us-east-2.amazonaws.com/static/img/docx-file.jpg" alt="Thumbnail">
             {% else %}
                 <img class="mini-thumb" src="{{ doc.file_thumbnail }}" alt="Thumbnail">
             {% endif %}
