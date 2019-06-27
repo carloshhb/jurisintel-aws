@@ -1,8 +1,16 @@
+{% load staticfiles %}
 {% for k, v in documentos %}
     <div class="open-case-sim-doc" id="{{ forloop.counter0 }}">
-        <img class= "open-case-thumbnail" src="{{ v.file_thumbnail }}" alt="Thumbnail"
+        {% if v.file_thumbnail == 'docx' %}
+            <img class= "open-case-thumbnail" src="{% static 'img/docx-file.jpg' %}" alt="Thumbnail"
              id="{{ v.file_name }}_{{ forloop.counter0 }}" data-file="{{ v.file_id }}" data-csrf="{{ csrf_token }}"
              data-url="{% url 'conteudo:similarities' v.file_id %}">
         <small>{{ v.file_name }}</small>
+        {% else %}
+            <img class= "open-case-thumbnail" src="{{ v.file_thumbnail }}" alt="Thumbnail"
+             id="{{ v.file_name }}_{{ forloop.counter0 }}" data-file="{{ v.file_id }}" data-csrf="{{ csrf_token }}"
+             data-url="{% url 'conteudo:similarities' v.file_id %}">
+        <small>{{ v.file_name }}</small>
+        {% endif %}
     </div>
 {% endfor %}
