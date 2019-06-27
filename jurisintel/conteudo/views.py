@@ -368,8 +368,9 @@ def verify_similarities(request, pk):
         filtered_list, filtered_list_ids = list(), list()
 
         for file in list_of_files:
-            filtered_list.append(file.resumo)
-            filtered_list_ids.append(file.pk)
+            if file.resumo is not None:
+                filtered_list.append(file.resumo)
+                filtered_list_ids.append(file.pk)
 
         similares = similar_resumo(resumo_referencia, filtered_list)
 
