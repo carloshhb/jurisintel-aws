@@ -2,7 +2,7 @@
 {% for id, doc in documentos %}
     <div class="panel-item">
         <a class="panel-item__link" href="{{ doc.file_url }}" target="_blank">
-            {% if doc.file.thumbnail == 'docx' %}
+            {% if doc.file_thumbnail == 'docx' %}
                 <img class="mini-thumb" src="{% static 'img/docx-file.jpg' %}" alt="Thumbnail">
             {% else %}
                 <img class="mini-thumb" src="{{ doc.file_thumbnail }}" alt="Thumbnail">
