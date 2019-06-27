@@ -20,9 +20,10 @@ def get_documents_(case):
                 'file_id': doc.pk,
             }
         except Exception:
+            filename = FILENAME.search(str(doc.file)).group()
             docs_dict = {
                 'file_name': filename,
-                'file_thumbnail': '',
+                'file_thumbnail': 'img/docx-file.jpg',
                 'file_resumo': doc.resumo,
                 'file_url': doc.file.url,
                 'file_id': doc.pk,
