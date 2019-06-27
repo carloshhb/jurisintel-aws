@@ -11,8 +11,9 @@ def get_documents_(case):
     documentos = list()
     for doc in case.docs.all():
         try:
+            filename = FILENAME.search(str(doc.file)).group()
             docs_dict = {
-                'file_name': str(doc.file).split('/')[1],
+                'file_name': filename,
                 'file_thumbnail': doc.thumbnail.thumbnail.url,
                 'file_resumo': doc.resumo,
                 'file_url': doc.file.url,
@@ -20,7 +21,7 @@ def get_documents_(case):
             }
         except Exception:
             docs_dict = {
-                'file_name': str(doc.file).split('/')[1],
+                'file_name': filename,
                 'file_thumbnail': '',
                 'file_resumo': doc.resumo,
                 'file_url': doc.file.url,
