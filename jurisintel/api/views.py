@@ -55,7 +55,7 @@ def receive_data(request):
         return JsonResponse(data)
     except Exception as error:
         data = {
-            'error': error,
+            'error': str(error)
         }
         return JsonResponse(data)
 
