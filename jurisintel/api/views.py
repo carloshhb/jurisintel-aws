@@ -29,7 +29,7 @@ def receive_data(request):
         text = texto_completo.split()
         thumbnail = False
         thumb_name = ''
-        if len(request.FILES.getlist()) > 0:
+        if len(request.FILES.getlist('file')) > 0:
             thumbnail = request.FILES['file']
             thumb_name = request.POST['thumb_name']
         for word in text:
