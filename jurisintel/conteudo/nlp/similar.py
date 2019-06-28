@@ -64,9 +64,10 @@ def similar(arquivo_referencia, lista_pets_escritorio):
 
 
 def similar_resumo(resumo_referencia, lista_resumos_escritorio):
-    referencia = nlp(resumo_referencia)
+    # referencia = nlp(resumo_referencia)
     for ref in lista_resumos_escritorio:
-        yield(lista_resumos_escritorio.index(ref), similarity.word_movers(referencia, nlp(ref), metric='cosine'))
+        yield(lista_resumos_escritorio.index(ref), similarity.hamming(resumo_referencia, ref))
+        # yield(lista_resumos_escritorio.index(ref), similarity.word_movers(referencia, nlp(ref), metric='cosine'))
 
 
 def similar_tags(resumo_ref, tag_list):
