@@ -47,6 +47,31 @@ def get_documents_tema(tema):
     return documentos
 
 
+def get_info_file(file, indice):
+    """
+    Get informations of each file
+    :param file: File object
+    :param indice: Index of file in list
+    :return: Dict
+    """
+    filename = FILENAME.search(str(file.file)).group()
+    if file.thumbnail is not None:
+        simdict = {
+            'file_name': filename,
+            'indice_sim': indice,
+            'file_url': str(file.file.url),
+            'thumbnail': str(file.thumbnail.thumbnail.url),
+        }
+    else:
+        simdict = {
+            'file_name': filename,
+            'indice_sim': indice,
+            'file_url': str(file.file.url),
+            'thumbnail': 'docx',
+        }
+    return simdict
+
+
 def get_case_tags(case):
     tags = list()
     for tag in case.tags.all():

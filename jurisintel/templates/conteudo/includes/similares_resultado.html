@@ -3,10 +3,19 @@
     <h6>Em ordem decrescente de maior para menor similaridade:</h6>
 </div>
 {% for k, v in resultado %}
+    {% if v.thumbnail == 'docx' %}
+        <div class="col-4 file-resultado">
+        <a href='{{ v.file_url }}' target="_blank">
+            <img class="open-case-thumbnail" src="{% static 'img/docx-file.jpg' %}" alt="Similar Thumbnail">
+        </a>
+        {{ v.file_name }}
+    </div>
+    {% else %}
     <div class="col-4 file-resultado">
         <a href='{{ v.file_url }}' target="_blank">
             <img class="open-case-thumbnail" src="{{ v.thumbnail }}" alt="Similar Thumbnail">
         </a>
         {{ v.file_name }}
     </div>
+    {% endif %}
 {% endfor %}

@@ -21,7 +21,7 @@ from accounts.models import User
 
 from .forms import CardForm, UpdateCaseForm, TagsFormset, TemaForm, EditTemaForm
 from .models import Case, File, Tags, Thumbnail, Tema, Ementa
-from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema
+from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema, get_info_file
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
 
@@ -384,26 +384,13 @@ def verify_similarities(request, pk):
 
         indices.sort(key=lambda x: x[0], reverse=True)
 
-        simm = list()
+        similar_list = list()
         for k in indices:
             f = File.objects.get(pk=k[2])
-            if f.thumbnail is not None:
-                simdict = {
-                    'file_name': str(f.file).split('/')[1],
-                    'indice_sim': k[0],
-                    'file_url': str(f.file.url),
-                    'thumbnail': str(f.thumbnail.thumbnail.url),
-                }
-            else:
-                simdict = {
-                    'file_name': str(f.file).split('/')[1],
-                    'indice_sim': k[0],
-                    'file_url': str(f.file.url),
-                    'thumbnail': 'docx',
-                }
-            simm.append([f.pk, simdict])
+            dados = get_info_file(f, k[0])
+            similar_list.append([f.pk, dados])
 
-        context = {'resultado': simm}
+        context = {'resultado': similar_list}
         data = {
             'html_resultado': render_to_string('conteudo/includes/similares_resultado.html', context=context, request=request)
         }
