@@ -380,8 +380,7 @@ def verify_similarities(request, pk):
         indices = list()
 
         for s in similares:
-            if s[1] > 0.20:
-                indices.append([s[1], filtered_list[s[0]], filtered_list_ids[s[0]]])
+            indices.append([s[1], filtered_list[s[0]], filtered_list_ids[s[0]]])
 
         indices.sort(key=lambda x: x[0], reverse=True)
 
