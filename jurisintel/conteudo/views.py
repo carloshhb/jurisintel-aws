@@ -387,12 +387,20 @@ def verify_similarities(request, pk):
         simm = list()
         for k in indices:
             f = File.objects.get(pk=k[2])
-            simdict = {
-                'file_name': str(f.file).split('/')[1],
-                'indice_sim': k[0],
-                'file_url': str(f.file.url),
-                'thumbnail': str(f.thumbnail.thumbnail.url),
-            }
+            if f.thumbnail is not None:
+                simdict = {
+                    'file_name': str(f.file).split('/')[1],
+                    'indice_sim': k[0],
+                    'file_url': str(f.file.url),
+                    'thumbnail': str(f.thumbnail.thumbnail.url),
+                }
+            else:
+                simdict = {
+                    'file_name': str(f.file).split('/')[1],
+                    'indice_sim': k[0],
+                    'file_url': str(f.file.url),
+                    'thumbnail': 'docx',
+                }
             simm.append([f.pk, simdict])
 
         context = {'resultado': simm}
