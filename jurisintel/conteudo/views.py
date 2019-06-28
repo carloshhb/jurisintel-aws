@@ -371,8 +371,9 @@ def verify_similarities(request, pk):
             if file.resumo is None:
                 pass
             else:
-                filtered_list.append(file.resumo)
-                filtered_list_ids.append(file.pk)
+                if len(file.resumo) > 30:
+                    filtered_list.append(file.resumo)
+                    filtered_list_ids.append(file.pk)
 
         similares = similar_resumo(resumo_referencia, filtered_list)
 
