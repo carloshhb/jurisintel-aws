@@ -3,7 +3,6 @@ import unicodedata
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from wand.image import Image as wi
 from accounts.models import User
 from conteudo.models import Case, File, Thumbnail
 from conteudo.nlp.jurisintel_resumidor import resumidor_from_texto as res

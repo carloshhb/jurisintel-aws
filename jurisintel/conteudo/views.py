@@ -1,8 +1,8 @@
+import csv
 import mimetypes
 import os
 import secrets
 import tempfile
-import csv
 import unicodedata
 
 import requests
@@ -10,20 +10,20 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse, get_object_or_404
 from django.template.loader import render_to_string
-from django.views import View
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views import View
 from django.views.generic import TemplateView
-from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from wand.image import Image as wi
 
 from accounts.models import User
-
+from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from .forms import CardForm, UpdateCaseForm, TagsFormset, TemaForm, EditTemaForm
 from .models import Case, File, Tags, Thumbnail, Tema, Ementa
-from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema, get_info_file
 from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.similar import similar_resumo, similar_tags
+from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema, \
+    get_info_file
+
 
 # Create your views here.
 
@@ -88,6 +88,10 @@ def retrieve_themes(request):
 
 @login_required(login_url='user_login')
 def home(request):
+    if 's' in request.GET:
+        search = request.GET['s']
+        return filter_by_anything(request, search)
+
     if request.user.profile.allow_entrance:
         parameters, tag_list = retrieve_cases(request)
         user_themes, all_themes = retrieve_themes(request)
@@ -782,6 +786,40 @@ def filter_by_word(request, word):
 
 def filter_by_sentence(request, sentence):
     filtered_cases = Case.objects.filter(docs__resumo__icontains=sentence)
+    parameters, tag_list = list(), list()
+    for case in filtered_cases:
+        if len(case.resumo) > 411:
+            resumo = '%s ...' % case.resumo[0:411]
+            fit = True
+        else:
+            resumo = case.resumo
+            fit = False
+        param_dict = {
+            'titulo': case.titulo,
+            'resumo': resumo,
+            'fit': fit,
+            'possible_edit': True,
+        }
+        parameters.append([case.pk, param_dict])
+        for tag in case.tags.all():
+            tag_list.append([case.pk, [tag.__str__()]])
+
+    user_themes, all_themes = retrieve_themes(request)
+
+    context = {
+        'parameters': parameters,
+        'tags': tag_list,
+        'themes': user_themes,
+    }
+    return render(request, 'conteudo/home.html', context)
+
+
+def filter_by_anything(request, sentence):
+
+    filtered_cases = Case.objects.filter(titulo__icontains=sentence)
+    if not filtered_cases:
+        filtered_cases = Case.objects.filter(docs__resumo__icontains=sentence)
+
     parameters, tag_list = list(), list()
     for case in filtered_cases:
         if len(case.resumo) > 411:

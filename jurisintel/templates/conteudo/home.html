@@ -7,6 +7,12 @@
 
     </style>
 {% endblock styles %}
+{% block searchbar %}
+    <form method="get" class="form-inline my-2 my-lg-0">
+        <input name='s' class="form-control mr-sm-2 search-bar" type="text" placeholder="Buscar" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+    </form>
+{% endblock searchbar %}
 {% block navitems %}
     <li class="nav-item active">
         <a class="nav-link" href="#">Início <span class="sr-only">(current)</span></a>

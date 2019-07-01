@@ -16,7 +16,7 @@ urlpatterns = [
 
     path('search=<str:word>', views.filter_by_word, name='filter-cases-word'),
     path('search-sentence=<str:sentence>', views.filter_by_sentence, name='filter-cases-sentence'),
-
+    path('search/<str:sentence>', views.filter_by_anything, name='filter-anything'),
     path('tema/<str:pk>/', views.open_tema, name='open-tema'),
     path('tema/<str:pk>/precedents/', views.conteudo_juridico, name='temas-precedents'),
 
