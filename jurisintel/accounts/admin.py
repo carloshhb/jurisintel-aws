@@ -1,8 +1,8 @@
 # Register your models here.
 from django.contrib import admin
-
+from django import forms
 # Register your models here.
-from .models import User, PlanGroup, Plano, Profile
+from .models import User, PlanGroup, Plano, Profile, Escritorio
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -22,7 +22,20 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ['email', 'first_name', 'last_name']
 
 
+class EscritorioForm(forms.ModelForm):
+
+    class Meta:
+        model = Escritorio
+        fields = ['escritorio']
+
+
+class EscritorioAdmin(admin.ModelAdmin):
+
+    form = EscritorioForm
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Plano)
 admin.site.register(PlanGroup)
 admin.site.register(Profile)
+admin.site.register(Escritorio, EscritorioAdmin)

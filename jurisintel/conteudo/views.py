@@ -29,28 +29,61 @@ from .utils import get_documents_, get_case_tags, get_case_ementas, get_printabl
 
 
 def retrieve_cases(request):
+    """
+    Function to retrieve all cases from user or firm user is attached to.
+    :param request: wsgi request.
+    :return: parameters, tag_list. Both lists.
+    """
     parameters, tag_list = list(), list()
 
-    all_cases = Case.objects.filter(user=request.user).order_by('-created_at')
-    for case in all_cases:
-        try:
-            if len(case.resumo) > 411:
-                resumo = '%s ...' % case.resumo[0:411]
-                fit = True
-            else:
-                resumo = case.resumo
-                fit = False
-        except Exception:
-            resumo, fit = '', False
-        param_dict = {
-            'titulo': case.titulo,
-            'resumo': resumo,
-            'fit': fit,
-            'possible_edit': True,
-        }
-        parameters.append([case.pk, param_dict])
-        for tag in case.tags.all():
-            tag_list.append([case.pk, [tag.__str__()]])
+    try:
+        users = User.objects.filter(escritorio__id=request.user.escritorio.pk)
+        all_cases = []
+        for user in users:
+            all_cases.append(Case.objects.filter(user=user).order_by('-created_at'))
+
+        for item_user in all_cases:
+            for case in item_user:
+                try:
+                    if len(case.resumo) > 411:
+                        resumo = '%s ...' % case.resumo[0:411]
+                        fit = True
+                    else:
+                        resumo = case.resumo
+                        fit = False
+                except Exception:
+                    resumo, fit = '', False
+                param_dict = {
+                    'titulo': case.titulo,
+                    'resumo': resumo,
+                    'fit': fit,
+                    'possible_edit': True,
+                }
+                parameters.append([case.pk, param_dict])
+                for tag in case.tags.all():
+                    tag_list.append([case.pk, [tag.__str__()]])
+
+    except AttributeError:
+        all_cases = Case.objects.filter(user=request.user).order_by('-created_at')
+        for case in all_cases:
+            try:
+                if len(case.resumo) > 411:
+                    resumo = '%s ...' % case.resumo[0:411]
+                    fit = True
+                else:
+                    resumo = case.resumo
+                    fit = False
+            except Exception:
+                resumo, fit = '', False
+            param_dict = {
+                'titulo': case.titulo,
+                'resumo': resumo,
+                'fit': fit,
+                'possible_edit': True,
+            }
+            parameters.append([case.pk, param_dict])
+            for tag in case.tags.all():
+                tag_list.append([case.pk, [tag.__str__()]])
 
     return parameters, tag_list
 
@@ -277,7 +310,7 @@ def open_case(request, pk):
 
         documentos = get_documents_(case)
         tags = get_case_tags(case)
-        print(documentos)
+
         try:
             tamanho_resumo = len(case.resumo)
             if tamanho_resumo > 730:
@@ -602,7 +635,7 @@ class TemasView(TemplateView):
 
     def post(self, request):
         tema_form = TemaForm(request.POST)
-        print(tema_form)
+
 
     def upload_file_tema(self, request, pk):
 

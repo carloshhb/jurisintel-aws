@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from conteudo.random_primary import RandomPrimaryIdModel
 
 
 class UserManager(BaseUserManager):
@@ -31,15 +32,24 @@ class UserManager(BaseUserManager):
         return user
 
 
-# class Escritorio(RandomPrimaryIdModel):
-#     CRYPT_KEY_LEN_MIN = 5
-#     CRYPT_KEY_LEN_MAX = 12
-#
-#     id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
-#     created_at = models.DateTimeField('Data de cadastro', default=timezone.now)
-#
-#     class Meta:
-#         abstract = True
+class Escritorio(RandomPrimaryIdModel):
+    CRYPT_KEY_LEN_MIN = 5
+    CRYPT_KEY_LEN_MAX = 12
+
+    id = models.CharField(max_length=CRYPT_KEY_LEN_MAX + 1, unique=True, primary_key=True)
+    escritorio = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField('Data de cadastro', default=timezone.now)
+
+    def __str__(self):
+        return self.firm_name
+
+    @property
+    def firm_name(self):
+        """
+        Property to get firm name
+        :return: str firm name
+        """
+        return '%s' % self.escritorio
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -57,7 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     codigo_adesao = models.CharField('Código da adesão', max_length=32, blank=True)
     situacao_adesao = models.CharField('Situação da adesão', max_length=32, blank=True)
     telefone_contato = models.CharField('Telefone para contato', max_length=11, blank=True, null=True)
-
+    escritorio = models.ForeignKey(Escritorio, blank=True, null=True, on_delete=models.DO_NOTHING)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'birthdate']
 
