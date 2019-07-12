@@ -145,7 +145,7 @@ p.card-resumo{
     flex-direction: column;
     vertical-align: middle;
     align-items: flex-start;
-    z-index: 999;
+    z-index: 700;
     padding-left: 10px;
 }
 .content-of-card{

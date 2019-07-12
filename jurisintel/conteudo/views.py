@@ -306,7 +306,8 @@ def create(request):
 
 def open_case(request, pk):
     case = get_object_or_404(Case, pk=pk)
-    if request.user == case.user:
+
+    if request.user == case.user or request.user.escritorio == case.user.escritorio:
 
         documentos = get_documents_(case)
         tags = get_case_tags(case)
