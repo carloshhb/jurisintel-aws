@@ -3,7 +3,12 @@
 {% block title %}JurisIntel - Início{% endblock title %}
 {% block styles %}
     <style>
-
+        .paginacao{
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            display: flex;
+        }
 
     </style>
 {% endblock styles %}
@@ -85,6 +90,8 @@
 {#            {% include 'conteudo/includes/cards.html'%}#}
             {% include 'conteudo/includes/cards_with_pagination.html'%}
         </div>
+    </section>
+    <section class="paginacao">
         {% if pages.has_other_pages %}
             <nav aria-label="Paginação">
                 <ul class="pagination">
