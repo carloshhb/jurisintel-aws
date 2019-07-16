@@ -13,6 +13,8 @@ from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView
+from django.db.models.query import QuerySet
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from wand.image import Image as wi
 
 from accounts.models import User
@@ -32,40 +34,18 @@ def retrieve_cases(request):
     """
     Function to retrieve all cases from user or firm user is attached to.
     :param request: wsgi request.
-    :return: parameters, tag_list. Both lists.
+    :return: parameters, tag_list, pages for pagination. Both lists.
     """
     parameters, tag_list = list(), list()
-
+    pages = []
+    page = request.GET.get('page', 1)
     try:
         users = User.objects.filter(escritorio__id=request.user.escritorio.pk)
-        all_cases = []
+        all_cases = QuerySet(model=Case)
         for user in users:
-            all_cases.append(Case.objects.filter(user=user).order_by('-created_at'))
-
-        for item_user in all_cases:
-            for case in item_user:
-                try:
-                    if len(case.resumo) > 411:
-                        resumo = '%s ...' % case.resumo[0:411]
-                        fit = True
-                    else:
-                        resumo = case.resumo
-                        fit = False
-                except Exception:
-                    resumo, fit = '', False
-                param_dict = {
-                    'titulo': case.titulo,
-                    'resumo': resumo,
-                    'fit': fit,
-                    'possible_edit': True,
-                }
-                parameters.append([case.pk, param_dict])
-                for tag in case.tags.all():
-                    tag_list.append([case.pk, [tag.__str__()]])
-
-    except AttributeError:
-        all_cases = Case.objects.filter(user=request.user).order_by('-created_at')
-        for case in all_cases:
+            all_cases = all_cases | Case.objects.filter(user=user).order_by('-created_at')
+        paginator = Paginator(all_cases, 10)
+        for case in paginator.object_list:
             try:
                 if len(case.resumo) > 411:
                     resumo = '%s ...' % case.resumo[0:411]
@@ -85,7 +65,47 @@ def retrieve_cases(request):
             for tag in case.tags.all():
                 tag_list.append([case.pk, [tag.__str__()]])
 
-    return parameters, tag_list
+        try:
+            pages = paginator.page(page)
+        except PageNotAnInteger:
+            pages = paginator.page(1)
+        except EmptyPage:
+            pages = paginator.page(paginator.num_pages)
+
+    except AttributeError:
+        all_cases = Case.objects.filter(user=request.user).order_by('-created_at')
+        paginator = Paginator(all_cases, 10)
+        for case in paginator.object_list:
+            try:
+                if len(case.resumo) > 411:
+                    resumo = '%s ...' % case.resumo[0:411]
+                    fit = True
+                else:
+                    resumo = case.resumo
+                    fit = False
+            except Exception:
+                resumo, fit = '', False
+            param_dict = {
+                'titulo': case.titulo,
+                'resumo': resumo,
+                'fit': fit,
+                'possible_edit': True,
+            }
+            parameters.append([case.pk, param_dict])
+            for tag in case.tags.all():
+                tag_list.append([case.pk, [tag.__str__()]])
+
+        try:
+            pages = paginator.page(page)
+        except PageNotAnInteger:
+            pages = paginator.page(1)
+        except EmptyPage:
+            pages = paginator.page(paginator.num_pages)
+
+    except Exception as error:
+        print(error)
+
+    return parameters, tag_list, pages
 
 
 def retrieve_themes(request):
@@ -126,15 +146,15 @@ def home(request):
         return filter_by_anything(request, search)
 
     if request.user.profile.allow_entrance:
-        parameters, tag_list = retrieve_cases(request)
+        parameters, tag_list, pages = retrieve_cases(request)
         user_themes, all_themes = retrieve_themes(request)
 
         context = {
             'parameters': parameters,
             'tags': tag_list,
             'themes': user_themes,
+            'pages': pages,
         }
-
         return render(request, 'conteudo/home.html', context)
     else:
         return HttpResponseRedirect(reverse('accounts:agendamento'))
@@ -494,7 +514,7 @@ def card_delete(request, pk):
             case.delete()
             data['form_is_valid'] = True
 
-            parameters, tag_list = retrieve_cases(request)
+            parameters, tag_list, pages = retrieve_cases(request)
 
             update_context = {
                 'parameters': parameters,
@@ -540,7 +560,7 @@ def save_(request, form, template):
             form.save()
             data['form_is_valid'] = True
 
-            parameters, tag_list = retrieve_cases(request)
+            parameters, tag_list, pages = retrieve_cases(request)
 
             update_context = {
                 'parameters': parameters,
@@ -573,7 +593,7 @@ def save_tag(request, formset, template, pk):
                         case = Case.objects.get(pk=pk)
                         case.tags.add(tag_obj)
 
-            parameters, tag_list = retrieve_cases(request)
+            parameters, tag_list, pages = retrieve_cases(request)
 
             update_context = {
                 'parameters': parameters,

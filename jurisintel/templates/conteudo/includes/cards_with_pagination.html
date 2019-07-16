@@ -1,0 +1,48 @@
+{% comment %} Criação automática de cartões baseada nos parâmetros {% endcomment %}
+{% for item in pages %}
+    <div class="cases-card col-12 col-md-4">
+        <div class="card card-container">
+            <div class="card-container-header">
+                {% if item.tema %}
+                    <div class="card-title">{{ item.titulo }} - <a href="{% url 'conteudo:open-tema' item.pk %}">Abrir</a></div>
+                {% else %}
+                    <div class="card-title">{{ item.titulo }} - <a href="{% url 'conteudo:open-case' item.pk %}">Ver conteúdo</a></div>
+                {% endif %}
+                    <i class="fas fa-times card-remove-button js-remove" data-url="{% url 'conteudo:card_delete' item.pk %}"></i>
+            </div>
+            <div class="card-body content-of-card">
+                {% if item.tema %}
+                    <div class="inside-card" data-url="{% url 'conteudo:open-tema' item.pk%}">
+                {% else %}
+                    <div class="inside-card" data-url="{% url 'conteudo:open-case' item.pk%}">
+                {% endif %}
+                        <p class="card-resumo">{{ item.resumo }}
+                            <strong>Ver mais</strong>
+                        </p>
+                    </div>
+                <div class="action-buttons">
+                    <button type="button" class="button button-icon button-icon__actions js-card-update"
+                            data-url="{% url 'conteudo:card_update' item.pk %}" title="Editar conteúdo do cartão">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <a class="button button-icon button-icon__actions js-add-docs" data-toggle="tolltip"
+                       data-placement="top" title="Adicionar documentos ao processo"
+                       href="{% url "conteudo:add-documento" item.pk %}">
+                        <i class="fas fa-paperclip"></i>
+                    </a>
+                    <a href="#" class="button button-icon button-icon__actions js-add-tags" data-toggle="tolltip"
+                       data-placement="top" title="Adicionar tags" data-url="{% url 'conteudo:add_card_tags' item.pk %}">
+                        <i class="fas fa-tag"></i>
+                    </a>
+                </div>
+                </div>
+                <div class="card-tags">
+                    {% for idT, v in tags %}
+                        {% if idT == item.pk %}
+                            <span class="badge badge-pill badge-danger tag">{{ v|first }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+{% endfor %}
