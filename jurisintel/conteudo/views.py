@@ -419,41 +419,58 @@ def save_ementas(doc):
 def verify_similarities(request, pk):
     if request.POST:
         file_to_verify = File.objects.get(pk=request.POST['file'])
-        list_of_files = File.objects.filter(case__user=request.user).exclude(file=file_to_verify)
-
         resumo_referencia = file_to_verify.resumo
+        if resumo_referencia is not None:
 
-        filtered_list, filtered_list_ids = list(), list()
+            try:
+                users = User.objects.filter(escritorio__id=request.user.escritorio.pk)
+                all_files = QuerySet(model=File)
+                for user in users:
+                    all_files = all_files | File.objects.filter(case__user=user).exclude(file=file_to_verify)
+            except Exception:
+                all_files = File.objects.filter(case__user=request.user).exclude(file=file_to_verify)
 
-        for file in list_of_files:
-            if file.resumo is None:
-                pass
-            else:
-                if len(file.resumo) > 30:
-                    filtered_list.append(file.resumo)
-                    filtered_list_ids.append(file.pk)
+            filtered_list, filtered_list_ids = list(), list()
 
-        similares = similar_resumo(resumo_referencia, filtered_list)
+            for file in all_files:
+                if file.resumo is None:
+                    pass
+                else:
+                    if len(file.resumo) > 30:
+                        filtered_list.append(str(file.resumo))
+                        filtered_list_ids.append(file.pk)
 
-        indices = list()
+            similares = similar_resumo(resumo_referencia, filtered_list)
 
-        for s in similares:
-            indices.append([s[1], filtered_list[s[0]], filtered_list_ids[s[0]]])
+            indices = list()
 
-        indices.sort(key=lambda x: x[0], reverse=True)
+            for s in similares:
+                indices.append([s[1], filtered_list[s[0]], filtered_list_ids[s[0]]])
 
-        similar_list = list()
-        for k in indices:
-            f = File.objects.get(pk=k[2])
-            dados = get_info_file(f, k[0])
-            similar_list.append([f.pk, dados])
+            indices.sort(key=lambda x: x[0], reverse=True)
 
-        context = {'resultado': similar_list}
-        data = {
-            'html_resultado': render_to_string('conteudo/includes/similares_resultado.html', context=context, request=request)
-        }
+            similar_list = list()
+            i = 0
+            for k in indices:
+                if i < len(indices) and i < 30:
+                    f = File.objects.get(pk=k[2])
+                    dados = get_info_file(f, k[0])
+                    similar_list.append([f.pk, dados])
+                    i += 1
+                else:
+                    break
 
-        return JsonResponse(data)
+            context = {'resultado': similar_list}
+            data = {
+                'html_resultado': render_to_string('conteudo/includes/similares_resultado.html', context=context, request=request)
+            }
+
+            return JsonResponse(data)
+        else:
+            context = {'error': 'erro'}
+            data = {'html_resultado': render_to_string('conteudo/includes/similares_resultado.html', context=context, request=request)}
+
+            return JsonResponse(data)
 
     else:
         case = get_object_or_404(Case, pk=pk)
