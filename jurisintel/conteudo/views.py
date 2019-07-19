@@ -256,13 +256,13 @@ def criar_resumo(arquivo, objeto):
             objeto.save()
         except Exception:
             # processar com tesseract
-            temp_dir = tempfile.mkdtemp(dir='/tmp/conv')
-            base = os.path.join(temp_dir, 'converted')
+            temp_dir = tempfile.mkdtemp()
+            base = os.path.join(temp_dir, 'conv')
             contents = []
             try:
-                convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=temp_dir)
-                for page in sorted(os.listdir(temp_dir)):
-                    page_path = os.path.join(temp_dir, page)
+                convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=base)
+                for page in sorted(os.listdir(base)):
+                    page_path = os.path.join(base, page)
                     page_content = tesseract_extract(page_path)
                     contents.append(page_content)
                 resultado = six.b('').join(contents).decode()
