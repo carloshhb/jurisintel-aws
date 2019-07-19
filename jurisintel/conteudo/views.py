@@ -256,8 +256,8 @@ def criar_resumo(arquivo, objeto):
             objeto.save()
         except Exception:
             # processar com tesseract
-            temp_dir = tempfile.mkdtemp()
-            base = os.path.join('tmp', 'conv')
+            temp_dir = tempfile.mkdtemp(dir='/tmp/conv')
+            base = os.path.join(temp_dir, 'converted')
             contents = []
             try:
                 convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=base)
