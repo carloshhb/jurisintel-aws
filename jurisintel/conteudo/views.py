@@ -4,7 +4,8 @@ import os
 import secrets
 import tempfile
 import unicodedata
-
+import six
+import docx2txt
 import requests
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
@@ -15,6 +16,7 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.db.models.query import QuerySet
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from pdf2image import convert_from_path
 from wand.image import Image as wi
 
 from accounts.models import User
@@ -22,13 +24,18 @@ from jurisintel.storage_backends import PublicMediaStorage, ThumbnailStorage
 from .forms import CardForm, UpdateCaseForm, TagsFormset, TemaForm, EditTemaForm
 from .models import Case, File, Tags, Thumbnail, Tema, Ementa
 from .nlp.jurisintel_resumidor import resumidor as res
+from .nlp.jurisintel_resumidor import resumidor_from_texto as resumo_texto
 from .nlp.similar import similar_resumo, similar_tags
 from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema, \
-    get_info_file
+    get_info_file, tesseract_extract, antiword_extract
 
 
 # Create your views here.
 
+# tipos de arquivos
+DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+DOC = 'application/msword'
+PDF = 'application/pdf'
 
 def retrieve_cases(request):
     """
@@ -189,21 +196,23 @@ def upload(request):
                         data['is_valid'] = False
 
                     try:
-                        thumbnail_image = pdf.convert("jpeg")
-                        temp_image = tempfile.SpooledTemporaryFile()
-                        pdf_name = str(arquivo).split('.pdf')
-                        thumb_name = '%s.jpg' % pdf_name[0]
+                        file_mimetype = mimetypes.guess_type(arquivo)
+                        if file_mimetype is not DOCX and file_mimetype is not DOC:
+                            thumbnail_image = pdf.convert("jpeg")
+                            temp_image = tempfile.SpooledTemporaryFile()
+                            pdf_name = str(arquivo).split('.pdf')
+                            thumb_name = '%s.jpg' % pdf_name[0]
 
-                        with thumbnail_image.sequence[0] as img:
-                            page = wi(image=img)
-                            page.width = 150
-                            page.height = 200
-                            page.strip()
-                            page.save(file=temp_image)
-                            img_file = s3_thumb.save(thumb_name, temp_image)
-                            thumbnail = Thumbnail.objects.create(thumbnail=img_file)
-                            save_file.thumbnail = thumbnail
-                            save_file.save()
+                            with thumbnail_image.sequence[0] as img:
+                                page = wi(image=img)
+                                page.width = 150
+                                page.height = 200
+                                page.strip()
+                                page.save(file=temp_image)
+                                img_file = s3_thumb.save(thumb_name, temp_image)
+                                thumbnail = Thumbnail.objects.create(thumbnail=img_file)
+                                save_file.thumbnail = thumbnail
+                                save_file.save()
                     except Exception as error:
                         print(error)
             else:
@@ -223,7 +232,9 @@ def random_name(size):
 def criar_resumo(arquivo, objeto):
     k = requests.get(arquivo.url, stream=True)
     file_mimetype = mimetypes.guess_type(k.url)
-    if file_mimetype[0] == 'application/pdf':
+
+    # verificar o tipo do arquivo
+    if file_mimetype[0] == PDF:
         # Nome do arquivo temporário
         temp_filename = '%s.pdf' % random_name(10)
         tmp_file = 'tmp/' + temp_filename
@@ -231,7 +242,58 @@ def criar_resumo(arquivo, objeto):
             for chunk in k.iter_content(chunk_size=128):
                 fd.write(chunk)
 
-        objeto.resumo = res(tmp_file)
+        try:
+            # processar com pdfminer (slate3k)
+            objeto.resumo = res(tmp_file)
+            objeto.save()
+        except Exception:
+            # processar com tesseract
+            temp_dir = tempfile.mkdtemp()
+            base = os.path.join(temp_dir, 'conv')
+            contents = []
+            try:
+                convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=temp_dir)
+                for page in sorted(os.listdir(temp_dir)):
+                    page_path = os.path.join(temp_dir, page)
+                    page_content = tesseract_extract(page_path)
+                    contents.append(page_content)
+                resultado = six.b('').join(contents).decode()
+
+                objeto.resumo = resumo_texto(resultado)
+                objeto.save()
+            except Exception as error:
+                print(error)
+
+        # Remover o arquivo temporário
+        os.remove(tmp_file)
+
+    # processar arquivo docx
+    elif file_mimetype[0] == DOCX:
+        # Nome do arquivo temporário
+        temp_filename = '%s.docx' % random_name(10)
+        tmp_file = 'tmp/' + temp_filename
+        with open(tmp_file, "wb") as fd:
+            for chunk in k.iter_content(chunk_size=128):
+                fd.write(chunk)
+
+        conteudo = docx2txt.process(tmp_file)
+        objeto.resumo = resumo_texto(conteudo)
+        objeto.save()
+
+        # Remover o arquivo temporário
+        os.remove(tmp_file)
+
+    # processar arquivo doc
+    elif file_mimetype[0] == DOC:
+        # Nome do arquivo temporário
+        temp_filename = '%s.doc' % random_name(10)
+        tmp_file = 'tmp/' + temp_filename
+        with open(tmp_file, "wb") as fd:
+            for chunk in k.iter_content(chunk_size=128):
+                fd.write(chunk)
+
+        resultado = antiword_extract(tmp_file)
+        objeto.resumo = resumo_texto(resultado)
         objeto.save()
 
         # Remover o arquivo temporário

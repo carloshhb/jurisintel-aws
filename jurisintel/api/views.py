@@ -77,20 +77,21 @@ def criar_resumo(texto, pk=None, filename=None, thumbnail=None, thumb_name=None)
 
     for doc in docs:
         file_name = FILENAME.search(str(doc.file))
-        if file_name.group() == filename:
-            resumo = res(texto)
-            if len(resumo) > 10:
-                doc.resumo = resumo
-            else:
-                doc.resumo = texto
+        if not doc.resumo:
+            if file_name.group() == filename:
+                resumo = res(texto)
+                if len(resumo) > 10:
+                    doc.resumo = resumo
+                else:
+                    doc.resumo = texto
 
-            if thumbnail:
-                thumb_saved = Thumbnail.objects.create(thumbnail=thumb)
-                doc.thumbnail = thumb_saved
+                if thumbnail:
+                    thumb_saved = Thumbnail.objects.create(thumbnail=thumb)
+                    doc.thumbnail = thumb_saved
 
-            doc.save()
+                doc.save()
 
-            return doc.resumo
+                return doc.resumo
 
     return 'Arquivo não encontrado'
 

@@ -1,6 +1,7 @@
 # IMPORTS HERE IF NEEDED
 import re
-
+import pytesseract
+import subprocess
 # HELPER FUNCTIONS
 
 TAG_RE = re.compile(r'<[^>]+>')
@@ -127,3 +128,31 @@ def get_printable_size(byte_size):
     size = _fix_size(current_size, size_index)
     measure = MEASURE[size_index]
     return size + measure
+
+
+def tesseract_extract(arquivo):
+    resultado = pytesseract.image_to_string(image=arquivo, lang='por')
+    return resultado
+
+
+def antiword_extract(arquivo):
+    try:
+        command = 'antiword {}'.format(
+            arquivo,
+            'stdout',
+        )
+        try:
+            print('Start')
+            output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            print('Finish')
+
+        except subprocess.CalledProcessError as e:
+            print('Error')
+            print(e.output)
+            return e.output
+
+    except Exception as e:
+        print('Error e')
+        print(e)
+        raise e
+    return output
