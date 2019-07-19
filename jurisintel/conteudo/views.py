@@ -358,7 +358,7 @@ def file_upload(request):
                             'tag': x[1],
                         }
                         tag_list.append([x[2], tag_dict])
-                except Exception:
+                except Exception as error:
                     print(error)
 
                 # passa as strings para a view
