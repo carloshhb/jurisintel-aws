@@ -187,7 +187,7 @@ def upload(request):
                     uploaded_file = s3_file.save(path, file)
                     save_file = File.objects.create(file=uploaded_file)
                 except Exception as error:
-                    print(error)
+                    data['error'] = str(error)
                 else:
                     if save_file:
                         data['is_valid'] = True
@@ -214,7 +214,7 @@ def upload(request):
                                 save_file.thumbnail = thumbnail
                                 save_file.save()
                     except Exception as error:
-                        print(error)
+                        data['error'] = str(error)
             else:
                 arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
                 file_error.append([arquivo, get_printable_size(file.size)])

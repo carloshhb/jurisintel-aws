@@ -232,6 +232,7 @@
                     }
                     else{
                         $('.modal-close').parent('.modal-footer').show();
+                        console.log(data.result.error)
                     }
                     if (data.result.file_error.length !== 0){
                         $('.upload-error-list').show();
