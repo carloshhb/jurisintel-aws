@@ -2,6 +2,7 @@
 import re
 import pytesseract
 import subprocess
+import slate3k as slate
 # HELPER FUNCTIONS
 
 TAG_RE = re.compile(r'<[^>]+>')
@@ -156,3 +157,17 @@ def antiword_extract(arquivo):
         print(e)
         raise e
     return output
+
+
+def parse_pdfminer(file):
+    with open(file, 'rb') as f:
+        doc = slate.PDF(f)
+
+    texto = ''
+    for item in doc:
+        texto += item
+
+    if len(texto) > 50:
+        return texto
+    else:
+        raise ValueError

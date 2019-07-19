@@ -27,7 +27,7 @@ from .nlp.jurisintel_resumidor import resumidor as res
 from .nlp.jurisintel_resumidor import resumidor_from_texto as resumo_texto
 from .nlp.similar import similar_resumo, similar_tags
 from .utils import get_documents_, get_case_tags, get_case_ementas, get_printable_size, get_documents_tema, \
-    get_info_file, tesseract_extract, antiword_extract
+    get_info_file, tesseract_extract, antiword_extract, parse_pdfminer
 
 
 # Create your views here.
@@ -250,7 +250,9 @@ def criar_resumo(arquivo, objeto):
 
         try:
             # processar com pdfminer (slate3k)
-            objeto.resumo = res(tmp_file)
+            resultado = parse_pdfminer(tmp_file)
+            resumo = resumo_texto(resultado)
+            objeto.resumo = resumo
             objeto.save()
         except Exception:
             # processar com tesseract
