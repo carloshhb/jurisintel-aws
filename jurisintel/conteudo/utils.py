@@ -3,6 +3,8 @@ import re
 import pytesseract
 import subprocess
 import slate3k as slate
+from PIL import Image
+
 # HELPER FUNCTIONS
 
 TAG_RE = re.compile(r'<[^>]+>')
@@ -132,7 +134,7 @@ def get_printable_size(byte_size):
 
 
 def tesseract_extract(arquivo):
-    resultado = pytesseract.image_to_string(image=arquivo, lang='por')
+    resultado = pytesseract.image_to_string(Image.open(arquivo), lang='por')
     return resultado
 
 

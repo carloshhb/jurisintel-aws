@@ -1,6 +1,7 @@
 import csv
 import mimetypes
 import os
+import shutil
 import secrets
 import tempfile
 import unicodedata
@@ -257,8 +258,8 @@ def criar_resumo(arquivo, objeto):
         except Exception:
             # processar com tesseract
             temp_dir = tempfile.mkdtemp()
-            base = os.path.join(temp_dir, 'conv')
             contents = []
+            resultado = ''
             try:
                 convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=temp_dir)
                 for page in sorted(os.listdir(temp_dir)):
@@ -266,7 +267,7 @@ def criar_resumo(arquivo, objeto):
                     page_path = os.path.join(temp_dir, page)
                     page_content = tesseract_extract(page_path)
                     contents.append(page_content)
-                resultado = six.b('').join(contents).decode()
+                resultado = resultado.join(contents)
                 resumo = resumo_texto(resultado)
                 if len(resumo) < 30:
                     objeto.resumo = resultado
@@ -276,6 +277,7 @@ def criar_resumo(arquivo, objeto):
             except Exception as error:
                 print(error)
 
+            shutil.rmtree(temp_dir)
         # Remover o arquivo temporário
         os.remove(tmp_file)
 
