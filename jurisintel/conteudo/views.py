@@ -38,6 +38,7 @@ DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 DOC = 'application/msword'
 PDF = 'application/pdf'
 
+
 def retrieve_cases(request):
     """
     Function to retrieve all cases from user or firm user is attached to.
@@ -49,9 +50,15 @@ def retrieve_cases(request):
     page = request.GET.get('page', 1)
     try:
         users = User.objects.filter(escritorio__id=request.user.escritorio.pk)
-        all_cases = QuerySet(model=Case)
+        # all_cases = QuerySet(model=Case, query=None)
+        all_cases = None
         for user in users:
-            all_cases = all_cases | Case.objects.filter(user=user).order_by('-created_at')
+            new_cases = Case.objects.filter(user=user).order_by('-created_at')
+            if all_cases is None:
+                all_cases = new_cases
+            else:
+                all_cases = all_cases | new_cases
+
         paginator = Paginator(all_cases, 10)
         for case in paginator.object_list:
             try:
