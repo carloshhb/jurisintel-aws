@@ -251,21 +251,18 @@ def criar_resumo(arquivo, objeto):
         try:
             # processar com pdfminer (slate3k)
             resultado = parse_pdfminer(tmp_file)
-            if resultado < 10:
-                raise ValueError
-            else:
-                resumo = resumo_texto(resultado)
-                objeto.resumo = resumo
-                objeto.save()
+            resumo = resumo_texto(resultado)
+            objeto.resumo = resumo
+            objeto.save()
         except Exception:
             # processar com tesseract
             temp_dir = tempfile.mkdtemp()
-            base = os.path.join(temp_dir, 'conv')
+            base = os.path.join('tmp', 'conv')
             contents = []
             try:
-                convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=temp_dir)
-                for page in sorted(os.listdir(temp_dir)):
-                    page_path = os.path.join(temp_dir, page)
+                convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=base)
+                for page in sorted(os.listdir(base)):
+                    page_path = os.path.join(base, page)
                     page_content = tesseract_extract(page_path)
                     contents.append(page_content)
                 resultado = six.b('').join(contents).decode()
