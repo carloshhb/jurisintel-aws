@@ -181,12 +181,15 @@ def upload(request):
         for file in request.FILES.getlist('files'):
             if not file.size > 5000000:
                 try:
-                    pdf = wi(file=file, resolution=200)
+                    file_mimetype = mimetypes.guess_type(str(file))
+                    if file_mimetype[0] == PDF:
+                        pdf = wi(file=file, resolution=200)
                     arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
                     path = '%s/%s' % (str(request.user.pk), arquivo)
                     uploaded_file = s3_file.save(path, file)
                     save_file = File.objects.create(file=uploaded_file)
                 except Exception as error:
+                    print("erro 1: " + str(error))
                     data['error'] = str(error)
                 else:
                     if save_file:
@@ -195,10 +198,9 @@ def upload(request):
                     else:
                         data['is_valid'] = False
 
-                    try:
-                        file_mimetype = mimetypes.guess_type(arquivo)
-                        print(file_mimetype[0])
-                        if file_mimetype[0] is not DOCX and file_mimetype[0] is not DOC:
+                    file_mimetype = mimetypes.guess_type(arquivo)
+                    if file_mimetype[0] == PDF:
+                        try:
                             thumbnail_image = pdf.convert("jpeg")
                             temp_image = tempfile.SpooledTemporaryFile()
                             pdf_name = str(arquivo).split('.pdf')
@@ -214,8 +216,11 @@ def upload(request):
                                 thumbnail = Thumbnail.objects.create(thumbnail=img_file)
                                 save_file.thumbnail = thumbnail
                                 save_file.save()
-                    except Exception as error:
-                        data['error'] = str(error)
+                        except Exception as error:
+                            print("erro 2" + str(error))
+                            data['error'] = str(error)
+                    else:
+                        save_file.thumbnail = None
             else:
                 arquivo = unicodedata.normalize('NFD', str(file)).encode('ASCII', 'ignore').decode('ASCII')
                 file_error.append([arquivo, get_printable_size(file.size)])
@@ -260,7 +265,11 @@ def criar_resumo(arquivo, objeto):
                     contents.append(page_content)
                 resultado = six.b('').join(contents).decode()
 
-                objeto.resumo = resumo_texto(resultado)
+                resumo = resumo_texto(resultado)
+                if len(resumo) < 30:
+                    objeto.resumo = resultado
+                else:
+                    objeto.resumo = resumo
                 objeto.save()
             except Exception as error:
                 print(error)
@@ -278,7 +287,11 @@ def criar_resumo(arquivo, objeto):
                 fd.write(chunk)
 
         conteudo = docx2txt.process(tmp_file)
-        objeto.resumo = resumo_texto(conteudo)
+        resumo = resumo_texto(conteudo)
+        if len(resumo) < 30:
+            objeto.resumo = conteudo
+        else:
+            objeto.resumo = resumo
         objeto.save()
 
         # Remover o arquivo temporário
@@ -294,7 +307,11 @@ def criar_resumo(arquivo, objeto):
                 fd.write(chunk)
 
         resultado = antiword_extract(tmp_file)
-        objeto.resumo = resumo_texto(resultado)
+        resumo = resumo_texto(resultado)
+        if len(resumo) < 30:
+            objeto.resumo = resultado
+        else:
+            objeto.resumo = resumo
         objeto.save()
 
         # Remover o arquivo temporário
@@ -340,7 +357,10 @@ def file_upload(request):
                     tag_list.append([x[2], tag_dict])
 
                 # passa as strings para a view
-                thumb = str(file_object.thumbnail.thumbnail.url)
+                try:
+                    thumb = str(file_object.thumbnail.thumbnail.url)
+                except Exception:
+                    thumb = 'docx'
                 try:
                     file = str(file_object.file).split('/')[1]
                 except Exception as error:
