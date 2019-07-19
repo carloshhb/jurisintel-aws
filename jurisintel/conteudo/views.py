@@ -260,10 +260,10 @@ def criar_resumo(arquivo, objeto):
             base = os.path.join(temp_dir, 'conv')
             contents = []
             try:
-                convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=base)
-                for page in sorted(os.listdir(base)):
+                convert_from_path(tmp_file, fmt='jpeg', dpi=300, output_folder=temp_dir)
+                for page in sorted(os.listdir(temp_dir)):
                     print(page)
-                    page_path = os.path.join(base, page)
+                    page_path = os.path.join(temp_dir, page)
                     page_content = tesseract_extract(page_path)
                     contents.append(page_content)
                 resultado = six.b('').join(contents).decode()
