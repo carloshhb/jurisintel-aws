@@ -307,7 +307,6 @@ def criar_resumo(arquivo, objeto):
                 fd.write(chunk)
 
         resultado = antiword_extract(tmp_file).decode()
-        resultado = resultado.split('directory. ')[1]
         resumo = resumo_texto(resultado)
         if len(resumo) < 30:
             objeto.resumo = resultado

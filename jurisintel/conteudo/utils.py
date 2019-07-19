@@ -143,7 +143,7 @@ def antiword_extract(arquivo):
         )
         try:
             print('Start')
-            output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            output = subprocess.check_output(command, env={'ANTIWORDHOME': '/usr/share/antiword'}, shell=True, stderr=subprocess.STDOUT)
             print('Finish')
 
         except subprocess.CalledProcessError as e:
