@@ -345,18 +345,21 @@ def file_upload(request):
                     index_list.append(t.id)
 
                 # CREATE TAG SIMILARITY
-                tags_obj = similar_tags(file_object.resumo, list_of_tags)
-                for s in tags_obj:
-                    if s[1] > 0.18:
-                        indices.append([s[1], list_of_tags[s[0]], index_list[s[0]]])
-                # ORDER FOR SIMILARITY WITH TEXT
-                indices.sort(key=lambda x: x[0], reverse=True)
+                try:
+                    tags_obj = similar_tags(file_object.resumo, list_of_tags)
+                    for s in tags_obj:
+                        if s[1] > 0.18:
+                            indices.append([s[1], list_of_tags[s[0]], index_list[s[0]]])
+                    # ORDER FOR SIMILARITY WITH TEXT
+                    indices.sort(key=lambda x: x[0], reverse=True)
 
-                for x in indices:
-                    tag_dict = {
-                        'tag': x[1],
-                    }
-                    tag_list.append([x[2], tag_dict])
+                    for x in indices:
+                        tag_dict = {
+                            'tag': x[1],
+                        }
+                        tag_list.append([x[2], tag_dict])
+                except Exception:
+                    print(error)
 
                 # passa as strings para a view
                 try:
