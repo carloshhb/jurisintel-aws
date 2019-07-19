@@ -197,6 +197,7 @@ def upload(request):
 
                     try:
                         file_mimetype = mimetypes.guess_type(arquivo)
+                        print(file_mimetype[0])
                         if file_mimetype[0] is not DOCX and file_mimetype[0] is not DOC:
                             thumbnail_image = pdf.convert("jpeg")
                             temp_image = tempfile.SpooledTemporaryFile()
